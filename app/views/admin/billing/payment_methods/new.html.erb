@@ -1,0 +1,52 @@
+<h2><%= @payment_method.name %></h2>
+<hr/>
+
+<%= simple_form_for([:admin, :billing, @payment_method], html: { class: 'form-inline' }) do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <div class="row">
+        <div class="col-md-5">
+            <%= f.association :user %>
+            <%= f.input :name %>
+            <%= f.input :card_brand, collection: ['visa', 'mastercard', 'discover', 'american_express', "diners_club", 'jcb'] %>
+            <%= f.input :number, placeholder: '####-####-####-####', label: 'Card Number' %>
+            <%= f.input :cardholder_name %>
+            <%= f.input :expiration_month, collection: (1..12) %>
+            <%= f.input :expiration_year, collection: (2012..2022) %>
+        </div>
+
+        <div class="col-md-6">
+            <%= f.input :default %>
+            <%= f.input :billing_street1 %>
+            <%= f.input :billing_street2 %>
+            <%= f.input :billing_city %>
+            <%= f.input :billing_state %>
+            <%= f.input :billing_zip %>
+            <%= f.input :billing_country %>
+
+        </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+
+
+
+<%= content_for :title do %>
+    <%= @payment_method.name %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/billing_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
+    <li class="active"><%= @payment_method.name %></li>
+<% end %>

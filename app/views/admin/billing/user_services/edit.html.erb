@@ -1,0 +1,41 @@
+<style>
+    .form-inline .control-label { width: 140px; }
+</style>
+
+<h2>Subscription #<%= @user_service.user_package_id %></h2>
+<hr/>
+
+
+<%= simple_form_for([:admin, :billing, @user_service], html: { class: 'form-inline' }) do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.input :user_package_id, as: :hidden %>
+    <%= f.association :service_type %>
+    <%= f.input :include_quantity %>
+    <%= f.input :available_quantity %>
+    <%= f.input :rate %>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+
+
+
+<%= content_for :title do %>
+    Subscription #<%= @user_service.user_package_id %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/billing_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+    <li><%= link_to "Subscription ##{@user_service.user_package.id}", admin_billing_user_package_path(@user_service.user_package_id) %></li>
+    <li class="active">edit</li>
+<% end %>

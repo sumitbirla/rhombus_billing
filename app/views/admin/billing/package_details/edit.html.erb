@@ -1,0 +1,41 @@
+<style>
+    .form-inline .control-label { width: 120px; }
+</style>
+<h2><%= @package_detail.package.name %></h2>
+<hr/>
+
+
+<%= simple_form_for([:admin, :billing, @package_detail], html: { class: 'form-inline' }) do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.input :package_id, as: :hidden %>
+    <%= f.association :service_type %>
+    <%= f.input :quantity %>
+    <%= f.input :trial_days %>
+    <%= f.input :rate %>
+    <%= f.input :hidden %>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+
+
+
+<%= content_for :title do %>
+    <%= @package_detail.package.name %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/billing_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "Packages", admin_billing_packages_path %></li>
+    <li><%= link_to @package_detail.package.name, admin_billing_package_path(@package_detail.package) %></li>
+    <li class="active">edit</li>
+<% end %>

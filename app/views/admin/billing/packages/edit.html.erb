@@ -1,0 +1,76 @@
+<style>
+    .form-inline .control-label { width: 120px; }
+</style>
+<h2><%= @package.name %></h2>
+
+
+<% unless @package.id.nil? %>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#">Summary</a></li>
+      <li><%= link_to "Details", details_admin_billing_package_path(@package) %></li>
+    </ul>
+<% end %>
+
+<%= simple_form_for([:admin, :billing, @package], html: { class: 'form-inline' }) do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.input :name %>
+    <%= f.input :price %>
+    <%= f.input :bill_frequency, input_html: { placeholder: '30 days' } %>
+    <%= f.input :trial_days %>
+    <%= f.input :active %>
+    <%= f.input :hidden %>
+    <%= f.input :sort %>
+    <div class="form-group string optional brand_website">
+      <label class="string optional control-label" for="brand_website">Image</label>
+      <div class="controls" style="display: inline;">
+        <%= f.input_field :image_path %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
+      </div>
+    </div>
+    <%= f.input :description, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+
+
+
+<%= content_for :title do %>
+    <%= @package.name %>
+<% end %>
+
+
+<% content_for :menu do
+  render "admin/shared/billing_menu"
+end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "Packages", admin_billing_packages_path %></li>
+    <li><%= link_to @package.name, admin_billing_package_path(@package) %></li>
+    <li class="active">edit</li>
+<% end %>
+
+
+<% content_for :head do %>
+    <script type="text/javascript" src="/ckfinder/ckfinder.js"></script>
+    <script>
+        function BrowseServer()
+        {
+            // You can use the "CKFinder" class to render CKFinder in a page:
+            var finder = new CKFinder( { connectorPath : '<%= Cache.setting('System', 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
+            //finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
+            finder.selectActionFunction = SetFileField;
+            finder.popup();
+        }
+
+        // This is a sample function which is called when a file is selected in CKFinder.
+        function SetFileField( fileUrl )
+        {
+            document.getElementById( 'package_image_path' ).value = fileUrl.substring(<%= Cache.setting('System', 'Static Files Url').length %>);
+        }
+    </script>
+<% end %>

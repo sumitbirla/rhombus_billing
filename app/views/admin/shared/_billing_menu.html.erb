@@ -1,0 +1,10 @@
+            <li class="<%= 'active' if request.original_url.include? 'admin/billing' %>">
+              <a href="#"><i class="fa fa-money fa-fw"></i> Billing <span class="fa arrow"></span></a>
+              <ul class="nav nav-second-level">
+                <li><%= link_to "Packages", admin_billing_packages_path %></li>
+                <li><%= link_to "Service Types", admin_billing_service_types_path %></li>
+                <li><%= link_to "Payments", admin_billing_payments_path %></li>
+                <li><%= link_to "Payment methods", admin_billing_payment_methods_path %></li>
+                <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+              </ul>
+            </li>
