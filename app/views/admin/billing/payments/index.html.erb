@@ -32,8 +32,6 @@
               <%= link_to "Package: " + UserPackage.find(pmt.payable_id).package.name, admin_billing_user_package_path(pmt.payable_id) %>
           <% elsif pmt.payable_type == "user_service" %>
               <%= UserService.find(pmt.payable_id).service_type.name %>
-          <% elsif pmt.payable_type == "agent_session" %>
-              <%= link_to AgentSession.find(pmt.payable_id).agent.name, admin_agents_agent_path(AgentSession.find(pmt.payable_id).agent) %>
           <% end %>
         </td>
         <td>
