@@ -9,14 +9,12 @@ Gem::Specification.new do |s|
   s.version     = RhombusBilling::VERSION
   s.authors     = ["Sumit Birla"]
   s.email       = ["sbirla@tampahost.net"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of RhombusBilling."
-  s.description = "TODO: Description of RhombusBilling."
+  s.homepage    = "http://github.com/sumitbirla/rhombus_billing"
+  s.summary     = "Billing plugin for Rhombus"
+  s.description = "Rhombus is a rails framework to quickly spin up website with different sets of functionality."
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 4.1.4"
-
-  s.add_development_dependency "sqlite3"
 end
