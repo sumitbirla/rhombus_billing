@@ -16,6 +16,7 @@
     <%= render 'admin/shared/error_messages', object: f.object %>
 
     <%= f.input :name %>
+	<%= f.input :group %>
     <%= f.input :price %>
     <%= f.input :bill_frequency, input_html: { placeholder: '30 days' } %>
     <%= f.input :trial_days %>
@@ -24,9 +25,7 @@
     <%= f.input :sort %>
     <div class="form-group string optional brand_website">
       <label class="string optional control-label" for="brand_website">Image</label>
-      <div class="controls" style="display: inline;">
-        <%= f.input_field :image_path %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
-      </div>
+      <%= f.input_field :image_path %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
     </div>
     <%= f.input :description, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
 
@@ -50,8 +49,12 @@ end %>
 <% content_for :breadcrumbs do %>
     <li><a href="#">Billing</a></li>
     <li><%= link_to "Packages", admin_billing_packages_path %></li>
-    <li><%= link_to @package.name, admin_billing_package_path(@package) %></li>
-    <li class="active">edit</li>
+	<% unless @package.id.nil? %>
+    	<li><%= link_to @package.name, admin_billing_package_path(@package) %></li>
+    	<li class="active">edit</li>
+	<% else %>
+		<li class="active">edit</li>
+	<% end %>
 <% end %>
 
 
@@ -61,7 +64,7 @@ end %>
         function BrowseServer()
         {
             // You can use the "CKFinder" class to render CKFinder in a page:
-            var finder = new CKFinder( { connectorPath : '<%= Cache.setting('System', 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
+            var finder = new CKFinder( { connectorPath : '<%= Cache.setting(:system, 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
             //finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
             finder.selectActionFunction = SetFileField;
             finder.popup();
@@ -70,7 +73,7 @@ end %>
         // This is a sample function which is called when a file is selected in CKFinder.
         function SetFileField( fileUrl )
         {
-            document.getElementById( 'package_image_path' ).value = fileUrl.substring(<%= Cache.setting('System', 'Static Files Url').length %>);
+            document.getElementById( 'package_image_path' ).value = fileUrl.substring(<%= Cache.setting(:system, 'Static Files Url').length %>);
         }
     </script>
 <% end %>

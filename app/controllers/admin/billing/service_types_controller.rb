@@ -47,7 +47,7 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
   private
   
     def service_type_params
-      params.require(:service_type).permit(:name, :quantity_type, :add_on, :sort)
+      params.require(:service_type).permit(:name, :code, :quantity_type, :bill_frequency, :add_on, :sort)
     end
   
 end

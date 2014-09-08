@@ -11,8 +11,10 @@
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 
+  <%= f.input :code, input_html: { class: 'short' } %>
   <%= f.input :name %>
   <%= f.input :quantity_type %>
+  <%= f.input :bill_frequency %>
   <%= f.input :add_on %>
   <%= f.input :sort %>
   

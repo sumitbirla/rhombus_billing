@@ -26,6 +26,7 @@
 #  created_at              :datetime
 #  updated_at              :datetime
 #
+require 'activemerchant'
 
 class PaymentMethod < ActiveRecord::Base
   self.table_name = 'bill_payment_methods'

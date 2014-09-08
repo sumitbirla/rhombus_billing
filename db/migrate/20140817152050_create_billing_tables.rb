@@ -17,6 +17,7 @@ class CreateBillingTables < ActiveRecord::Migration
 
     create_table "bill_packages", force: true do |t|
       t.string   "name",                                    null: false
+      t.string   "group",  
       t.text     "description",                             null: false
       t.decimal  "price",          precision: 10, scale: 2, null: false
       t.integer  "trial_days"
@@ -73,7 +74,9 @@ class CreateBillingTables < ActiveRecord::Migration
     
     create_table "bill_service_types", force: true do |t|
       t.string   "name",          null: false
+      t.string   "code",          null: false
       t.string   "quantity_type", null: false
+      t.string   "bill_frequency",null: false
       t.boolean  "add_on",        null: false
       t.integer  "sort",          null: false
       t.datetime "created_at"

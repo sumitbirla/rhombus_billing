@@ -4,15 +4,19 @@
 <%= will_paginate @service_types %>
 <table class="table table-striped table-condensed">
 	<tr>
+		<th>Code</th>
 		<th>Name</th>
 		<th>Quantity type</th>
+		<th>Bill frequency</th>
 		<th>Add-on ?</th>
 		<th>&nbsp;</th>
 	</tr>
 	<% @service_types.each do |svc| %>
 	<tr>
+		<td><%= svc.code %>
 		<td><%= link_to svc.name, edit_admin_billing_service_type_path(svc) %></td>
 		<td><%= svc.quantity_type %>
+		<td><%= svc.bill_frequency %>
 		<td><%= raw tick(svc.add_on)%>
 		<td>
 			<%= link_to "edit", edit_admin_billing_service_type_path(svc) %> &nbsp;

@@ -10,7 +10,7 @@
     <h4>Summary</h4>
     <table class="table table-condensed table-bordered summary">
       <tr>
-        <td>Name</td>
+        <td width="140">Name</td>
         <td><%= @package.name %></td>
       </tr>
       <tr>
@@ -23,7 +23,12 @@
       </tr>
       <tr>
         <td>Trial Days</td>
-        <td><%= @package.trial_days %> days</td>
+        <td>
+		<% if @package.trial_days && @package.trial_days > 0 %>
+          <%= @package.trial_days %> days
+      	<% else %>
+          <span class="light">- none -</span>
+      	<% end %></td>
       </tr>
       <tr>
         <td>Status</td>
@@ -39,24 +44,28 @@
     <table class="table table-striped table-condensed">
       <tr>
         <th>Service Type</th>
-        <th>Quantity</th>
+        <th class="calign">Quantity</th>
         <th class="calign">Trial Days</th>
         <th>Rate</th>
-        <th>Hidden</th>
       </tr>
       <% @package.details.each do |pd| %>
           <tr>
             <td><%= pd.service_type.name %></td>
-            <td><%= pd.quantity %></td>
+            <td class="calign"><%= pd.quantity %></td>
             <td class="calign">
-              <% if pd.trial_days %>
-                <%= pd.trial_days %> days
-              <% else %>
-                n/a
-              <% end %>
+		      <% if pd.trial_days && pd.trial_days > 0 %>
+		          <%= pd.trial_days %> days
+		      <% else %>
+		          <span class="light">- none -</span>
+		      <% end %>
             </td>
-            <td><%= number_to_currency(pd.rate) %></td>
-            <td><%= tick pd.hidden %></td>
+            <td>
+				<% unless pd.rate.nil? || pd.rate == 0.0 %>
+					<%= number_to_currency(pd.rate) %> / <%= pd.service_type.bill_frequency.downcase %>
+				<% else %>
+					<span class="light">- included -</span>
+				<% end %>
+			</td>
           </tr>
       <% end %>
     </table>

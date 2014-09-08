@@ -6,6 +6,7 @@
 <table class="table table-striped table-condensed">
 	<tr>
 		<th>Name</th>
+		<th>Group</th>
 		<th>Description</th>
 		<th>Price</th>
         <th>Bill Frequency</th>
@@ -17,6 +18,7 @@
 	<% @packages.each do |pkg| %>
 	<tr>
 		<td><%= link_to pkg.name, admin_billing_package_path(pkg) %></td>
+		<td><%= pkg.group %>
 		<td><%= pkg.description %>
 		<td><%= number_to_currency(pkg.price) %> /mo.</td>
         <td><%= pkg.bill_frequency %> days</td>

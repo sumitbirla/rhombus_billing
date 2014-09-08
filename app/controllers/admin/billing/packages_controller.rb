@@ -52,7 +52,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
   private
   
     def package_params
-      params.require(:package).permit(:name, :description, :price, :hidden, :sort, :trial_days, :bill_frequency,
+      params.require(:package).permit(:name, :group, :description, :price, :hidden, :sort, :trial_days, :bill_frequency,
                                       :image_path, :active)
     end
   
