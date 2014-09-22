@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   namespace :admin do
     
     namespace :billing do
@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       resources :package_details
       resources :user_packages do
         member do
-          get 'services' => 'user_packages#services'
+          get 'services'
         end
       end
       resources :user_services
@@ -21,6 +21,15 @@ Rails.application.routes.draw do
       resources :payments
     end
     
+  end
+  
+  namespace :account do
+    resources :payments
+    resources :payment_methods do
+      member do 
+        get 'primary'
+      end
+    end
   end
   
 end

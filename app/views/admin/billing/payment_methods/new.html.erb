@@ -1,4 +1,4 @@
-<h2><%= @payment_method.name %></h2>
+<h2><%= @payment_method.card_display %></h2>
 <hr/>
 
 <%= simple_form_for([:admin, :billing, @payment_method], html: { class: 'form-inline' }) do |f| %>
@@ -8,7 +8,6 @@
     <div class="row">
         <div class="col-md-5">
             <%= f.association :user %>
-            <%= f.input :name %>
             <%= f.input :card_brand, collection: ['visa', 'mastercard', 'discover', 'american_express', "diners_club", 'jcb'] %>
             <%= f.input :number, placeholder: '####-####-####-####', label: 'Card Number' %>
             <%= f.input :cardholder_name %>
@@ -36,7 +35,7 @@
 
 
 <%= content_for :title do %>
-    <%= @payment_method.name %>
+    <%= @payment_method.card_display %>
 <% end %>
 
 
@@ -48,5 +47,5 @@ end %>
 <% content_for :breadcrumbs do %>
     <li><a href="#">Billing</a></li>
     <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
-    <li class="active"><%= @payment_method.name %></li>
+    <li class="active"><%= @payment_method.card_display %></li>
 <% end %>

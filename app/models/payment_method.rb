@@ -26,43 +26,45 @@
 #  created_at              :datetime
 #  updated_at              :datetime
 #
-require 'activemerchant'
+require 'credit_card_validations'
+require 'openssl'
+require 'base64'
 
 class PaymentMethod < ActiveRecord::Base
-  self.table_name = 'bill_payment_methods'
   
+  self.table_name = 'bill_payment_methods'
   attr_accessor :number
+  
+  before_validation :set_brand
+  before_save :encrypt_number
+  
   belongs_to :user
   has_many :payments
-  validates_presence_of :user_id, :name, :card_brand, :cardholder_name, :expiration_month, :expiration_year
-
-  def credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-        :brand              => card_brand,
-        :number             => @number,
-        :verification_value => '1234',
-        :month              => expiration_month,
-        :year               => expiration_year,
-        :first_name         => cardholder_name.split[0],
-        :last_name          => cardholder_name.split[1]
-    )
-  end
-
-  def card_valid?
-    unless credit_card.valid?
-      errors.add(:cc_number, "Credit card is not valid. #{credit_card.errors.full_messages.join('. ')}")
-      return false
-    end
-
-    return true
-  end
-
-  def to_s
-    card_brand + ' *' + card_display[-4, 4]
-  end
+  
+  validates :number, presence: true, credit_card_number: true
+  validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
 
   def self.CARD_BRANDS
     ['Visa', 'MasterCard', 'Discover', 'American Express' ]
   end
-
+  
+  def set_brand
+    self.card_brand = CreditCardValidations::Detector.new(number).brand
+  end
+  
+  def encrypt_number  
+    cipher = OpenSSL::Cipher::AES256.new(:CBC)
+    cipher.encrypt
+    cipher.key = IO.binread('/var/lib/rhombus.bin')
+    
+    self.iv = Base64.encode64(cipher.random_iv)
+    self.encrypted_cc = Base64.encode64(cipher.update(number) + cipher.final)
+    
+    self.card_display = 'x-' + number[-4, 4]
+  end
+  
+  def to_s
+    card_brand + ' ' + card_display
+  end
+  
 end

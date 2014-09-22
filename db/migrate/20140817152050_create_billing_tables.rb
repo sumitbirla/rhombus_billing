@@ -34,7 +34,6 @@ class CreateBillingTables < ActiveRecord::Migration
       t.integer  "user_id",                                 null: false
       t.boolean  "default",                 default: false, null: false
       t.string   "card_brand",              default: "",    null: false
-      t.string   "name",                                    null: false
       t.string   "card_display",            default: "",    null: false
       t.string   "cardholder_name",                         null: false
       t.integer  "expiration_month",                        null: false

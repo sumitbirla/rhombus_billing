@@ -1,6 +1,6 @@
 <h2>
   <%= link_to "edit", edit_admin_billing_payment_method_path(@payment_method), class: "btn btn-sm btn-default pull-right" %>
-  <i class="icon-credit-card"></i> &nbsp;<%= @payment_method.name %></h2>
+  <i class="icon-credit-card"></i> &nbsp;<%= @payment_method.card_display %></h2>
 <hr/>
 
 
@@ -97,7 +97,7 @@
 
 
 <%= content_for :title do %>
-    <%= @payment_method.name %>
+    <%= @payment_method.card_display %>
 <% end %>
 
 
