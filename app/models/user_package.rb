@@ -20,6 +20,6 @@ class UserPackage < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :package
-  has_many :services, class_name: 'UserService'
+  has_many :services, class_name: 'UserService', dependent: :destroy
   has_many :payments, as: :payable
 end
