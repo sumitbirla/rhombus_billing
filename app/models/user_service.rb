@@ -16,5 +16,5 @@ class UserService < ActiveRecord::Base
   self.table_name = 'bill_user_services'
   belongs_to :user_package
   belongs_to :service_type
-  has_many :items, class_name: 'UserServiceItem'
+  has_many :items, class_name: 'UserServiceItem', dependent: :destroy
 end

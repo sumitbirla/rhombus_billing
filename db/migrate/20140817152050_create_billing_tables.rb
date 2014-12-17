@@ -59,7 +59,7 @@ class CreateBillingTables < ActiveRecord::Migration
     create_table "bill_payments", force: true do |t|
       t.integer  "payable_id"
       t.string   "payable_type",                               default: ""
-      t.integer  "user_id",                                                 null: false
+      t.integer  "user_id",
       t.integer  "payment_method_id"
       t.decimal  "amount",            precision: 10, scale: 2,              null: false
       t.string   "transaction_id"
