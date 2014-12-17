@@ -1,9 +1,43 @@
-<h2>Admin::Payments#edit</h2>
-<p>Find me in app/views/admin/payments/edit.html.erb</p>
+<style>
+    .form-inline .control-label { width: 120px; }
+</style>
+<h2>Payment Details</h2>
 
 
+<%= simple_form_for([:admin, :billing, @payment], html: { class: 'form-inline' }) do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.association :user %>
+    <%= f.input :amount %>
+	  <%= f.input :payable_id %>
+    <%= f.input :payable_type %>
+    <%= f.input :transaction_id %>
+    <%= f.input :memo, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+
+    <%= f.button :submit %>
+
+<% end %>
+
+
+
+<% content_for :title do %>
+    New Payment
+<% end %>
 
 
 <% content_for :menu do
-    render "admin/shared/billing_menu"
+  render "admin/shared/billing_menu"
 end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "Payments", admin_billing_payments_path %></li>
+	<% unless @payment.id.nil? %>
+    <li class="active">edit</li>
+	<% else %>
+		<li class="active">new</li>
+	<% end %>
+<% end %>
+

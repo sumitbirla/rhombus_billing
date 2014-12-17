@@ -9,17 +9,16 @@
 		<th>Group</th>
 		<th>Description</th>
 		<th>Price</th>
-        <th>Bill Frequency</th>
+    <th>Bill Frequency</th>
 		<th>Trial days</th>
-		<th>Hidden</th>
-        <th>Status</th>
+    <th>Status</th>
 		<th>&nbsp;</th>
 	</tr>
 	<% @packages.each do |pkg| %>
 	<tr>
 		<td><%= link_to pkg.name, admin_billing_package_path(pkg) %></td>
-		<td><%= pkg.group %>
-		<td><%= pkg.description %>
+		<td><%= pkg.group %></td>
+		<td><%= pkg.description[0..40] %> ... </td>
 		<td><%= number_to_currency(pkg.price) %> /mo.</td>
         <td><%= pkg.bill_frequency %> days</td>
 		<td>
@@ -28,14 +27,14 @@
 			<% else %>
 			-
 			<% end %>
-		<td><%= tick pkg.hidden %></td>
-        <td>
-          <% if pkg.active %>
-            <span class="label label-success">active</span>
-          <% else %>
-             <span class="label label-danger">inactive</span>
-          <% end %>
-        </td>
+    </td>
+    <td>
+        <% if pkg.active %>
+          <span class="label label-success">active</span>
+        <% else %>
+           <span class="label label-danger">inactive</span>
+        <% end %>
+    </td>
 		<td>
 			<%= link_to "edit", edit_admin_billing_package_path(pkg) %> &nbsp;
 			<%= link_to "delete", 

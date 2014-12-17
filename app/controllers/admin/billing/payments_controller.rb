@@ -2,6 +2,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   
   def index
     @payments = Payment.page(params[:page]).order('created_at DESC')
+    @payments = @payments.where(user_id: params[:uid]) unless params[:uid].nil?
   end
 
   def new
@@ -47,7 +48,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   private
 
     def payment_params
-      params.require(:payment).permit(:user_id, :order_id, :user_package_id, :transaction_id, :memo, :amount)
+      params.require(:payment).permit!
     end
   
 end

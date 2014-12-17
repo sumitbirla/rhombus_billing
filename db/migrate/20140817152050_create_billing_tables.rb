@@ -17,7 +17,7 @@ class CreateBillingTables < ActiveRecord::Migration
 
     create_table "bill_packages", force: true do |t|
       t.string   "name",                                    null: false
-      t.string   "group",  
+      t.string   "group"
       t.text     "description",                             null: false
       t.decimal  "price",          precision: 10, scale: 2, null: false
       t.integer  "trial_days"
