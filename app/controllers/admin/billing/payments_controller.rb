@@ -7,6 +7,19 @@ class Admin::Billing::PaymentsController < Admin::BaseController
 
   def new
     @payment = Payment.new memo: 'New Payment'
+    
+    unless params[:order_id].nil?
+      order = Order.find(params[:order_id])
+      @payment.assign_attributes({
+        payable_type: 'order',
+        payable_id: order.id,
+        memo: "Order ##{order.id}",
+        amount: order.total,
+        user_id: order.user_id,
+        cc_cardholder_name: order.billing_name
+      })
+    end
+    
     render 'edit'
   end
 

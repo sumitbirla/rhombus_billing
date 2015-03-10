@@ -9,49 +9,35 @@
     <th>Item</th>
     <th>Method</th>
     <th>Memo</th>
-    <th>Debit</th>
-    <th>Credit</th>
-    <th></th>
+    <th>Amount</th>
   </tr>
   <% @payments.order('created_at DESC').each do |pmt| %>
-      <tr>
-        <td><%= pmt.id %></td>
-        <td><%= systime pmt.created_at %></td>
-        <td>
-          <% if pmt.user_id %>
-              <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
-          <% else %>
-              - guest -
-          <% end %>
-        </td>
-        <td>
-          <% if pmt.payable_type == "order" %>
-              <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
-          <% elsif pmt.payable_type == "user_package" %>
-              <%= link_to "Package: " + UserPackage.find(pmt.payable_id).package.name, admin_billing_user_package_path(pmt.payable_id) %>
-          <% elsif pmt.payable_type == "user_service" %>
-              <%= UserService.find(pmt.payable_id).service_type.name %>
-          <% elsif pmt.payable_type == "shipment" %>
-              <% shipment = Shipment.find(pmt.payable_id)%>
-              <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
-          <% end %>
-        </td>
-        <td>
-          <% if pmt.payment_method_id %>
-            <%= pmt.payment_method %>
-          <% else %>
-            -
-          <% end %>
-        </td>
-        <td><%= pmt.memo %></td>
-        <td><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") if pmt.amount < 0.0 %></td>
-        <td><%= number_to_currency(pmt.amount) if pmt.amount >= 0.0 %></td>
-        <td>
-          <% if  pmt.amount >= 0.0 %>
-            <a href="#">receipt</a>
-          <% end %>
-        </td>
-      </tr>
+  <tr>
+    <td><%= pmt.id %></td>
+    <td><%= systime pmt.created_at %></td>
+    <td>
+      <% if pmt.user_id %>
+          <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
+      <% else %>
+          - guest -
+      <% end %>
+    </td>
+    <td>
+      <% if pmt.payable_type == "order" %>
+          <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
+      <% elsif pmt.payable_type == "user_package" %>
+          <%= link_to "Package: " + UserPackage.find(pmt.payable_id).package.name, admin_billing_user_package_path(pmt.payable_id) %>
+      <% elsif pmt.payable_type == "user_service" %>
+          <%= UserService.find(pmt.payable_id).service_type.name %>
+      <% elsif pmt.payable_type == "shipment" %>
+          <% shipment = Shipment.find(pmt.payable_id)%>
+          <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
+      <% end %>
+    </td>
+    <td><%= pmt.cc_number %></td>
+    <td><%= pmt.memo %></td>
+    <td><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+  </tr>
   <% end %>
 </table>
 <p><b>Balance:</b> <%= number_to_currency(@payments.sum(:amount), negative_format: "(%u%n)") %></p>

@@ -13,7 +13,18 @@
 	  <%= f.input :payable_id %>
     <%= f.input :payable_type %>
     <%= f.input :transaction_id %>
-    <%= f.input :memo, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+    <%= f.input :memo %>
+    
+    <hr/>
+    <%= f.input :cc, label: "Charge Card" %>
+    <%= f.input :cc_cardholder_name, label: "Card holder" %>
+    <%= f.input :cc_number, label: "Number" %>
+    <div class="form-group">
+      <label class="string optional control-label" for="cc_expiration_month">Expiration</label>
+      <%= f.number_field :cc_expiration_month, in: 1..12, placeholder: 'MM' %>
+      <%= f.number_field :cc_expiration_year, in: 2015..2015, placeholder: 'YYYY' %>
+    </div>
+    <%= f.input :cc_code, label: "CVC", input_html: { max_length: 4, style: "width: 100px;", placeholder: 'XXX' } %>
 
     <%= f.button :submit %>
 

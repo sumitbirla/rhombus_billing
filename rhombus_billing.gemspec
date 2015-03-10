@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activemerchant"
   s.add_dependency "credit_card_validations"
+  s.add_dependency "rails"
 end
