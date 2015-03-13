@@ -15,8 +15,9 @@
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
+    <%= f.association :domain %>
     <%= f.input :name %>
-	<%= f.input :group %>
+	  <%= f.input :group %>
     <%= f.input :price %>
     <%= f.input :bill_frequency, input_html: { placeholder: '30 days' } %>
     <%= f.input :trial_days %>

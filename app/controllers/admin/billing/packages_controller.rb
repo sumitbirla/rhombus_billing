@@ -1,7 +1,7 @@
 class Admin::Billing::PackagesController < Admin::BaseController
   
   def index
-    @packages = Package.page(params[:page])
+    @packages = Package.where(domain_id: cookies[:domain_id]).page(params[:page])
   end
 
   def new
