@@ -1,7 +1,7 @@
 class Admin::Billing::ServiceTypesController < Admin::BaseController
   
   def index
-    @service_types = ServiceType.page(params[:page]).order('sort')
+    @service_types = ServiceType.where(domain_id: cookies[:domain_id]).page(params[:page]).order(:sort)
   end
 
   def new
@@ -11,6 +11,7 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
 
   def create
     @service_type = ServiceType.new(service_type_params)
+    @service_type.domain_id = cookies[:domain_id]
     
     if @service_type.save
       redirect_to action: 'index', notice: 'Service Type was successfully created.'
@@ -47,7 +48,7 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
   private
   
     def service_type_params
-      params.require(:service_type).permit(:name, :code, :quantity_type, :bill_frequency, :add_on, :sort)
+      params.require(:service_type).permit!
     end
   
 end

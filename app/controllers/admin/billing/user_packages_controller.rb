@@ -1,7 +1,12 @@
 class Admin::Billing::UserPackagesController < Admin::BaseController
 
   def index
-    @user_packages = UserPackage.where(recurr_status: 'A').includes(:package, :user).page(params[:page]).order(:recurr_date)
+    @user_packages = UserPackage.joins(:package)
+                                .where("bill_packages.domain_id = #{cookies[:domain_id]}")
+                                .where(recurr_status: 'A')
+                                .includes(:package, :user)
+                                .page(params[:page])
+                                .order(:recurr_date)
   end
 
   def new

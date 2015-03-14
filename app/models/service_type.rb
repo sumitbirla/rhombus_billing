@@ -14,5 +14,6 @@
 class ServiceType < ActiveRecord::Base
   self.table_name = 'bill_service_types'
   
+  belongs_to :domain
   validates_presence_of :name, :quantity_type, :sort
 end
