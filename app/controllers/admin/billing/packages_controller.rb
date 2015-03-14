@@ -11,6 +11,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
 
   def create
     @package = Package.new(package_params)
+    @package.domain_id = cookies[:domain_id]
     
     if @package.save
       redirect_to action: 'index', notice: 'Package was successfully created.'
@@ -52,8 +53,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
   private
   
     def package_params
-      params.require(:package).permit(:name, :group, :description, :price, :hidden, :sort, :trial_days, :bill_frequency,
-                                      :image_path, :active)
+      params.require(:package).permit!
     end
   
 end

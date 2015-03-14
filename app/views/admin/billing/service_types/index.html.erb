@@ -1,5 +1,5 @@
 <h2><%= link_to "new service type", new_admin_billing_service_type_path, class: 'btn btn-sm btn-default pull-right' %>
-	Service Types</h2>
+	<%= current_domain %> Service Types</h2>
 
 <%= will_paginate @service_types %>
 <table class="table table-striped table-condensed">

@@ -21,7 +21,7 @@
   <% @package.details.each do |pd| %>
   <tr>
     <td><%= pd.service_type.name %></td>
-	<td><%= pd.service_type.code %></td>
+	  <td><%= pd.service_type.code %></td>
     <td class="calign"><%= pd.quantity %></td>
     <td class="calign">
       <% if pd.trial_days && pd.trial_days > 0 %>
@@ -36,7 +36,7 @@
 		<% else %>
 			<span class="light">- included -</span>
 		<% end %>
-	</td>
+	  </td>
     <td><%= tick pd.hidden %></td>
     <td>
       <%= link_to "edit", edit_admin_billing_package_detail_path(pd) %> &nbsp;

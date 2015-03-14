@@ -10,7 +10,7 @@
     <%= render 'admin/shared/error_messages', object: f.object %>
 
     <%= f.input :package_id, as: :hidden %>
-    <%= f.association :service_type %>
+    <%= f.association :service_type, collection: ServiceType.where(domain_id: current_domain.id) %>
     <%= f.input :quantity %>
     <%= f.input :trial_days %>
     <%= f.input :rate %>
