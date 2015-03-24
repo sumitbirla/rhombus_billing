@@ -26,4 +26,8 @@ class Package < ActiveRecord::Base
   def to_s
     name
   end
+  
+  def get_detail(service_code)
+    details.find { |x| x.service_type.code == service_code }
+  end
 end
