@@ -65,7 +65,7 @@ end %>
         function BrowseServer()
         {
             // You can use the "CKFinder" class to render CKFinder in a page:
-            var finder = new CKFinder( { connectorPath : '<%= Cache.setting(:system, 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
+            var finder = new CKFinder( { connectorPath : '<%= Cache.setting(Rails.configuration.domain_id, :system, 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
             //finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
             finder.selectActionFunction = SetFileField;
             finder.popup();
