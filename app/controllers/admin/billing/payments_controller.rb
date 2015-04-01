@@ -1,8 +1,13 @@
 class Admin::Billing::PaymentsController < Admin::BaseController
   
   def index
-    @payments = Payment.page(params[:page]).order('created_at DESC')
+    @payments = Payment.order(created_at: :desc)
     @payments = @payments.where(user_id: params[:uid]) unless params[:uid].nil?
+    @payments = @payments.where("created_at > '#{params[:start_date]}'") unless params[:start_date].blank?
+    @payments = @payments.where("created_at < '#{params[:end_date]}'") unless params[:end_date].blank?
+    
+    @balance = @payments.sum(:amount)
+    @payments = @payments.page(params[:page])
   end
 
   def new
