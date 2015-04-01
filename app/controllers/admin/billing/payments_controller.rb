@@ -6,11 +6,12 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     @payments = @payments.where("created_at > '#{params[:start_date]}'") unless params[:start_date].blank?
     @payments = @payments.where("created_at < '#{params[:end_date]}'") unless params[:end_date].blank?
     
-    @balance = @payments.sum(:amount)
-    
     respond_to do |format|
-      format.html { @payments = @payments.page(params[:page]) }
-      format.csv { send_data Payment.to_csv }
+      format.html do
+        @balance = @payments.sum(:amount) 
+        @payments = @payments.page(params[:page])
+      end
+      format.csv { send_data @payments.to_csv }
     end
     
   end

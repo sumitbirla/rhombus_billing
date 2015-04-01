@@ -66,7 +66,7 @@
 </table>
 
 <p>
-  <%= link_to 'CSV', admin_billing_payments_path(format: :csv) %> | 
+  <%= link_to 'CSV', admin_billing_payments_path(format: :csv, uid: params[:uid], start_date: params[:start_date], end_date: params[:end_date]) %> | 
   <b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %>
 </p>
 
