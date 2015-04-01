@@ -65,7 +65,10 @@
   <% end %>
 </table>
 
-<p><b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %></p>
+<p>
+  <%= link_to 'CSV', admin_billing_payments_path(format: :csv) %> | 
+  <b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %>
+</p>
 
 
 <% content_for :title do %>
