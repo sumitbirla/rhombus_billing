@@ -40,10 +40,12 @@
     <td><%= pmt.id %></td>
     <td><%= systime pmt.created_at %></td>
     <td>
-      <% if pmt.user_id %>
-          <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
+      <% if pmt.user_id == 0 %>
+        - system -
+      <% elsif pmt.user.nil? %>
+        - guest -
       <% else %>
-          - guest -
+          <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
       <% end %>
     </td>
     <td>
@@ -56,6 +58,8 @@
       <% elsif pmt.payable_type == "shipment" %>
           <% shipment = Shipment.find(pmt.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
+      <% elsif pmt.payable_type == "pbx_cdr" %>
+          <%= link_to "Phone Call", admin_pbx_cdr_path(0, uuid: pmt.payable_id) %>
       <% end %>
     </td>
     <td><%= pmt.cc_number %></td>
