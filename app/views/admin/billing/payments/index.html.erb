@@ -30,6 +30,7 @@
     <th>ID</th>
     <th>Date</th>
     <th>User</th>
+    <th>Customer</th>
     <th>Item</th>
     <th>Method</th>
     <th>Memo</th>
@@ -48,6 +49,7 @@
           <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
       <% end %>
     </td>
+    <td><%= tick pmt.customer %></td>
     <td>
       <% if pmt.payable_type == "order" %>
           <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
