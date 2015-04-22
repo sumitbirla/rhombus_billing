@@ -58,7 +58,7 @@
       <% elsif pmt.payable_type == "user_service" %>
           <%= UserService.find(pmt.payable_id).service_type.name %>
       <% elsif pmt.payable_type == "shipment" %>
-          <% shipment = Shipment.find(pmt.payable_id)%>
+          <% shipment = Shipment.find_by(id: pmt.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
       <% elsif pmt.payable_type == "pbx_cdr" %>
           <%= link_to "Phone Call", admin_pbx_cdr_path(0, uuid: pmt.payable_id) %>
