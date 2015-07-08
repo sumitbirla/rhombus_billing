@@ -60,6 +60,7 @@ class PaymentMethod < ActiveRecord::Base
     self.iv = Base64.encode64(cipher.random_iv)
     self.encrypted_cc = Base64.encode64(cipher.update(number) + cipher.final)
     
+    self.card_brand = CreditCardValidations::Detector.new(number).brand
     self.card_display = 'x-' + number[-4, 4]
   end
   

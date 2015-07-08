@@ -15,7 +15,7 @@
   </tr>
   <% @payment_methods.each do |pm| %>
       <tr>
-        <td><%= link_to pm.cardholder_name, admin_billing_payment_method_path(pm) %></td>
+        <td><%= link_to pm.cardholder_name, admin_system_user_path(pm.user_id) %></td>
         <td><%= pm.card_display %></td>
         <td><%= pm.card_brand.titlecase %></td>
         <td><%= pm.expiration_month %> / <%= pm.expiration_year %></td>
@@ -27,7 +27,6 @@
          <% end %></td>
         <td><%= tick pm.default %></td>
         <td>
-          <%= link_to "edit", edit_admin_billing_payment_method_path(pm) %> &nbsp;
           <%= link_to "delete",
                       { action: "destroy", id: pm.id },
                       method: :delete,

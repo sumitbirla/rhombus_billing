@@ -11,8 +11,6 @@ class Account::PaymentMethodsController < Account::BaseController
   def create
     @payment_method = PaymentMethod.new(payment_method_params)
     @payment_method.user_id = session[:user_id]
-
-    return render 'new' unless @payment_method.valid?
     @payment_method.status = 'A'
     
     if @payment_method.save

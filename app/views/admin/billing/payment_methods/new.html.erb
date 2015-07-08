@@ -1,33 +1,36 @@
-<h2><%= @payment_method.card_display %></h2>
+<h2>Credit Card</h2>
 <hr/>
 
-<%= simple_form_for([:admin, :billing, @payment_method], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :billing, @payment_method], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <%= f.association :user %>
-            <%= f.input :card_brand, collection: ['visa', 'mastercard', 'discover', 'american_express', "diners_club", 'jcb'] %>
-            <%= f.input :number, placeholder: '####-####-####-####', label: 'Card Number' %>
-            <%= f.input :cardholder_name %>
-            <%= f.input :expiration_month, collection: (1..12) %>
-            <%= f.input :expiration_year, collection: (2012..2022) %>
+            <%= f.input :number, placeholder: '####-####-####-####', label: 'Number' %>
+            <%= f.input :cardholder_name, label: "Cardholder" %>
+            <div class="form-group string optional payment_method_billing_street1">
+              <label class="string optional control-label col-sm-3" for="payment_method_billing_street1">Expiration</label>
+              <div class="col-sm-9">
+                <%= f.select :expiration_month, (1..12) %>
+                <%= f.select :expiration_year, (2015..2025) %>
+              </div>
+            </div>
+            <%= f.input :default %>
         </div>
 
         <div class="col-md-6">
-            <%= f.input :default %>
             <%= f.input :billing_street1 %>
             <%= f.input :billing_street2 %>
             <%= f.input :billing_city %>
             <%= f.input :billing_state %>
             <%= f.input :billing_zip %>
             <%= f.input :billing_country %>
-
         </div>
     </div>
 
-    <div class="form-actions">
+    <div class="col-md-12">
       <%= f.button :submit %>
     </div>
 <% end %>
