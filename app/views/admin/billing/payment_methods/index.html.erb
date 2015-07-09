@@ -10,6 +10,8 @@
     <th>Brand</th>
     <th>Expiration</th>
     <th>Last Transaction</th>
+    <th>Result</th>
+    <th>Attempts</th>
     <th>Default ?</th>
     <th>&nbsp;</th>
   </tr>
@@ -18,13 +20,16 @@
         <td><%= link_to pm.cardholder_name, admin_system_user_path(pm.user_id) %></td>
         <td><%= pm.card_display %></td>
         <td><%= pm.card_brand.titlecase %></td>
-        <td><%= pm.expiration_month %> / <%= pm.expiration_year %></td>
+        <td><%= pm.expiration_month %>/<%= pm.expiration_year %></td>
         <td>
          <% if pm.last_transaction_date %>
           <%= systime pm.last_transaction_date %>
          <% else %>
            -
-         <% end %></td>
+         <% end %>
+        </td>
+        <td><%= pm.last_transaction_result %></td>
+        <td><%= pm.bill_attempts %></td>
         <td><%= tick pm.default %></td>
         <td>
           <%= link_to "delete",
