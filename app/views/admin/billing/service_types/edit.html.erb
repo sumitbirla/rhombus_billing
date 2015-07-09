@@ -1,13 +1,9 @@
-<style>
-    .form-inline .control-label { width: 120px; }
-</style>
-
 <h2>
 	<%= @service_type.name %>
 </h2>
 <hr/>
 
-<%= simple_form_for([:admin, :billing, @service_type], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :billing, @service_type], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
   <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -18,19 +14,15 @@
   <%= f.input :add_on %>
   <%= f.input :sort %>
   
-  <div class="form-actions">
-  	<%= f.button :submit %>
-  </div>
+  <%= f.button :submit %>
+
 <% end %>
 
 
 <% content_for :title do %>
-Billing: <%= @service_type.name %>
+  Billing: <%= @service_type.name %>
 <% end %>
 
-<% content_for :menu do
-    render "admin/shared/billing_menu"
-end %>
 
 <% content_for :breadcrumbs do %>
 	<li><a href="#">Billing</a></li>

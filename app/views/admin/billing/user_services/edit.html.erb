@@ -6,7 +6,7 @@
 <hr/>
 
 
-<%= simple_form_for([:admin, :billing, @user_service], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :billing, @user_service], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -16,9 +16,8 @@
     <%= f.input :available_quantity %>
     <%= f.input :rate %>
 
-    <div class="form-actions">
-      <%= f.button :submit %>
-    </div>
+    <%= f.button :submit %>
+
 <% end %>
 
 
@@ -27,10 +26,6 @@
     Subscription #<%= @user_service.user_package_id %>
 <% end %>
 
-
-<% content_for :menu do
-  render "admin/shared/billing_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>
