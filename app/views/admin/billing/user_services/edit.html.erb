@@ -6,7 +6,7 @@
 <hr/>
 
 
-<%= simple_form_for [:admin, :billing, @user_service], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :billing, @user_service] do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 

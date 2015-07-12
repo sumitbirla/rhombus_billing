@@ -1,11 +1,8 @@
-<style>
-    .form-inline .control-label { width: 120px; }
-</style>
 <h2><%= @package_detail.package.name %></h2>
 <hr/>
 
 
-<%= simple_form_for([:admin, :billing, @package_detail], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :billing, @package_detail] do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -16,14 +13,13 @@
     <%= f.input :rate %>
     <%= f.input :hidden %>
 
-    <div class="form-actions">
-      <%= f.button :submit %>
-    </div>
+    <%= f.button :submit %>
+
 <% end %>
 
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
     <%= @package_detail.package.name %>
 <% end %>
 

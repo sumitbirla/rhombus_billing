@@ -1,13 +1,13 @@
 <h2>User Subscription #<%= @user_package.id %></h2>
 
 <% unless @user_package.id.nil? %>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
       <li class="active"><a href="#">Summary</a></li>
       <li><%= link_to "Services", services_admin_billing_user_package_path(@user_package) %></li>
     </ul>
 <% end %>
 
-<%= simple_form_for [:admin, :billing, @user_package], html: { class: 'form-horizontal' }, wrapper: :horizontal_form do |f| %>
+<%= simple_form_for [:admin, :billing, @user_package] do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -15,7 +15,7 @@
     <%= f.association :package %>
     <%= f.input :amount %>
     <%= f.input :rate %>
-    <%= f.input :recurr_date %>
+    <%= f.input :recurr_date, as: :datepicker %>
     <%= f.input :recurr_status, collection: ['A', 'P', 'D', 'I'] %>
     <%= f.input :bill_attempts %>
 
