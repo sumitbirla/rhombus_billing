@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: user_packages
+# Table name: bill_user_packages
 #
 #  id                        :integer          not null, primary key
 #  user_id                   :integer          not null
