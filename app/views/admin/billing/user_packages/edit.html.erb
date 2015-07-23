@@ -33,6 +33,10 @@
 <% content_for :breadcrumbs do %>
     <li><a href="#">Billing</a></li>
     <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
-    <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
-    <li class="active">edit</li>
+    <% if @user_package.persisted? %>
+      <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
+      <li class="active">edit</li>
+    <% else %>
+      <li>new</li>
+    <% end %>
 <% end %>
