@@ -26,6 +26,7 @@
 #  updated_at              :datetime
 #
 
+require 'activemerchant'
 require 'credit_card_validations'
 require 'openssl'
 require 'base64'
@@ -53,7 +54,7 @@ class PaymentMethod < ActiveRecord::Base
   end
   
   def encrypt_number  
-    cipher = OpenSSL::Cipher::AES256.new(:CBC)
+    cipher = OpenSSL::Cipher::AES.new(256, :CBC)
     cipher.encrypt
     cipher.key = IO.binread('/var/lib/rhombus.bin')
     
@@ -64,8 +65,63 @@ class PaymentMethod < ActiveRecord::Base
     self.card_display = 'x-' + number[-4, 4]
   end
   
+  def decrypt_number
+    decipher = OpenSSL::Cipher::AES.new(256, :CBC)
+    decipher.decrypt
+    decipher.key = IO.binread('/var/lib/rhombus.bin')
+    decipher.iv = Base64.decode64(iv)
+    self.number = decipher.update(Base64.decode64(encrypted_cc)) + decipher.final
+  end
+  
   def to_s
     card_brand + ' ' + card_display
   end
   
+  
+  def charge(amount, cvv2 = nil)
+    # charge the card
+    gateway = ActiveMerchant::Billing::StripeGateway.new(
+      :login => Cache.setting(Rails.configuration.domain_id, :store, 'Stripe Secret Key')
+    )
+    
+    credit_card = ActiveMerchant::Billing::CreditCard.new(
+      :number             => decrypt_number,
+      :month              => expiration_month,
+      :year               => expiration_year,
+      :first_name         => cardholder_name.split[0],
+      :last_name          => cardholder_name.split[1]
+    )
+    
+    credit_card.verification_value = cvv2 unless cvv2.blank?
+      
+    purchase_options = {
+      :billing_address => {
+        :name     => cardholder_name,
+        :address1 => billing_street1,
+        :address2 => billing_street2,
+        :city     => billing_city,
+        :state    => billing_state,
+        :zip      => billing_zip,
+        :country  => billing_country
+    }}
+    
+    # process payment
+    response = gateway.purchase((amount * 100).to_i, credit_card, purchase_options)
+    
+    # record status
+    if response.success?
+      update(bill_attempts: 0, 
+             last_transaction_date: DateTime.now, 
+             last_transaction_result: response.message, 
+             status: "A")
+    else
+      update(bill_attempts: bill_attempts + 1, 
+             last_transaction_date: DateTime.now, 
+             last_transaction_result: response.message, 
+             status: "D")
+    end
+    
+    response  
+  end
+    
 end
