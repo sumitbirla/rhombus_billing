@@ -1,10 +1,12 @@
 # == Schema Information
 #
-# Table name: packages
+# Table name: bill_packages
 #
 #  id             :integer          not null, primary key
+#  domain_id      :integer          not null
 #  name           :string(255)      not null
-#  description    :text             not null
+#  group          :string(255)
+#  description    :text(65535)      not null
 #  price          :decimal(10, 2)   not null
 #  trial_days     :integer
 #  bill_frequency :integer          not null

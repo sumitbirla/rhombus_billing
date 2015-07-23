@@ -1,17 +1,25 @@
 # == Schema Information
 #
-# Table name: payments
+# Table name: bill_payments
 #
-#  id                :integer          not null, primary key
-#  payable_id        :integer
-#  payable_type      :string(255)      default("")
-#  user_id           :integer          not null
-#  payment_method_id :integer
-#  amount            :decimal(10, 2)   not null
-#  transaction_id    :string(255)
-#  memo              :string(255)
-#  created_at        :datetime
-#  updated_at        :datetime
+#  id                  :integer          not null, primary key
+#  payable_id          :string(255)
+#  payable_type        :string(255)      default("")
+#  user_id             :integer
+#  customer            :boolean          default(TRUE), not null
+#  payment_method_id   :integer
+#  amount              :decimal(10, 2)   not null
+#  transaction_id      :string(255)
+#  cc                  :boolean          default(FALSE), not null
+#  cc_type             :string(255)
+#  cc_cardholder_name  :string(255)
+#  cc_number           :string(255)
+#  cc_expiration_month :integer
+#  cc_expiration_year  :integer
+#  cc_code             :string(255)
+#  memo                :string(255)
+#  created_at          :datetime
+#  updated_at          :datetime
 #
 
 require 'activemerchant'
