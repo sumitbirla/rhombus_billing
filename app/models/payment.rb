@@ -42,9 +42,10 @@ class Payment < ActiveRecord::Base
   
   def self.to_csv
     CSV.generate do |csv|
-      csv << column_names
+      cols = column_names - ['payable_id', 'payable_type', 'customer', 'payment_method_id']
+      csv << cols
       all.each do |pmt|
-        csv << pmt.attributes.values_at(*column_names)
+        csv << pmt.attributes.values_at(*cols)
       end
     end
   end

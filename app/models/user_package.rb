@@ -22,4 +22,9 @@ class UserPackage < ActiveRecord::Base
   belongs_to :package
   has_many :services, class_name: 'UserService', dependent: :destroy
   has_many :payments, as: :payable
+  
+  def get_service(code)
+    service_type = ServiceType.find_by(code: code)
+    services.find { |x| x.service_type_id == service_type.id }
+  end
 end
