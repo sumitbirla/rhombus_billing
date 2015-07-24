@@ -22,7 +22,7 @@ class Package < ActiveRecord::Base
   self.table_name = 'bill_packages'
   
   belongs_to :domain
-  has_many :details, class_name: 'PackageDetail'
+  has_many :details, class_name: 'PackageDetail', dependent: :destroy
   validates_presence_of :name, :price, :bill_frequency
 
   def to_s
