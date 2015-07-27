@@ -23,14 +23,24 @@ class Admin::Billing::PaymentMethodsController < Admin::BaseController
       render 'new'
     end
   end
+  
+  def destroy
+    pm = PaymentMethod.find(params[:id])
+    pm.destroy
+    
+    # if there is only one remaining payment_method, make it the default
+    if PaymentMethod.where(user_id: pm.user_id).count == 1
+      PaymentMethod.where(user_id: pm_user_id).update_all(default: true)
+    end
+    
+    redirect_to action: 'index'
+  end
 
 
   private
 
     def payment_method_params
-      params.require(:payment_method).permit(:user_id, :default, :card_brand, :cardholder_name, :number, :expiration_month,
-                    :expiration_year, :billing_street1, :billing_street2, :billing_city, :billing_state, :billing_zip,
-                    :billing_country, :bill_attempts, :status)
+      params.require(:payment_method).permit!
     end
 
 end
