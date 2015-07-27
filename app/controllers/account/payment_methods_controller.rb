@@ -24,6 +24,12 @@ class Account::PaymentMethodsController < Account::BaseController
   def destroy
     @payment_method = PaymentMethod.find_by(id: params[:id], user_id: session[:user_id])
     @payment_method.destroy
+    
+    # if there is only one remaining payment_method, make it the default
+    if PaymentMethod.where(user_id: session[:user_id]).count == 1
+      PaymentMethod.where(user_id: session[:user_id]).update_all(default: true)
+    end
+    
     redirect_to action: 'index'
   end
 
