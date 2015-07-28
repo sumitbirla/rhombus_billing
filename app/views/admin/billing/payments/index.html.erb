@@ -38,7 +38,7 @@
   </tr>
   <% @payments.order('created_at DESC').each do |pmt| %>
   <tr>
-    <td><%= pmt.id %></td>
+    <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
     <td><%= systime pmt.created_at %></td>
     <td>
       <% if pmt.user_id == 0 %>

@@ -1,0 +1,76 @@
+<h2>Payment ID: <%= @payment.id %></h2>
+
+<table class="table table-condensed table-bordered summary">
+  <tr>
+    <td width="120">User</td>
+    <td>
+      <% unless @payment.user.nil? %>
+        <%= link_to @payment.user, admin_system_user_path(@payment.user, q: :payments) %>
+      <% else %>
+        <span class="light">n/a</span>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>Timestamp</td>
+    <td><%= systime @payment.created_at %></td>
+  </tr>
+  <tr>
+    <td>Amount</td>
+    <td><%= number_to_currency @payment.amount %></td>
+  </tr>
+  <tr>
+    <td>REF:</td>
+    <td>
+      <% if @payment.payable_type == "order" %>
+          <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
+      <% elsif @payment.payable_type == "user_package" %>
+          <%= link_to "Package: " + UserPackage.find(@payment.payable_id).package.name, admin_billing_user_package_path(@payment.payable_id) %>
+      <% elsif @payment.payable_type == "user_service" %>
+          <%= UserService.find(@payment.payable_id).service_type.name %>
+      <% elsif @payment.payable_type == "shipment" %>
+          <% shipment = Shipment.find_by(id: @payment.payable_id)%>
+          <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
+      <% elsif @payment.payable_type == "pbx_cdr" %>
+          <%= link_to "Phone Call", admin_pbx_cdr_path(0, uuid: @payment.payable_id) %>
+      <% end %>
+    </td>
+  </tr>
+  <% unless @payment.transaction_id.blank? %>
+  <tr>
+    <td>Transaction ID:</td>
+    <td><%= @payment.transaction_id %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <td>Memo</td>
+    <td><%= @payment.memo %></td>
+  </tr>
+  <% unless @payment.payment_method.nil? %>
+  <tr>
+    <td>Payment Method</td>
+    <td><%= @payment.payment_method %></td>
+  </tr>
+  <% end %>
+</table>
+
+
+<% if @payment.amount > 0.0 %>
+  <form method="get" action="/admin/billing/payments/<%= @payment.id %>/refund">
+    <b>Amount:</b> <input type="number" name="amount" value="<%= @payment.amount %>"> &nbsp; &nbsp; 
+    <b>Memo:</b> <input type="text" name"memo"> &nbsp; &nbsp; 
+    <button class="btn btn-sm btn-danger">Refund</button>
+  </form>
+<% end %>
+
+
+<% content_for :title do %>
+    Payment ID: <%= @payment.id %>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Payments", admin_billing_payments_path %></li>
+  <li class="active">Payment ID: <%= @payment.id %></li>
+<% end %>

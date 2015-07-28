@@ -1,10 +1,7 @@
-<style>
-    .form-inline .control-label { width: 120px; }
-</style>
 <h2>Payment Details</h2>
 
 
-<%= simple_form_for([:admin, :billing, @payment], html: { class: 'form-inline' }) do |f| %>
+<%= simple_form_for [:admin, :billing, @payment] do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
 
@@ -35,11 +32,6 @@
 <% content_for :title do %>
     New Payment
 <% end %>
-
-
-<% content_for :menu do
-  render "admin/shared/billing_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>

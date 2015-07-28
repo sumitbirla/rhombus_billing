@@ -15,6 +15,10 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     end
     
   end
+  
+  def show
+    @payment = Payment.find(params[:id])
+  end
 
   def new
     @payment = Payment.new memo: 'New Payment'

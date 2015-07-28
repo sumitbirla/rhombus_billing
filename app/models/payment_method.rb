@@ -45,6 +45,10 @@ class PaymentMethod < ActiveRecord::Base
   validates :number, presence: true, credit_card_number: true
   validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
 
+  def to_s
+    brand + " " + card_display + " " + cardholder_name
+  end
+
   def self.CARD_BRANDS
     ['Visa', 'MasterCard', 'Discover', 'American Express' ]
   end
