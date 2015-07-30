@@ -38,17 +38,17 @@
       <tr>
         <th>Service Type</th>
         <th>Included</th>
-        <th>Available</th>
+        <th>Used</th>
         <th>Rate</th>
       </tr>
       <% @user_package.services.each do |svc| %>
           <tr>
             <td><%= svc.service_type.name %></td>
-            <td><%= svc.include_quantity %></td>
-            <td><%= svc.available_quantity %></td>
+            <td><%= svc.quantity %></td>
+            <td><%= svc.used %></td>
             <td>
               <% if svc.rate %>
-                  <%= number_to_currency(svc.rate) %>
+                  <%= number_to_currency(svc.rate) %> / <%= svc.service_type.bill_frequency.downcase%>
               <% else %>
                   - included -
               <% end %>

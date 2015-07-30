@@ -63,7 +63,7 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
   private
 
     def user_package_params
-      params.require(:user_package).permit(:user_id, :package_id, :amount, :rate, :recurr_date, :recurr_status, :bill_attempts)
+      params.require(:user_package).permit!
     end
 
 end

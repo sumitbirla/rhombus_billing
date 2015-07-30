@@ -43,7 +43,7 @@ class Admin::Billing::PackageDetailsController < Admin::BaseController
   private
 
     def package_detail_params
-      params.require(:package_detail).permit(:package_id, :service_type_id, :quantity, :trial_days, :rate, :hidden)
+      params.require(:package_detail).permit!
     end
 
 end

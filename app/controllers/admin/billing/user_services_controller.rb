@@ -39,7 +39,7 @@ class Admin::Billing::UserServicesController < Admin::BaseController
   private
 
     def user_service_params
-      params.require(:user_service).permit(:user_package_id, :service_type_id, :include_quantity, :available_quantity, :rate)
+      params.require(:user_service).permit!
     end
 
 end

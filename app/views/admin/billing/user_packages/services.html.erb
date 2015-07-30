@@ -12,15 +12,15 @@
   <tr>
     <th>Service Type</th>
     <th>Included Quantity</th>
-    <th>Available Quantity</th>
+    <th>Used Quantity</th>
     <th>Rate</th>
     <th></th>
   </tr>
   <% @user_package.services.each do |svc| %>
       <tr>
         <td><%= svc.service_type.name %></td>
-        <td><%= svc.include_quantity %></td>
-        <td><%= svc.available_quantity %></td>
+        <td><%= svc.quantity %></td>
+        <td><%= svc.used %></td>
         <td>
           <% if svc.rate %>
             <%= number_to_currency(svc.rate) %>
