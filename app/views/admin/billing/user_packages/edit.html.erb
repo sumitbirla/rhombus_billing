@@ -1,25 +1,51 @@
-<h2>User Subscription #<%= @user_package.id %></h2>
+<h2>[<%= @user_package.id %>] <%= @user_package.user %></h2>
+<hr>
 
-<% unless @user_package.id.nil? %>
-    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
-      <li class="active"><a href="#">Summary</a></li>
-      <li><%= link_to "Services", services_admin_billing_user_package_path(@user_package) %></li>
-    </ul>
-<% end %>
+
+<%= render 'admin/shared/error_messages', object: @user_package %>
 
 <%= simple_form_for [:admin, :billing, @user_package] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
-
-    <%= f.association :user %>
-    <%= f.association :package %>
-    <%= f.input :amount %>
-    <%= f.input :rate %>
-    <%= f.input :recurr_date, as: :datepicker %>
-    <%= f.input :recurr_status, collection: ['A', 'P', 'D', 'I'] %>
-    <%= f.input :bill_attempts %>
-
-    <%= f.button :submit %>
+  <div class="row">
+    <div class="col-md-6">
+      <%= f.association :user %>
+      <%= f.association :package %>
+      <%= f.input :amount %>
+      <%= f.input :rate %>
+    </div>
+    <div class="col-md-6">
+      <%= f.input :recurr_date, as: :datepicker %>
+      <%= f.input :recurr_status, collection: ['A', 'P', 'D', 'I'] %>
+      <%= f.input :bill_attempts %>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-condensed table-striped">
+        <tr>
+          <th>Code</th>
+          <th>Service</th>
+          <th>Included</th>
+          <th>Used</th>
+          <th>Rate</th>
+        </tr>
+        
+        <%= f.fields_for :services do |sf| %>
+          <% svc = @user_package.services[sf.index] %>
+        <tr>
+          <td><%= svc.service_type.code %></td>
+          <td><%= svc.service_type.name %></td>
+          <td><%= sf.input_field :quantity %></td>
+          <td><%= sf.input_field :used %></td>
+          <td><%= sf.input_field :rate %> / <%= svc.service_type.bill_frequency %></td>
+        </tr>
+      <% end %>
+      </table>
+    
+      <%= f.button :submit %>
+    </div>
+  </div>
 <% end %>
 
 

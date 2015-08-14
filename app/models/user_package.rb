@@ -22,9 +22,23 @@ class UserPackage < ActiveRecord::Base
   belongs_to :package
   has_many :services, class_name: 'UserService', dependent: :destroy
   has_many :payments, as: :payable
+  accepts_nested_attributes_for :services
   
   def get_service(code)
     service_type = ServiceType.find_by(code: code)
     services.find { |x| x.service_type_id == service_type.id }
   end
+  
+  def total_price
+    total = rate
+    
+    services.each do |s|
+      if s.used > s.quantity
+        total += (s.used - s.quantity) * s.rate 
+      end
+    end
+    
+    total
+  end
+  
 end

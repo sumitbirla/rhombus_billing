@@ -17,4 +17,8 @@ class UserService < ActiveRecord::Base
   belongs_to :user_package
   belongs_to :service_type
   has_many :items, class_name: 'UserServiceItem', dependent: :destroy
+  
+  def overage
+    (used > quantity) ?  used-quantity : 0
+  end
 end
