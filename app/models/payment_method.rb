@@ -41,6 +41,7 @@ class PaymentMethod < ActiveRecord::Base
   
   belongs_to :user
   has_many :payments
+  has_many :cc_transactions
   
   validates :number, presence: true, credit_card_number: true
   validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
@@ -111,6 +112,14 @@ class PaymentMethod < ActiveRecord::Base
     
     # process payment
     response = gateway.purchase((amount * 100).to_i, credit_card, purchase_options)
+    CcTransaction.create(
+      payment_method_id: id,
+      gateway: "stripe",
+      action: "purchase",
+      amount: amount,
+      result: (response.success? ? "OK" : "FAIL"),
+      data: res.to_yaml
+    )
     
     # record status
     if response.success?
