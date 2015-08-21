@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
 
   namespace :admin do
+  namespace :billing do
+    get 'cc_transactions/index'
+    end
+  end
+
+  namespace :admin do
     
     namespace :billing do
       resources :service_types

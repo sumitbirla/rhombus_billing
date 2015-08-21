@@ -30,7 +30,7 @@
     <th>ID</th>
     <th>Date</th>
     <th>User</th>
-    <th>Customer</th>
+    <th class="text-center">Cust.</th>
     <th>Item</th>
     <th>Method</th>
     <th>Memo</th>
@@ -49,22 +49,18 @@
           <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
       <% end %>
     </td>
-    <td><%= tick pmt.customer %></td>
+    <td class="text-center"><%= tick pmt.customer %></td>
     <td>
       <% if pmt.payable_type == "order" %>
           <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "user_package" %>
-          <%= link_to "Package: " + UserPackage.find(pmt.payable_id).package.name, admin_billing_user_package_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "user_service" %>
-          <%= UserService.find(pmt.payable_id).service_type.name %>
+      <% elsif pmt.payable_type == "UserPackage" %>
+          <%= link_to UserPackage.find(pmt.payable_id).package.name + " package [#{pmt.payable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
       <% elsif pmt.payable_type == "shipment" %>
           <% shipment = Shipment.find_by(id: pmt.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "pbx_cdr" %>
-          <%= link_to "Phone Call", admin_pbx_cdr_path(0, uuid: pmt.payable_id) %>
       <% end %>
     </td>
-    <td><%= pmt.cc_number %></td>
+    <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
     <td><%= pmt.memo %></td>
     <td><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
   </tr>
