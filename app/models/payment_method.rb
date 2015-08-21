@@ -118,7 +118,7 @@ class PaymentMethod < ActiveRecord::Base
       action: "purchase",
       amount: amount,
       result: (response.success? ? "OK" : "FAIL"),
-      data: res.to_yaml
+      data: response.to_yaml
     )
     
     # record status
