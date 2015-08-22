@@ -58,7 +58,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
 
     if @payment.update(payment_params)
       flash[:notice] =  'Payment was successfully updated.'
-       redirect_to action: 'index'
+      redirect_to action: 'index'
     else
       render 'edit'
     end

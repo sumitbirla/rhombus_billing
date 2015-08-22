@@ -47,7 +47,7 @@ class PaymentMethod < ActiveRecord::Base
   validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
 
   def to_s
-    brand + " " + card_display + " " + cardholder_name
+    (cardholder_name + " &middot; " + card_brand.upcase + " " + card_display).html_safe
   end
 
   def self.CARD_BRANDS
@@ -77,11 +77,6 @@ class PaymentMethod < ActiveRecord::Base
     decipher.iv = Base64.decode64(iv)
     self.number = decipher.update(Base64.decode64(encrypted_cc)) + decipher.final
   end
-  
-  def to_s
-    card_brand + ' ' + card_display
-  end
-  
   
   def charge(amount, cvv2 = nil)
     # charge the card

@@ -1,6 +1,7 @@
             <li class="<%= 'active' if request.original_url.include? 'admin/billing' %>">
               <a href="#"><i class="fa fa-money fa-fw"></i> Billing <span class="fa arrow"></span></a>
               <ul class="nav nav-second-level">
+                <li><%= link_to "CC Transactions", admin_billing_cc_transactions_path %></li>
                 <li><%= link_to "Packages", admin_billing_packages_path %></li>
                 <li><%= link_to "Payments", admin_billing_payments_path %></li>
                 <li><%= link_to "Payment methods", admin_billing_payment_methods_path %></li>

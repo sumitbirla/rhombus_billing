@@ -24,15 +24,11 @@
     <td>
       <% if @payment.payable_type == "order" %>
           <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
-      <% elsif @payment.payable_type == "user_package" %>
-          <%= link_to "Package: " + UserPackage.find(@payment.payable_id).package.name, admin_billing_user_package_path(@payment.payable_id) %>
-      <% elsif @payment.payable_type == "user_service" %>
-          <%= UserService.find(@payment.payable_id).service_type.name %>
+      <% elsif @payment.payable_type == "UserPackage" %>
+          <%= link_to UserPackage.find(@payment.payable_id).package.name + " package [#{@payment.payable_id}]", admin_billing_user_package_path(@payment.payable_id) %>
       <% elsif @payment.payable_type == "shipment" %>
           <% shipment = Shipment.find_by(id: @payment.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
-      <% elsif @payment.payable_type == "pbx_cdr" %>
-          <%= link_to "Phone Call", admin_pbx_cdr_path(0, uuid: @payment.payable_id) %>
       <% end %>
     </td>
   </tr>

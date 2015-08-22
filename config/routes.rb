@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   namespace :admin do
     
     namespace :billing do
+      resources :cc_transactions
       resources :service_types
       resources :packages do
         member do

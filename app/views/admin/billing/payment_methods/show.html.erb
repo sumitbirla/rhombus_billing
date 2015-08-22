@@ -72,12 +72,13 @@
       <% end %>
     </td>
     <td>
-      <% if payment.order_id %>
-        <%= link_to "Order ##{payment.order_id}", admin_store_order_path(payment.order_id) %>
-      <% elsif payment.user_package_id %>
-        <%= link_to "Package: " + payment.user_package.package.name, admin_billing_user_package_path(payment.user_package_id) %>
-      <% elsif payment.user_service_id %>
-        <%= payment.user_service.service_type.name %>
+      <% if payment.payable_type == "order" %>
+          <%= link_to "Order ##{payment.payable_id}", admin_store_order_path(payment.payable_id) %>
+      <% elsif payment.payable_type == "UserPackage" %>
+          <%= link_to UserPackage.find(payment.payable_id).package.name + " package [#{payment.payable_id}]", admin_billing_user_package_path(payment.payable_id) %>
+      <% elsif payment.payable_type == "shipment" %>
+          <% shipment = Shipment.find_by(id: payment.payable_id)%>
+          <%= link_to "Shipment #{shipment}", admin_store_shipment_path(payment.payable_id) %>
       <% end %>
     </td>
     <td><%= payment.memo %></td>
@@ -109,5 +110,5 @@ end %>
 <% content_for :breadcrumbs do %>
     <li><a href="#">Billing</a></li>
     <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
-    <li class="active"><%= @payment_method.name %></li>
+    <li class="active"><%= @payment_method %></li>
 <% end %>
