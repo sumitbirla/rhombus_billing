@@ -21,7 +21,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   end
 
   def new
-    @payment = Payment.new memo: 'New Payment'
+    @payment = Payment.new(user_id: params[:user_id], memo: 'New Payment')
     
     unless params[:order_id].nil?
       order = Order.find(params[:order_id])
