@@ -34,10 +34,15 @@ class Payment < ActiveRecord::Base
   belongs_to :payment_method
 
   validates_presence_of :payable_id, :payable_type, :amount
-  validates_presence_of :cc_cardholder_name, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :paid_with_card?
+  validates_presence_of :cc_cardholder_name, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :charge_manual_entry?
   
-  def paid_with_card?
-    cc
+  
+  def charge_manual_entry?
+    cc && payment_method_id.nil?
+  end
+  
+  def charge_saved_card?
+    cc && payment_method_id
   end
   
   def self.to_csv
@@ -53,17 +58,27 @@ class Payment < ActiveRecord::Base
   def charge_card
     return true unless cc
     
+    # saved credit card selected?
+    unless payment_method_id.nil?
+      pm = PaymentMethod.find(payment_method_id)
+      response = pm.charge(amount)
+      
+      errors.add :base, response.message
+      return response.success?
+    end
+    
+    # manual entry
     active_gw = Cache.setting('eCommerce', 'Payment Gateway')
     
     if active_gw == 'Authorize.net'
       gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-          :login => Cache.setting('eCommerce', 'Authorize.Net Login ID'),
-          :password => Cache.setting('eCommerce', 'Authorize.Net Transaction Key'),
+          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Login ID'),
+          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
           :test => false
       )
     elsif active_gw == 'Stripe'
       gateway = ActiveMerchant::Billing::StripeGateway.new(
-          :login => Cache.setting('eCommerce', 'Stripe Secret Key')
+          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
       )  
     else
       raise "Payment gateway is not set up."

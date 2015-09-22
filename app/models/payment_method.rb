@@ -81,7 +81,7 @@ class PaymentMethod < ActiveRecord::Base
   def charge(amount, cvv2 = nil)
     # charge the card
     gateway = ActiveMerchant::Billing::StripeGateway.new(
-      :login => Cache.setting(Rails.configuration.domain_id, :store, 'Stripe Secret Key')
+      :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
     )
     
     credit_card = ActiveMerchant::Billing::CreditCard.new(

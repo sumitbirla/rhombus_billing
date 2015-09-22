@@ -14,6 +14,8 @@
     
     <hr/>
     <%= f.input :cc, label: "Charge Card" %>
+    <%= f.input :payment_method_id, collection: PaymentMethod.where(user_id: @payment.user_id), prompt: "- manual entry -" %>
+    <span class="manual-entry">
     <%= f.input :cc_cardholder_name, label: "Card holder" %>
     <%= f.input :cc_number, label: "Number" %>
     <div class="form-group">
@@ -22,7 +24,7 @@
       <%= f.number_field :cc_expiration_year, in: 2015..2015, placeholder: 'YYYY' %>
     </div>
     <%= f.input :cc_code, label: "CVC", input_html: { max_length: 4, style: "width: 100px;", placeholder: 'XXX' } %>
-
+    </span>
     <%= f.button :submit %>
 
 <% end %>
@@ -42,5 +44,23 @@
 	<% else %>
 		<li class="active">new</li>
 	<% end %>
+<% end %>
+
+
+<% content_for :head do %>
+  <script>
+    $(document).ready(function() {
+      
+      $("#payment_payment_method_id").change(function() {
+        if ($(this).val() == "")
+          $(".manual-entry").show();
+        else
+          $(".manual-entry").hide();
+      });
+      
+      $("#payment_payment_method_id").trigger('change');
+      
+    });
+  </script>
 <% end %>
 
