@@ -13,6 +13,11 @@ class Account::PaymentMethodsController < Account::BaseController
     @payment_method.user_id = session[:user_id]
     @payment_method.status = 'A'
     
+    # if this is only one payment_method, make it the default
+    if PaymentMethod.where(user_id: session[:user_id]).count == 0
+      @payment_method.default = true
+    end
+    
     if @payment_method.save
       flash[:notice] = 'Payment Method was successfully created.'
       redirect_to action: 'index'

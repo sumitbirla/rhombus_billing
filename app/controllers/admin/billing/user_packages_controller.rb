@@ -42,7 +42,7 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
     @user_package = UserPackage.find(params[:id])
 
     if @user_package.update(user_package_params)
-      redirect_to action: 'index'
+      redirect_to action: 'show', id: params[:id]
     else
       render 'edit'
     end
