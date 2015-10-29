@@ -12,8 +12,9 @@
     <th>Expiration</th>
     <th>Last Transaction</th>
     <th>Result</th>
-    <th>Attempts</th>
-    <th>Default ?</th>
+    <th class="text-center">Attempts</th>
+    <th class="text-center">Default ?</th>
+    <th class="text-center">Status</th>
     <th>&nbsp;</th>
   </tr>
   <% @payment_methods.each do |pm| %>
@@ -31,8 +32,9 @@
          <% end %>
         </td>
         <td><%= pm.last_transaction_result %></td>
-        <td><%= pm.bill_attempts %></td>
-        <td><%= tick pm.default %></td>
+        <td class="text-center"><%= pm.bill_attempts %></td>
+        <td class="text-center"><%= tick pm.default %></td>
+        <td class="text-center"><%= pm.status %></td>
         <td>
           <%= link_to "delete",
                       { action: "destroy", id: pm.id },
