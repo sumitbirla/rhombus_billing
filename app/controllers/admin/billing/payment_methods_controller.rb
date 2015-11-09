@@ -9,7 +9,7 @@ class Admin::Billing::PaymentMethodsController < Admin::BaseController
   end
 
   def new
-    @payment_method = PaymentMethod.new
+    @payment_method = PaymentMethod.new(user_id: params[:user_id])
   end
 
   def create
