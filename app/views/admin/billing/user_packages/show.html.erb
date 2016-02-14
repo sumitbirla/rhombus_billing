@@ -17,7 +17,7 @@
         <td><%= @user_package.package.name %></td>
       </tr>
       <tr>
-        <td>Base Rate</td>
+        <td>Monthly Rate</td>
         <td><%= number_to_currency(@user_package.rate) %></td>
       </tr>
       <tr>
@@ -35,7 +35,7 @@
     <table class="table table-condensed table-bordered summary">
       <tr>
         <td>Base Rate</td>
-        <td><%= number_to_currency(@user_package.rate) %></td>
+        <td><%= number_to_currency(@user_package.package.rate) %></td>
       </tr>
       <tr>
         <td>With extras</td>
