@@ -25,8 +25,8 @@ class UserPackage < ActiveRecord::Base
   accepts_nested_attributes_for :services
   
   def get_service(code)
-    service_type = ServiceType.find_by(code: code)
-    services.find { |x| x.service_type_id == service_type.id }
+    code = ServiceType.find_by(code: code).id if code.is_a?(String)
+    services.find { |x| x.service_type_id == code }
   end
   
   def total_price
