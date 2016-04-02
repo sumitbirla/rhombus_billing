@@ -1,8 +1,8 @@
-Setting.create(section: 'store', key: 'Authorize.Net Login ID', value: 'xxxxx', value_type: 'string')
-Setting.create(section: 'store', key: 'Authorize.Net Transaction Key', value: 'xxxxx', value_type: 'string')
-Setting.create(section: 'store', key: 'PayPal API Username', value: 'xxxxxx', value_type: 'string')
-Setting.create(section: 'store', key: 'PayPal API Password', value: 'xxxxxx', value_type: 'string')
-Setting.create(section: 'store', key: 'PayPal Signature', value: 'xxxxxxxxxx', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'Authorize.Net Login ID', value: 'xxxxx', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'Authorize.Net Transaction Key', value: 'xxxxx', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'PayPal API Username', value: 'xxxxxx', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'PayPal API Password', value: 'xxxxxx', value_type: 'string')
+Setting.create(domain_id: 1, section: 'store', key: 'PayPal Signature', value: 'xxxxxxxxxx', value_type: 'string')
 
 Permission.create(section: 'billing', resource: 'admin', action: 'login')
 
