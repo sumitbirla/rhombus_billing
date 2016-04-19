@@ -62,6 +62,7 @@ class Payment < ActiveRecord::Base
     unless payment_method_id.nil?
       pm = PaymentMethod.find(payment_method_id)
       response = pm.charge(amount)
+      this.transaction_id = response.authorization
       
       errors.add :base, response.message
       return response.success?
@@ -110,6 +111,38 @@ class Payment < ActiveRecord::Base
     errors.add :base, response.message
     response.success?
     
+  end
+  
+  
+  def refund(amount)
+
+    gateway = ActiveMerchant::Billing::StripeGateway.new(
+      :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
+    )
+    
+    # process refund
+    response = gateway.refund((amount * 100).to_i, transaction_id)
+    CcTransaction.create(
+      payment_method_id: id,
+      gateway: "stripe",
+      action: "refund",
+      amount: amount,
+      result: (response.success? ? "OK" : "FAIL"),
+      data: response.to_yaml
+    )
+    
+    # create payment record for refund
+    if response.success?
+      pmt = this.dup
+      pmt.assign_attributes({
+        amount: amount * -1.0,
+        memo: "Refund",
+        transaction_id: response.authorization
+      })
+      pmt.save
+    end
+    
+    response  
   end
   
 end

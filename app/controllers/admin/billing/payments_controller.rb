@@ -71,6 +71,14 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     flash[:notice] = 'Payment has been deleted.'
     redirect_to action: 'index'
   end
+  
+  
+  def refund
+    @payment = Payment.find(params[:id])
+    response = @payment.refund(params[:amount])
+    flash[:notice] = 'Payment refund is not available.'
+    redirect_to :back
+  end
 
 
   private
