@@ -75,8 +75,8 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   
   def refund
     @payment = Payment.find(params[:id])
-    response = @payment.refund(params[:amount])
-    flash[:notice] = 'Payment refund is not available.'
+    response = @payment.refund(params[:amount].to_f, params[:memo])
+    flash[:notice] = response.message
     redirect_to :back
   end
 

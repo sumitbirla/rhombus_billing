@@ -54,7 +54,7 @@
 <% if @payment.amount > 0.0 %>
   <form method="get" action="/admin/billing/payments/<%= @payment.id %>/refund">
     <b>Amount:</b> <input type="number" name="amount" value="<%= @payment.amount %>"> &nbsp; &nbsp; 
-    <b>Memo:</b> <input type="text" name"memo"> &nbsp; &nbsp; 
+    <b>Memo:</b> <input type="text" name="memo"> &nbsp; &nbsp; 
     <button class="btn btn-sm btn-danger">Refund</button>
   </form>
 <% end %>

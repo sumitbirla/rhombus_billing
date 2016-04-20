@@ -25,6 +25,8 @@
 require 'activemerchant'
 
 class Payment < ActiveRecord::Base
+  include PaymentGateway
+  
   self.table_name = 'bill_payments'
   
   before_save :charge_card
@@ -69,22 +71,6 @@ class Payment < ActiveRecord::Base
     end
     
     # manual entry
-    active_gw = Cache.setting('eCommerce', 'Payment Gateway')
-    
-    if active_gw == 'Authorize.net'
-      gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(
-          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Login ID'),
-          :password => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Authorize.Net Transaction Key'),
-          :test => false
-      )
-    elsif active_gw == 'Stripe'
-      gateway = ActiveMerchant::Billing::StripeGateway.new(
-          :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
-      )  
-    else
-      raise "Payment gateway is not set up."
-    end 
-    
     credit_card = ActiveMerchant::Billing::CreditCard.new(
       :number             => cc_number,
       :verification_value => cc_code,
@@ -99,7 +85,8 @@ class Payment < ActiveRecord::Base
       :customer => cc_cardholder_name,
     }
 
-    response = gateway.purchase((amount*100).to_i, credit_card, purchase_options)
+    # active_gateway is defined in concerns
+    response = active_gateway.purchase((amount*100).to_i, credit_card, purchase_options)
     if response.success?
       update_attributes({ 
         cc_number: credit_card.display_number, 
@@ -114,14 +101,9 @@ class Payment < ActiveRecord::Base
   end
   
   
-  def refund(amount)
-
-    gateway = ActiveMerchant::Billing::StripeGateway.new(
-      :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
-    )
-    
-    # process refund
-    response = gateway.refund((amount * 100).to_i, transaction_id)
+  def refund(amount, memo)
+    # active_gateway is defined in concerns
+    response = active_gateway.refund((amount * 100.0).to_i, transaction_id)
     CcTransaction.create(
       payment_method_id: id,
       gateway: "stripe",
@@ -133,10 +115,10 @@ class Payment < ActiveRecord::Base
     
     # create payment record for refund
     if response.success?
-      pmt = this.dup
+      pmt = self.dup
       pmt.assign_attributes({
         amount: amount * -1.0,
-        memo: "Refund",
+        memo: memo,
         transaction_id: response.authorization
       })
       pmt.save

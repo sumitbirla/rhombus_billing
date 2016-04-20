@@ -32,6 +32,7 @@ require 'openssl'
 require 'base64'
 
 class PaymentMethod < ActiveRecord::Base
+  include PaymentGateway
   
   self.table_name = 'bill_payment_methods'
   attr_accessor :number
@@ -79,10 +80,6 @@ class PaymentMethod < ActiveRecord::Base
   end
   
   def charge(amount, cvv2 = nil)
-    # charge the card
-    gateway = ActiveMerchant::Billing::StripeGateway.new(
-      :login => Cache.setting(Rails.configuration.domain_id, 'eCommerce', 'Stripe Secret Key')
-    )
     
     credit_card = ActiveMerchant::Billing::CreditCard.new(
       :number             => decrypt_number,
@@ -105,8 +102,8 @@ class PaymentMethod < ActiveRecord::Base
         :country  => billing_country
     }}
     
-    # process payment
-    response = gateway.purchase((amount * 100).to_i, credit_card, purchase_options)
+    # active_gateway is defined in concerns
+    response = active_gateway.purchase((amount * 100).to_i, credit_card, purchase_options)
     CcTransaction.create(
       payment_method_id: id,
       gateway: "stripe",
