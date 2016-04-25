@@ -64,7 +64,7 @@ class Payment < ActiveRecord::Base
     unless payment_method_id.nil?
       pm = PaymentMethod.find(payment_method_id)
       response = pm.charge(amount)
-      this.transaction_id = response.authorization
+      self.transaction_id = response.authorization
       
       errors.add :base, response.message
       return response.success?
