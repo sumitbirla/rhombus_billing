@@ -4,7 +4,7 @@
 #
 #  id                      :integer          not null, primary key
 #  user_id                 :integer          not null
-#  default                 :boolean          default(FALSE), not null
+#  default                 :boolean          default("0"), not null
 #  card_brand              :string(255)      default(""), not null
 #  card_display            :string(255)      default(""), not null
 #  cardholder_name         :string(255)      not null
@@ -21,7 +21,7 @@
 #  status                  :string(255)      not null
 #  last_transaction_result :string(255)
 #  last_transaction_date   :datetime
-#  bill_attempts           :integer          default(0), not null
+#  bill_attempts           :integer          default("0"), not null
 #  created_at              :datetime
 #  updated_at              :datetime
 #

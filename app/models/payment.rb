@@ -6,11 +6,11 @@
 #  payable_id          :string(255)
 #  payable_type        :string(255)      default("")
 #  user_id             :integer
-#  customer            :boolean          default(TRUE), not null
+#  customer            :boolean          default("1"), not null
 #  payment_method_id   :integer
 #  amount              :decimal(10, 2)   not null
 #  transaction_id      :string(255)
-#  cc                  :boolean          default(FALSE), not null
+#  cc                  :boolean          default("0"), not null
 #  cc_type             :string(255)
 #  cc_cardholder_name  :string(255)
 #  cc_number           :string(255)
