@@ -5,7 +5,7 @@ class CreateBillingTables < ActiveRecord::Migration
       t.integer  "payment_method_id", limit: 4
       t.string   "gateway",           limit: 255,                           null: false
       t.string   "action",            limit: 255,                           null: false
-      t.decimal  "amount",                          precision: 8, scale: 2, null: false
+      t.decimal  "amount",            precision: 8, scale: 2,               null: false
       t.string   "result",            limit: 255,                           null: false
       t.text     "data",              limit: 65535
       t.datetime "created_at",                                              null: false
@@ -19,7 +19,7 @@ class CreateBillingTables < ActiveRecord::Migration
       t.integer  "service_type_id", limit: 4,                          null: false
       t.integer  "quantity",        limit: 4,                          null: false
       t.integer  "trial_days",      limit: 4
-      t.decimal  "rate",                      precision: 10, scale: 2
+      t.decimal  "rate",            precision: 10, scale: 2
       t.boolean  "hidden",                                             null: false
       t.datetime "created_at"
       t.datetime "updated_at"
