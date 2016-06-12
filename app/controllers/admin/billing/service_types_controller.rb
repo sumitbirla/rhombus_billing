@@ -1,7 +1,12 @@
 class Admin::Billing::ServiceTypesController < Admin::BaseController
   
   def index
-    @service_types = ServiceType.where(domain_id: cookies[:domain_id]).page(params[:page]).order(:sort)
+    @service_types = ServiceType.where(domain_id: cookies[:domain_id]).order(:sort)
+    
+    respond_to do |format|
+      format.html { @service_types = @service_types.page(params[:page]) }
+      format.csv { send_data ServiceType.to_csv(@service_types) }
+    end
   end
 
   def new

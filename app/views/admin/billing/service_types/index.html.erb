@@ -1,5 +1,7 @@
-<h2><%= link_to "new service type", new_admin_billing_service_type_path, class: 'btn btn-sm btn-default pull-right' %>
-	<%= current_domain %> Service Types</h2>
+<%= link_to new_admin_billing_service_type_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New service type
+<% end %>
+<h2><%= current_domain %> Service Types</h2>
 
 <%= will_paginate @service_types %>
 <table class="table table-striped table-condensed">
@@ -30,15 +32,12 @@
 </table>
 
 
+<%= render 'admin/shared/table_summary', data: @service_types %>
+
 
 <% content_for :title do %>
-Billing Service Types
+  Billing Service Types
 <% end %>
-
-
-<% content_for :menu do
-    render "admin/shared/billing_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>

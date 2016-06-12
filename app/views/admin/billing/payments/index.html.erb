@@ -5,7 +5,9 @@
       <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
       <input type="submit" class="btn btn-sm btn-default">
   </form>
-  <%= link_to 'New Payment', new_admin_billing_payment_path, class: 'btn btn-default btn-sm' %>
+  <%= link_to new_admin_billing_payment_path, class: 'btn btn-default btn-sm' do %>
+    <i class="fa fa-plus"></i> New payment
+    <% end %>
 </div>
 
 <h2>
@@ -23,6 +25,7 @@
 <% end %>
 
 
+<span class="pull-right"><b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %></span>
 
 <%= will_paginate @payments %>
 <table class="table table-striped table-condensed">
@@ -67,10 +70,8 @@
   <% end %>
 </table>
 
-<p>
-  <%= link_to 'CSV', admin_billing_payments_path(format: :csv, uid: params[:uid], start_date: params[:start_date], end_date: params[:end_date]) %> | 
-  <b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %>
-</p>
+<%= render 'admin/shared/table_summary', data: @payments %>
+
 
 
 <% content_for :title do %>

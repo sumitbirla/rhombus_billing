@@ -16,6 +16,7 @@
 #
 
 class UserPackage < ActiveRecord::Base
+  include Exportable
   self.table_name = 'bill_user_packages'
   
   belongs_to :user

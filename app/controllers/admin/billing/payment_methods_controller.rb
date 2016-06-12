@@ -1,7 +1,12 @@
 class Admin::Billing::PaymentMethodsController < Admin::BaseController
 
   def index
-    @payment_methods = PaymentMethod.includes(:user).page(params[:page])
+    @payment_methods = PaymentMethod.includes(:user)
+    
+    respond_to do |format|
+      format.html { @payment_methods = @payment_methods.page(params[:page]) }
+      format.csv { send_data PaymentMethod.to_csv(@payment_methods) }
+    end
   end
 
   def show

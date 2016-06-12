@@ -1,10 +1,11 @@
-<h2>
-	<%= link_to "new package", new_admin_billing_package_path, class: 'btn btn-sm btn-default pull-right' %>
-	<%= current_domain %> Packages
-</h2>
+<%= link_to new_admin_billing_package_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New package
+<% end %>
+<h2><%= current_domain %> Packages</h2>
 
 <table class="table table-striped table-condensed">
 	<tr>
+    <th>ID</td>
 		<th>Name</th>
 		<th>Group</th>
 		<th>Description</th>
@@ -16,6 +17,7 @@
 	</tr>
 	<% @packages.each do |pkg| %>
 	<tr>
+    <td><%= pkg.id %></td>
 		<td><%= link_to pkg.name, admin_billing_package_path(pkg) %></td>
 		<td><%= pkg.group %></td>
 		<td><%= pkg.description[0..40] %> ... </td>
@@ -46,15 +48,12 @@
 	<% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @packages %>
+
 
 <% content_for :title do %>
     Billing Packages
 <% end %>
-
-
-<% content_for :menu do
-    render "admin/shared/billing_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>

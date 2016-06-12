@@ -33,6 +33,7 @@ require 'base64'
 
 class PaymentMethod < ActiveRecord::Base
   include PaymentGateway
+  include Exportable
   
   self.table_name = 'bill_payment_methods'
   attr_accessor :number

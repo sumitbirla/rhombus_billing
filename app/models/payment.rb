@@ -26,6 +26,7 @@ require 'activemerchant'
 
 class Payment < ActiveRecord::Base
   include PaymentGateway
+  include Exportable
   
   self.table_name = 'bill_payments'
   
@@ -45,16 +46,6 @@ class Payment < ActiveRecord::Base
   
   def charge_saved_card?
     cc && payment_method_id
-  end
-  
-  def self.to_csv
-    CSV.generate do |csv|
-      cols = column_names - ['payable_id', 'payable_type', 'customer', 'payment_method_id']
-      csv << cols
-      all.each do |pmt|
-        csv << pmt.attributes.values_at(*cols)
-      end
-    end
   end
   
   def charge_card

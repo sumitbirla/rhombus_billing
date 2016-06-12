@@ -5,8 +5,12 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
                                 .where("bill_packages.domain_id = #{cookies[:domain_id]}")
                                 .where(recurr_status: 'A')
                                 .includes(:package, :user)
-                                .page(params[:page])
                                 .order(:recurr_date)
+                                
+    respond_to do |format|
+      format.html { @user_packages = @user_packages.page(params[:page]) }
+      format.csv { send_data UserPackage.to_csv(@user_packages) }
+    end
   end
 
   def new

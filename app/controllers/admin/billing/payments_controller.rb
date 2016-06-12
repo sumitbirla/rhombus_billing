@@ -11,7 +11,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
         @balance = @payments.sum(:amount) 
         @payments = @payments.page(params[:page])
       end
-      format.csv { send_data @payments.to_csv }
+      format.csv { send_data Payment.to_csv(@payments) }
     end
     
   end

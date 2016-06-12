@@ -1,7 +1,12 @@
 class Admin::Billing::PackagesController < Admin::BaseController
   
   def index
-    @packages = Package.where(domain_id: cookies[:domain_id]).page(params[:page])
+    @packages = Package.where(domain_id: cookies[:domain_id])
+    
+    respond_to do |format|
+      format.html { @packages = @packages.page(params[:page]) }
+      format.csv { send_data Package.to_csv(@packages) }
+    end
   end
 
   def new

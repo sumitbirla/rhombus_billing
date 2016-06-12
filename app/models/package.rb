@@ -19,6 +19,7 @@
 #
 
 class Package < ActiveRecord::Base
+  include Exportable
   self.table_name = 'bill_packages'
   
   belongs_to :domain

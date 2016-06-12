@@ -1,5 +1,6 @@
-
-<%= link_to "new subscription", new_admin_billing_user_package_path, class: 'btn btn-sm btn-default pull-right' %>
+<%= link_to new_admin_billing_user_package_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New subscription
+<% end %>
 <h2>User Subscriptions</h2>
 
 
@@ -36,14 +37,14 @@
   <% end %>
 </table>
 
+<%= render 'admin/shared/table_summary', data: @user_packages %>
+
+
+
 <% content_for :title do %>
     User Subscriptions
 <% end %>
 
-
-<% content_for :menu do
-  render "admin/shared/billing_menu"
-end %>
 
 
 <% content_for :breadcrumbs do %>
