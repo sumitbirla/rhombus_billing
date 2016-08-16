@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       end
       resources :user_services
       resources :payment_methods
+      resources :invoices
       resources :payments do 
         member do
           get 'refund'
