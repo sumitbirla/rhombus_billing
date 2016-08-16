@@ -23,6 +23,8 @@ class UserPackage < ActiveRecord::Base
   belongs_to :package
   has_many :services, class_name: 'UserService', dependent: :destroy
   has_many :payments, as: :payable
+  has_many :invoices, as: :invoiceable
+  
   accepts_nested_attributes_for :services
   
   def get_service(code)

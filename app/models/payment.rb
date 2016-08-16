@@ -6,11 +6,11 @@
 #  payable_id          :string(255)
 #  payable_type        :string(255)      default("")
 #  user_id             :integer
-#  customer            :boolean          default("1"), not null
+#  customer            :boolean          default(TRUE), not null
 #  payment_method_id   :integer
 #  amount              :decimal(10, 2)   not null
 #  transaction_id      :string(255)
-#  cc                  :boolean          default("0"), not null
+#  cc                  :boolean          default(FALSE), not null
 #  cc_type             :string(255)
 #  cc_cardholder_name  :string(255)
 #  cc_number           :string(255)
@@ -35,6 +35,7 @@ class Payment < ActiveRecord::Base
   belongs_to :payable, polymorphic: true
   belongs_to :user
   belongs_to :payment_method
+  has_and_belongs_to_many :invoices
 
   validates_presence_of :payable_id, :payable_type, :amount
   validates_presence_of :cc_cardholder_name, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :charge_manual_entry?

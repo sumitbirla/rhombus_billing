@@ -10,5 +10,7 @@ class CreateInvoices < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    
+    add_index :bill_invoices, [:invoiceable_type, :invoiceable_id]
   end
 end

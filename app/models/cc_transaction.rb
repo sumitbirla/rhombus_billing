@@ -6,7 +6,7 @@
 #  payment_method_id :integer
 #  gateway           :string(255)      not null
 #  action            :string(255)      not null
-#  amount            :decimal(10, )    not null
+#  amount            :decimal(8, 2)    not null
 #  result            :string(255)      not null
 #  data              :text(65535)
 #  created_at        :datetime         not null
