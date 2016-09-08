@@ -25,7 +25,7 @@
     </div>
     <%= f.input :cc_code, label: "CVC", input_html: { max_length: 4, style: "width: 100px;", placeholder: 'XXX' } %>
     </span>
-    <%= f.button :submit %>
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
 <% end %>
 
