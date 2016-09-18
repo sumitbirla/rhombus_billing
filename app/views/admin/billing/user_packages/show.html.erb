@@ -8,43 +8,19 @@
 <div class="row">
   <div class="col-md-6">
     <table class="table table-condensed table-bordered summary">
-      <tr>
-        <td width="120">Customer</td>
-        <td><%= link_to @user_package.user.name, admin_system_user_path(@user_package.user) %></td>
-      </tr>
-      <tr>
-        <td>Package</td>
-        <td><%= @user_package.package.name %></td>
-      </tr>
-      <tr>
-        <td>Monthly Rate</td>
-        <td><%= number_to_currency(@user_package.rate) %></td>
-      </tr>
-      <tr>
-        <td>Recurr Status</td>
-        <td><%= @user_package.recurr_status %></td>
-      </tr>
-      <tr>
-        <td>Recurr Date</td>
-        <td><%= @user_package.recurr_date %></td>
-      </tr>
+      <%= obj_property(@user_package, :user) { |x| link_to x.name, admin_system_user_path(x) }%>
+      <%= obj_property @user_package, :package %>
+      <%= obj_property @user_package, :rate %>
+      <%= obj_property @user_package, :recurr_status %>
+      <%= obj_property @user_package, :recurr_date %>
     </table>
   </div>
   
   <div class="col-md-6">
     <table class="table table-condensed table-bordered summary">
-      <tr>
-        <td>Base Rate</td>
-        <td><%= number_to_currency(@user_package.package.price) %></td>
-      </tr>
-      <tr>
-        <td>With extras</td>
-        <td><%= number_to_currency(@user_package.total_price) %>  (currently)</td>
-      </tr>
-      <tr>
-        <td>Balance</td>
-        <td><%= number_to_currency(@user_package.payments.sum(:amount)) %></td>
-      </tr>
+      <%= obj_property(@user_package, :package, label: "Base rate") { |x| x.price } %>
+      <%= obj_property(@user_package, :total_price, label: "With extras") %>
+      <%= obj_property(@user_package, :payments, label: "Balance") { |x| x.sum(:amount) } %>
     </table>
   </div>
 </div>

@@ -1,54 +1,30 @@
 <h2>Payment ID: <%= @payment.id %></h2>
 
-<table class="table table-condensed table-bordered summary">
-  <tr>
-    <td width="120">User</td>
-    <td>
-      <% unless @payment.user.nil? %>
-        <%= link_to @payment.user, admin_system_user_path(@payment.user, q: :payments) %>
-      <% else %>
-        <span class="light">n/a</span>
-      <% end %>
-    </td>
-  </tr>
-  <tr>
-    <td>Timestamp</td>
-    <td><%= systime @payment.created_at %></td>
-  </tr>
-  <tr>
-    <td>Amount</td>
-    <td><%= number_to_currency @payment.amount %></td>
-  </tr>
-  <tr>
-    <td>REF:</td>
-    <td>
-      <% if @payment.payable_type == "order" %>
-          <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
-      <% elsif @payment.payable_type == "UserPackage" %>
-          <%= link_to UserPackage.find(@payment.payable_id).package.name + " package [#{@payment.payable_id}]", admin_billing_user_package_path(@payment.payable_id) %>
-      <% elsif @payment.payable_type == "shipment" %>
-          <% shipment = Shipment.find_by(id: @payment.payable_id)%>
-          <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
-      <% end %>
-    </td>
-  </tr>
-  <% unless @payment.transaction_id.blank? %>
-  <tr>
-    <td>Transaction ID:</td>
-    <td><%= @payment.transaction_id %></td>
-  </tr>
-  <% end %>
-  <tr>
-    <td>Memo</td>
-    <td><%= @payment.memo %></td>
-  </tr>
-  <% unless @payment.payment_method.nil? %>
-  <tr>
-    <td>Payment Method</td>
-    <td><%= @payment.payment_method %></td>
-  </tr>
-  <% end %>
-</table>
+<div class="row">
+  <div class="col-md-6">
+    <table class="table table-condensed table-bordered summary">
+      <%= obj_property(@payment, :user) { |x| link_to x.name, admin_system_user_path(x, q: :payments)}%>
+      <%= obj_property @payment, :created_at %>
+      <%= obj_property @payment, :amount %>
+      <tr>
+        <td>REF:</td>
+        <td>
+          <% if @payment.payable_type == "order" %>
+              <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
+          <% elsif @payment.payable_type == "UserPackage" %>
+              <%= link_to UserPackage.find(@payment.payable_id).package.name + " package [#{@payment.payable_id}]", admin_billing_user_package_path(@payment.payable_id) %>
+          <% elsif @payment.payable_type == "shipment" %>
+              <% shipment = Shipment.find_by(id: @payment.payable_id)%>
+              <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
+          <% end %>
+        </td>
+      </tr>
+      <%= obj_property @payment, :transaction_id %>
+      <%= obj_property @payment, :memo %>
+      <%= obj_property @payment, :payment_method %>
+    </table>
+  </div>
+</div>
 
 
 <% if @payment.amount > 0.0 %>

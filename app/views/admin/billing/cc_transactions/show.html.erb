@@ -1,33 +1,12 @@
 <h2>Transaction ID: <%= @cc_transaction.id %></h2>
 
 <table class="table table-condensed table-bordered summary">
-  <% unless @cc_transaction.payment_method.nil? %>
-  <tr>
-    <td>Payment method</td>
-    <td>
-      <%= link_to @cc_transaction.payment_method.to_s, admin_billing_payment_method_path(@cc_transaction.payment_method) %>
-    </td>
-  <% end %>
-  <tr>
-    <td width="120">Timestamp</td>
-    <td><%= systime @cc_transaction.created_at %></td>
-  </tr>
-  <tr>
-    <td>Amount</td>
-    <td><%= number_to_currency @cc_transaction.amount %></td>
-  </tr>
-  <tr>
-    <td>Gateway</td>
-    <td><%= @cc_transaction.gateway %></td>
-  </tr>
-  <tr>
-    <td>Action</td>
-    <td><%= @cc_transaction.action %></td>
-  </tr>
-  <tr>
-    <td>Result</td>
-    <td><%= @cc_transaction.result %></td>
-  </tr>
+  <%= obj_property(@cc_transaction, :payment_method) { |x| link_to x.to_s, admin_billing_payment_method_path(x) } %>
+  <%= obj_property @cc_transaction, :created_at %>
+  <%= obj_property @cc_transaction, :amount %>
+  <%= obj_property @cc_transaction, :gateway %>
+  <%= obj_property @cc_transaction, :action %>
+  <%= obj_property @cc_transaction, :result %>
 </table>
 
 <h3>Debug</h3>

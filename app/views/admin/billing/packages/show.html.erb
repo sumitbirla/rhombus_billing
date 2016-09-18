@@ -9,35 +9,12 @@
 
     <h4>Summary</h4>
     <table class="table table-condensed table-bordered summary">
-      <tr>
-        <td width="140">Name</td>
-        <td><%= @package.name %></td>
-      </tr>
-      <tr>
-        <td>Price</td>
-        <td><%= number_to_currency(@package.price) %></td>
-      </tr>
-      <tr>
-        <td>Bill Frequency</td>
-        <td><%= @package.bill_frequency %> days</td>
-      </tr>
-      <tr>
-        <td>Trial Days</td>
-        <td>
-		<% if @package.trial_days && @package.trial_days > 0 %>
-          <%= @package.trial_days %> days
-      	<% else %>
-          <span class="light">- none -</span>
-      	<% end %></td>
-      </tr>
-      <tr>
-        <td>Status</td>
-        <td><%= @package.active %></td>
-      </tr>
-      <tr>
-        <td>Hidden</td>
-        <td><%= @package.hidden %></td>
-      </tr>
+      <%= obj_property @package, :name %>
+      <%= obj_property @package, :price %>
+      <%= obj_property(@package, :bill_frequency) { |x| "#{x} days"} %>
+      <%= obj_property(@package, :trial_days) { |x| "#{x} days"} %>
+      <%= obj_property @package, :active %>
+      <%= obj_property @package, :hidden %>
     </table>
 
     <h4>Services</h4>
