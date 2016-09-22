@@ -9,7 +9,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     respond_to do |format|
       format.html do
         @balance = @payments.sum(:amount) 
-        @payments = @payments.page(params[:page])
+        @payments = @payments.paginate(page: params[:page], per_page: @per_page)
       end
       format.csv { send_data Payment.to_csv(@payments) }
     end

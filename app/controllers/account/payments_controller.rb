@@ -8,7 +8,7 @@ class Account::PaymentsController < Account::BaseController
     end
     
     respond_to do |format|
-      format.html { @payments = @payments.page(params[:page]) }
+      format.html { @payments = @payments.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data @payments.to_csv }
     end
     

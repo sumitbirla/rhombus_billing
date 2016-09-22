@@ -9,7 +9,7 @@ class Admin::Billing::CcTransactionsController < Admin::BaseController
     @cc_transactions = @cc_transactions.where("created_at < '#{params[:end_date]}'") unless params[:end_date].blank?
     
     respond_to do |format|
-      format.html { @cc_transactions = @cc_transactions.page(params[:page]) }
+      format.html { @cc_transactions = @cc_transactions.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data CcTransaction.to_csv(@cc_transactions) }
     end
     

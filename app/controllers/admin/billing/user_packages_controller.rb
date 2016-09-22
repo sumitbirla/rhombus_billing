@@ -8,7 +8,7 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
                                 .order(:recurr_date)
                                 
     respond_to do |format|
-      format.html { @user_packages = @user_packages.page(params[:page]) }
+      format.html { @user_packages = @user_packages.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data UserPackage.to_csv(@user_packages) }
     end
   end

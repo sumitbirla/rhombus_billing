@@ -4,7 +4,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
     @packages = Package.where(domain_id: cookies[:domain_id])
     
     respond_to do |format|
-      format.html { @packages = @packages.page(params[:page]) }
+      format.html { @packages = @packages.paginate(page: params[:page], per_page: @per_page) }
       format.csv { send_data Package.to_csv(@packages) }
     end
   end
