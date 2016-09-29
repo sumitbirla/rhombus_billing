@@ -17,4 +17,6 @@ class Invoice < ActiveRecord::Base
   self.table_name = 'bill_invoices'
   belongs_to :invoiceable, polymorphic: true
   has_and_belongs_to_many :payments
+  belongs_to :user
+  belongs_to :affiliate
 end

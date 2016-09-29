@@ -2,15 +2,7 @@
   <tr>
     <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
     <td><%= systime pmt.created_at %></td>
-    <td>
-      <% if pmt.user_id == 0 %>
-        - system -
-      <% elsif pmt.user.nil? %>
-        - guest -
-      <% else %>
-          <%= link_to pmt.user.name, admin_system_user_path(pmt.user) %>
-      <% end %>
-    </td>
+    <td><%= link_to_user_or_affiliate pmt, :payments %></td>
     <td class="text-center"><%= tick pmt.customer %></td>
     <td>
       <% if pmt.payable_type == "order" %>

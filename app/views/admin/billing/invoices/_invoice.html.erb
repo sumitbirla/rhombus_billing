@@ -1,0 +1,25 @@
+<tr>
+  <td><%= invoice.id %></td>
+  <td><%= systime invoice.created_at %></td>
+  <td><%= link_to_user_or_affiliate invoice, :invoices %></td>
+  <td>
+    <% if invoice.invoiceable_type == "order" %>
+        <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(invoice.invoiceable_id) %>
+    <% elsif invoice.invoiceable_type == "UserPackage" %>
+        <%= link_to UserPackage.find(invoice.invoiceable_id).package.name + " package [#{invoice.invoiceable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
+    <% elsif invoice.invoiceable_type == "shipment" %>
+        <% shipment = Shipment.find_by(id: invoice.invoiceable_id)%>
+        <%= link_to "Shipment #{shipment}", admin_store_shipment_path(invoice.invoiceable_id) %>
+    <% end %>
+  </td>
+  <td class="text-right"><%= invoice.amount %></td>
+  <td class="text-center"><%= invoice.due_date %></td>
+  <td class="text-center"><%= tick invoice.paid %></td>
+  <td class="text-right">
+		<%= link_to "edit", edit_admin_billing_invoice_path(invoice) %> &nbsp;
+		<%= link_to "delete", 
+					  { action: "destroy", id: invoice.id }, 
+					  method: :delete, 
+					  data: { confirm: "Are you sure?" } %>
+  </td>
+</tr>

@@ -1,0 +1,60 @@
+<div class="pull-right">
+  <form action="" method="get" style="display: inline;">
+      <input type="hidden" name="uid" value="<%= params[:uid] %>">
+      <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to 
+      <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
+      <input type="submit" class="btn btn-sm btn-default">
+  </form>
+  <%= link_to new_admin_billing_invoice_path, class: 'btn btn-default btn-sm' do %>
+    <i class="fa fa-plus"></i> New invoice
+    <% end %>
+</div>
+
+<h2>
+  <i class="fa fa-money"></i> &nbsp;Invoices
+</h2>
+
+
+<% if !params[:uid].blank? || !params[:start_date].blank? || !params[:end_date].blank? %>
+  <div class="bs-callout <%= @payments.total_entries == 0 ? "bs-callout-danger" : "bs-callout-info" %>">
+    <%= link_to request.url.split('?').first, class: "pull-right btn btn-xs btn-default" do %>
+      <i class="fa fa-times"></i> clear filter
+    <% end %>
+    Found <%= @invoices.total_entries %> records matching search criteria
+  </div>
+<% end %>
+
+
+<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+  <li class="<%= "active" if params[:paid] == "0" %>"><a href="<%= admin_billing_invoices_path(paid: 0)%>"><%= tab_count("Unpaid", 0)%></a></li>
+  <li class="<%= "active" if params[:paid] == "1" %>"><a href="<%= admin_billing_invoices_path(paid: 1)%>"><%= tab_count("Paid", 0)%></a></li>
+</ul>
+
+<%= will_paginate @invoices %>
+<table class="table table-striped table-condensed">
+  <tr>
+    <th>ID</th>
+    <th>Date</th>
+    <th>User</th>
+    <th>Item</th>
+    <th class="text-right">Amount</th>
+    <th class="text-center">Due Date</th>
+    <th class="text-center">Paid?</th>
+    <th></th>
+  </tr>
+  <%= render @invoices %>
+</table>
+
+<%= render 'admin/shared/table_summary', data: @invoices %>
+
+
+
+<% content_for :title do %>
+    Invoices
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li class="active">Invoices</li>
+<% end %>

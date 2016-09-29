@@ -34,8 +34,12 @@ class Payment < ActiveRecord::Base
   
   belongs_to :payable, polymorphic: true
   belongs_to :user
+  belongs_to :affiliate
   belongs_to :payment_method
+  has_many :invoice_payments
   has_and_belongs_to_many :invoices
+  
+  accepts_nested_attributes_for :invoice_payments, allow_destroy: true
 
   validates_presence_of :payable_id, :payable_type, :amount
   validates_presence_of :cc_cardholder_name, :cc_number, :cc_expiration_month, :cc_expiration_year, :cc_code, if: :charge_manual_entry?
