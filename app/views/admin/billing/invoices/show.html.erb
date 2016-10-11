@@ -1,9 +1,70 @@
-<h2>Invoice #<%= @invoice.id%></h2>
+<h2>Invoice #<%= @invoice.id %></h2>
+
+
+<div class="row">
+
+  <div class="col-md-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">Invoicee:</div>
+      <div class="panel-body">
+        <%= link_to_user_or_affiliate @invoice %><br/>
+        <%= @invoice.affiliate.address_as_text(delimiter: "<br>") %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">Payment:</div>
+      <div class="panel-body">
+        Posted: <%= @invoice.post_date %><br>
+        Due: <%= @invoice.due_date || "<span class='light'>- not set -</span>".html_safe %><br>
+        Status: <%= @invoice.paid ? "paid" : "unpaid" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-success">
+      <div class="panel-heading">Notes:</div>
+      <div class="panel-body">
+        <%= @invoice.note %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<table class="table table-striped table-condensed table-bordered">
+  <tr>
+    <th class="text-center">Quantity</th>
+    <th>Item</th>
+    <th>Description</th>
+    <th class="text-right">Unit price</th>
+    <th class="calign">Subtotal</th>
+  </tr>
+  <% @invoice.items.each do |item|  %>
+  <tr>
+    <td class="text-center"><%= number_with_delimiter item.quantity %></td>
+    <td nowrap><%= item.item_number %></td>
+    <td><%= item.item_description %></td>
+    <td class="text-right"><%= number_to_currency(item.unit_price) %></td>
+    <td class="text-right"><%= number_to_currency(item.unit_price * item.quantity) %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <th colspan="4" class="text-right">Total: </th>
+    <th class="text-right"><%= number_to_currency @invoice.amount %></th>
+  </tr>
+</table>
+
+
+
 
 <% content_for :title do %>
 	Invoice #<%= @invoice.id%>
 <% end %>
-
 
 
 <% content_for :breadcrumbs do %>
