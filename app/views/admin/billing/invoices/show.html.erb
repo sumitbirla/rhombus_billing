@@ -1,5 +1,10 @@
-<h2>Invoice #<%= @invoice.id %></h2>
+<%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm pull-right' do %>
+  <i class="fa fa-edit"></i> Edit
+<% end %>
 
+<h2>
+  <span class='light pull-right'><%= @invoice.from_affiliate %> &nbsp; </span>
+  Invoice #<%= @invoice.id %></h2>
 
 <div class="row">
 
@@ -38,6 +43,7 @@
 
 <table class="table table-striped table-condensed table-bordered">
   <tr>
+    <th>Group</th>
     <th class="text-center">Quantity</th>
     <th>Item</th>
     <th>Description</th>
@@ -46,6 +52,7 @@
   </tr>
   <% @invoice.items.each do |item|  %>
   <tr>
+    <td><%= item.group %></td>
     <td class="text-center"><%= number_with_delimiter item.quantity %></td>
     <td nowrap><%= item.item_number %></td>
     <td><%= item.item_description %></td>
@@ -54,7 +61,7 @@
   </tr>
   <% end %>
   <tr>
-    <th colspan="4" class="text-right">Total: </th>
+    <th colspan="5" class="text-right">Total: </th>
     <th class="text-right"><%= number_to_currency @invoice.amount %></th>
   </tr>
 </table>

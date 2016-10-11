@@ -1,0 +1,131 @@
+<h2>
+  Invoice #<%= @invoice.id %><br>
+  <small><%= link_to_user_or_affiliate @invoice %></small>
+</h2>
+<hr>
+
+<%= render 'admin/shared/error_messages', object: @invoice %>
+
+<%= simple_form_for [:admin, :billing, @invoice] do |f| %>
+
+<input type="hidden" name="add_more_items" value=""/>
+
+<div class="row">
+
+  <div class="col-md-6">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <%= link_to "update amount", "#", class: 'update-invoice pull-right' %>
+        Invoice:
+      </div>
+      <div class="panel-body">
+        <%= f.input :from_affiliate_id, collection: Cache.affiliate_list('purchasers'), label: 'Issued by' %>
+        <%= f.input :amount %>
+        <%= f.input :post_date, as: :datepicker%>
+        <%= f.input :due_date, as: :datepicker %>  
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Notes:</div>
+      <div class="panel-body">
+        <%= f.input :note, input_html: { class: '', rows: 2 } %>
+        <%= f.input :paid %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
+<table class="table table-striped table-condensed table-bordered">
+  <tr>
+    <th>Group</th>
+    <th class="text-center">Quantity</th>
+    <th>Item</th>
+    <th width="50%">Description</th>
+    <th class="text-right">Unit price</th>
+    <th>&nbsp;</th>
+  </tr>
+  <%= f.simple_fields_for :items do |itemf| %>
+    <% 
+      item = @invoice.items[itemf.index] 
+    %>
+      <tr>
+        <td><%= itemf.input_field :group %></td>
+        <td><%= itemf.input_field :quantity, class: "text-center quantity" %></td>
+        <td><%= itemf.input_field :item_number %></td>
+        <td><%= itemf.input_field :item_description, style: 'width: 100%;' %></td>
+        <td><%= itemf.input_field :unit_price, class: "text-right unit-price" %></td>
+        <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>
+      </tr>
+  <% end %>
+</table>
+
+<%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+<% end %>
+
+
+
+<% content_for :title do %>
+    Invoice #<%= @invoice.id %>
+<% end %>
+
+
+<% content_for :head do %>
+    <style>
+        .form-inline .form-group { margin: 10px 0; }
+        .fa-times { cursor: pointer; }
+        .bold { font-weight: bold; }
+    </style>
+    
+    <script>
+      $(document).ready(function() {
+        
+        $(".update-invoice").click(function(e) {
+          
+          e.preventDefault();
+          var total = 0.0;
+      
+          $(".quantity").each(function() {  
+              var unit_price = parseFloat($(this).parent().parent().find(".unit-price").val());
+              var quantity = parseFloat($(this).val());
+        
+              if (!isNaN(unit_price) && !isNaN(quantity))
+                total += unit_price * quantity; 
+          });
+      
+          $("#invoice_amount").val(total.toFixed(2));
+        });
+        
+        
+        $(".fa-times").click(function () {
+          $(this).parent().parent().hide("slow");
+          $(this).siblings(".destroy").val("true");
+          return false;
+        });
+      
+        $(".add-more-items").click(function() {
+          $("input[name='add_more_items']").val(<%= @invoice.items.length %>);
+          $("form.form-horizontal").submit();
+        });
+        
+      });
+    </script>
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to 'Invoices', admin_billing_invoices_path(paid: @invoice.paid ? 1 : 0) %></li>
+	<% if @invoice.persisted? %>
+    <li><%= link_to "Invoice #{@invoice.id}", admin_billing_invoice_path(@invoice)%></li>
+    <li class="active">edit</li>
+	<% else %>
+		<li class="active">new</li>
+	<% end %>
+<% end %>

@@ -14,7 +14,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
 
   def create
-    @invoice = Invoice.new(order_params)
+    @invoice = Invoice.new(invoice_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @invoice.items.length + 5 
@@ -43,7 +43,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     @invoice = Invoice.find(params[:id])
     item_count = @invoice.items.length
 
-    @invoice.assign_attributes(order_params)
+    @invoice.assign_attributes(invoice_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - item_count + 5 

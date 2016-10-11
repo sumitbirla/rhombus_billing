@@ -18,6 +18,7 @@ class Invoice < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :affiliate
+  belongs_to :from_affiliate, class_name: 'Affiliate'
   belongs_to :invoiceable, polymorphic: true
   
   has_many :items, class_name: 'InvoiceItem'

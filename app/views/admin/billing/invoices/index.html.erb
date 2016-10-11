@@ -26,8 +26,8 @@
 
 
 <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <li class="<%= "active" if params[:paid] == "0" %>"><a href="<%= admin_billing_invoices_path(paid: 0)%>"><%= tab_count("Unpaid", 0)%></a></li>
-  <li class="<%= "active" if params[:paid] == "1" %>"><a href="<%= admin_billing_invoices_path(paid: 1)%>"><%= tab_count("Paid", 0)%></a></li>
+  <li class="<%= "active" if params[:paid] == "0" %>"><a href="<%= admin_billing_invoices_path(paid: 0)%>"><%= tab_count("Unpaid", Invoice.where(paid: false).count)%></a></li>
+  <li class="<%= "active" if params[:paid] == "1" %>"><a href="<%= admin_billing_invoices_path(paid: 1)%>"><%= tab_count("Paid", Invoice.where(paid: true).count)%></a></li>
 </ul>
 
 <%= will_paginate @invoices %>
