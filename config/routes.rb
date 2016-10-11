@@ -2,6 +2,18 @@ Rails.application.routes.draw do
 
   namespace :admin do
   namespace :billing do
+    get 'credit_memos/index'
+    end
+  end
+
+  namespace :admin do
+  namespace :billing do
+    get 'credit_memos/edit'
+    end
+  end
+
+  namespace :admin do
+  namespace :billing do
     get 'cc_transactions/index'
     end
   end
@@ -26,6 +38,11 @@ Rails.application.routes.draw do
       resources :user_services
       resources :payment_methods
       resources :invoices
+      resources :credit_memos do 
+        member do 
+          get 'print'
+        end
+      end
       resources :payments do 
         member do
           get 'refund'

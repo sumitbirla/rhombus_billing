@@ -1,5 +1,5 @@
 <tr>
-  <td><%= invoice.id %></td>
+  <td><%= link_to invoice.id.to_s, admin_billing_invoice_path(invoice) %></td>
   <td><%= systime invoice.created_at %></td>
   <td><%= link_to_user_or_affiliate invoice, :invoices %></td>
   <td>
@@ -12,7 +12,7 @@
         <%= link_to "Shipment #{shipment}", admin_store_shipment_path(invoice.invoiceable_id) %>
     <% end %>
   </td>
-  <td class="text-right"><%= invoice.amount %></td>
+  <td class="text-right"><%= number_to_currency invoice.amount %></td>
   <td class="text-center"><%= invoice.due_date %></td>
   <td class="text-center"><%= tick invoice.paid %></td>
   <td class="text-right">

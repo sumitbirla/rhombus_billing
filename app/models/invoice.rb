@@ -15,8 +15,14 @@
 
 class Invoice < ActiveRecord::Base
   self.table_name = 'bill_invoices'
-  belongs_to :invoiceable, polymorphic: true
-  has_and_belongs_to_many :payments
+  
   belongs_to :user
   belongs_to :affiliate
+  belongs_to :invoiceable, polymorphic: true
+  
+  has_many :items, class_name: 'InvoiceItem'
+  has_and_belongs_to_many :payments
+  
+  accepts_nested_attributes_for :items, reject_if: lambda { |x| x['quantity'].blank? }, allow_destroy: true
+  
 end

@@ -1,0 +1,30 @@
+<h2>
+	Credit Memo
+</h2>
+<hr/>
+
+<%= simple_form_for [:admin, :billing, @credit_memo] do |f| %>
+
+  <%= render 'admin/shared/error_messages', object: f.object %>
+
+  <%= f.input :user_id %>
+  <%= f.input :affiliate_id, collection: Cache.affiliate_list('retailers') %>
+  <%= f.input :description %>
+  <%= f.input :amount %>
+  <%= f.input :used %>
+  
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+<% end %>
+
+
+<% content_for :title do %>
+  Credit Memo
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Billing</a></li>
+	<li><%= link_to "Credit Memos", admin_billing_credit_memos_path %></li>
+	<li class="active">Credit Memo</li>
+<% end %>

@@ -1,0 +1,39 @@
+<div class="pull-right">
+  <%= link_to new_admin_billing_credit_memo_path, class: 'btn btn-default btn-sm' do %>
+    <i class="fa fa-plus"></i> New credit memo
+  <% end %>
+</div>
+
+<h2>
+  <i class="fa fa-money"></i> &nbsp;Credit Memos
+</h2>
+
+
+<%= will_paginate @credit_memos %>
+<table class="table table-striped table-condensed">
+  <tr>
+    <th>ID</th>
+    <th>Issued</th>
+    <th>User</th>
+    <th>Description</th>
+    <th class="text-right">Amount</th>
+    <th class="text-right">Used</th>
+    <th>Status</th>
+    <th class="text-right"></th>
+  </tr>
+  <%= render @credit_memos %>
+</table>
+
+<%= render 'admin/shared/table_summary', data: @credit_memos %>
+
+
+
+<% content_for :title do %>
+    Credit Memos
+<% end %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li class="active">Credit Memos</li>
+<% end %>

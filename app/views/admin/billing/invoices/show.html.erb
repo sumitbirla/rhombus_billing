@@ -1,0 +1,13 @@
+<h2>Invoice #<%= @invoice.id%></h2>
+
+<% content_for :title do %>
+	Invoice #<%= @invoice.id%>
+<% end %>
+
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">eCommerce</a></li>
+	<li><%= link_to "Invoices", admin_billing_invoices_path(paid: 0) %></li>
+	<li class="active">Invoice #<%= @invoice.id%></li>
+<% end %>

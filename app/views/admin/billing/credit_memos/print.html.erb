@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Credit Memo</title>
+  <style>
+      body {
+          background:white !important;
+          color:black!important;
+          width: 95%!important;
+          margin: 0 auto!important;
+          font-family:Arial, Helvetica, sans-serif!important;
+          font-size:12px!important;
+      }
+      table {
+          width: 100%!important;
+          border-collapse:collapse;
+      }
+      table td {
+          border-right: 1px solid #000;
+          padding: 5px!important;
+      }
+      table.bordered {
+        border: solid 1px black;
+      }
+      table.bordered th {
+        padding: 4px;
+        border-bottom: solid 1px black;    
+      }
+      article {
+          padding: 0px 0!important;
+      }
+      p {
+          font-weight:normal !important;
+          line-height:16px !important;
+          margin-top: 0;
+      }
+      h1 { 
+        font-size: 38px;
+        color: #ccc;
+      }
+      h2 {
+          font-size:20px !important;
+          margin-bottom: 0px;
+      }
+      h3 {
+        margin-bottom:4px;
+      }
+      .boxleft {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxcenter {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxright {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .textright{
+          text-align:right !important;
+      }
+  </style>
+</head>
+<body onload="window.print()">
+  <h1>CREDIT MEMO</h1>
+  
+<section>
+  <article>
+    <header>
+      <table class="no-border" cellspacing="0" cellpadding="0" border="0">
+        <thead>
+        <tr valign="top">
+          <th scope="col" style="text-align:left;">
+            <h2><%= @credit_memo.affiliate.name %></h2>
+            <p><%= raw @credit_memo.affiliate.address_as_text.gsub("\n", "<br>") %></p>
+            <p>
+              <% unless @credit_memo.affiliate.phone.blank? %>
+              <strong>Phone:</strong> <%= @credit_memo.affiliate.phone %><br/>
+              <% end %>
+              <% unless @credit_memo.affiliate.fax.blank? %>
+              <strong>Fax:</strong> <%= @credit_memo.affiliate.fax %><br/>
+              <% end %>
+            </p>
+            <p>
+              <strong>Memo ID: </strong> <%= @credit_memo.id %><br>
+              <strong>Issued: </strong> <%= @credit_memo.created_at.to_date %><br>
+              <strong>Vendor Code: </strong> <%= @credit_memo.affiliate.code %><br>
+            </p>
+          </th>
+          <th scope="col" style="text-align:right;"> 
+            <h2>Pet Healthbox LLC</h2>
+              201 Douglas Rd E., STE 1<br>
+              Oldsmar, FL 34677<br><br>
+              <strong>Email:</strong> help@healthybreeds.com<br><br>  
+          </th>
+        </tr>
+        </thead>
+      </table>
+      <div style="clear:both;"></div>
+    </header>
+    <br/>
+    <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+      <tr>
+        <th scope="col" style="text-align:left;"><strong>Description</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Amount</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <tr>
+        <td><%= @credit_memo.description %></td>
+        <td style="text-align:right;"><%= number_to_currency @credit_memo.amount %></td>
+      </tr>
+
+      </tbody>
+    </table>
+    
+    <br><br><br><img src="/barcode?code=CM<%= @credit_memo.id %>" />
+  </article>
+
+
+</section>
+</body>
+</html>

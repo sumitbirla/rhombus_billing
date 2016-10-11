@@ -1,0 +1,23 @@
+<tr>
+  <td><%= credit_memo.id %></td>
+  <td><%= sysdate credit_memo.created_at.to_date %></td>
+  <td><%= link_to_user_or_affiliate credit_memo, :credit_memos %></td>
+  <td><%= credit_memo.description %></td>
+  <td class="text-right"><%= number_to_currency credit_memo.amount %></td>
+  <td class="text-right"><%= number_to_currency credit_memo.used %></td>
+  <td class="text-center">
+    <% if credit_memo.used < credit_memo.amount %>
+      <span class="label label-success">open</span>
+    <% else %>
+      <span class="label label-danger">closed</span>
+    <% end %>
+  </td>
+  <td class="text-right">
+    <%= link_to "print", print_admin_billing_credit_memo_path(credit_memo), target: '_new' %> &nbsp;
+		<%= link_to "edit", edit_admin_billing_credit_memo_path(credit_memo) %> &nbsp;
+		<%= link_to "delete", 
+					  { action: "destroy", id: credit_memo.id }, 
+					  method: :delete, 
+					  data: { confirm: "Are you sure?" } %>
+  </td>
+</tr>
