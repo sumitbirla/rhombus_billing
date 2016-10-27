@@ -30,7 +30,7 @@ class Admin::Billing::CreditMemosController < Admin::BaseController
   def update
     @credit_memo = CreditMemo.find(params[:id])
     
-    if @credit_memo.update(service_type_params)
+    if @credit_memo.update(credit_memo_params)
       redirect_to action: 'index', notice: 'Credit Memo was successfully updated.'
     else
       render 'edit'

@@ -37,7 +37,11 @@ Rails.application.routes.draw do
       end
       resources :user_services
       resources :payment_methods
-      resources :invoices
+      resources :invoices do 
+        member do 
+          get 'print'
+        end
+      end
       resources :credit_memos do 
         member do 
           get 'print'

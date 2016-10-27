@@ -1,6 +1,11 @@
-<%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm pull-right' do %>
-  <i class="fa fa-edit"></i> Edit
-<% end %>
+<div class="pull-right">
+  <%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm' do %>
+    <i class="fa fa-edit"></i> Edit
+  <% end %>
+  <%= link_to print_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm', target: '_new' do %>
+    <i class="fa fa-print"></i> Print
+  <% end %>
+</div>
 
 <h2>
   <span class='light pull-right'><%= @invoice.from_affiliate %> &nbsp; </span>

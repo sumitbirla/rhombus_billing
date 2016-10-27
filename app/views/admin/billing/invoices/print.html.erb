@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Invoice #<%= @invoice.id %></title>
+  <style>
+      body {
+          background:white !important;
+          color:black!important;
+          width: 95%!important;
+          margin: 0 auto!important;
+          font-family:Arial, Helvetica, sans-serif!important;
+          font-size:10px!important;
+      }
+      table {
+          width: 100%!important;
+          border-collapse:collapse;
+      }
+      table td{
+          aborder: 1px solid #ccc;
+          padding: 5px!important;
+      }
+      table.bordered {
+        border: solid 1px black;
+      }
+      table.bordered th {
+        padding: 4px;
+        border-bottom: solid 1px black;    
+      }
+      article {
+          padding: 0px 0!important;
+      }
+      p {
+          font-weight:normal !important;
+          line-height:16px !important;
+          margin-top: 0;
+      }
+      h2 {
+          font-size:20px !important;
+          margin-bottom: 0px;
+      }
+      .boxleft {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxcenter {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .boxright {
+          float:left!important;
+          width: 32%!important;
+          margin-top:0px !important;
+      }
+      .textright{
+          text-align:right !important;
+      }
+  </style>
+</head>
+<body onload="awindow.print()">
+<section>
+  <article>
+    <header>
+      <table class="no-border" cellspacing="0" cellpadding="0" border="0">
+        <thead>
+        <tr valign="top">
+          <th scope="col" style="text-align:left;">
+            <% from = @invoice.from_affiliate %>
+            <h2><%= from.name %></h2>
+
+            <p>
+              <%= from.address_as_text(skip_country: true, delimiter: "<br>").html_safe %>
+            </p>
+            <p>
+              <strong>Phone:</strong> <%= from.phone %><br/>
+              <strong>Email:</strong> <%= from.email %>
+            </p>
+          </th>
+          <th scope="col" style="text-align:right;"> <h2>INVOICE</h2>
+            <p>
+              
+              <strong>Invoice Date: </strong>
+              <%= @invoice.post_date.strftime("%d-%^b-%Y") %><br/>
+              <strong>Invoice ID: </strong> <%= @invoice.id %><br/>
+              <img src="/barcode?code=<%= @invoice.id %>" />
+            </p>
+          </th>
+        </tr>
+        </thead>
+      </table>
+
+
+      <div class="boxleft">
+        <h2>Billing address </h2>
+        <p><%= @invoice.affiliate.name %><br/>
+          <%= @invoice.affiliate.address_as_text(skip_country: true, delimiter: "<br>").html_safe %></p>
+      </div>
+      <div class="boxright">
+        <h2>Payment due date:</h2>
+        <p><%= @invoice.due_date.strftime("%d-%^b-%Y") %></p>
+      </div>
+      <div style="clear:both;"></div>
+    </header>
+    <br/>
+    <% order = Order.find(@invoice.invoiceable_id) %>
+    <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+      <tr>
+        <th scope="col" style="text-align:left;"><strong>Customer Code</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Your PO #</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Order Date</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Our Order #</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Status</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+        <% unless order.affiliate.nil? %>
+          <%= order.affiliate.code %>
+        <% end %>
+        </td>
+        <td><%= order.external_order_id %></td>
+        <td><%= order.submitted.strftime("%d-%^b-%Y") %></td>
+        <td><%= order.id %></td>
+        <td><%= order.status %></td>
+      </tr>
+      </tbody>
+    </table>
+    <br/><br/>
+    <table class="bordered" width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+      <tr>
+        <th scope="col" style="text-align:left;"><strong>ID</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Item Number</strong></th>
+        <th scope="col" style="text-align:left;"><strong>Description</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Unit Cost</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Quantity</strong></th>
+        <th scope="col" style="text-align:right;"><strong>Subtotal</strong></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @invoice.items.each do |item| %>
+      <tr>
+        <td><%= item.group %></td>
+        <td><%= item.item_number %></td>
+        <td><%= item.item_description %></td>
+        <td align="right" class="textright"><%= number_to_currency(item.unit_price, precision: 4, strip_insignificant_zeros: true) %></td>
+        <td align="right" class="textright"><%= number_with_delimiter(item.quantity) %></td>
+        <td align="right" class="textright"><%= number_to_currency(item.unit_price * item.quantity) %></td>
+      </tr>
+      <% end %>
+      <tr>
+        <td align="right" class="textright" colspan="5"><b>Total Due:</b></td>
+        <td align="right" class="textright"><b><%= number_to_currency(@invoice.amount) %></b></td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+
+
+  <h2>Comments</h2>
+  <% unless @invoice.note.blank? %>
+    <%= @invoice.note %>
+  <% else %>
+    Thank you for your business!
+  <% end %>
+
+</section>
+</body>
+</html>

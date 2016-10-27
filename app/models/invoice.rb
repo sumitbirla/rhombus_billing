@@ -24,6 +24,7 @@ class Invoice < ActiveRecord::Base
   has_many :items, class_name: 'InvoiceItem'
   has_and_belongs_to_many :payments
   
+  validates_presence_of :amount, :from_affiliate_id
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['quantity'].blank? }, allow_destroy: true
   
 end

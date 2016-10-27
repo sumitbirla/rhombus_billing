@@ -1,5 +1,10 @@
 <h2>
-  Invoice #<%= @invoice.id %><br>
+  <% if @invoice.persisted? %>
+    Invoice #<%= @invoice.id %>
+  <% else %>
+    New Invoice
+  <% end %>
+  <br>
   <small><%= link_to_user_or_affiliate @invoice %></small>
 </h2>
 <hr>
@@ -9,6 +14,9 @@
 <%= simple_form_for [:admin, :billing, @invoice] do |f| %>
 
 <input type="hidden" name="add_more_items" value=""/>
+<%= f.hidden_field :invoiceable_type %>
+<%= f.hidden_field :invoiceable_id %>
+<%= f.hidden_field :affiliate_id %>
 
 <div class="row">
 
@@ -35,19 +43,24 @@
         <%= f.input :paid %>
       </div>
     </div>
+    
+    <div class="pull-right">
+      <%= link_to '$ update total amount', '#', class: 'update-amount btn btn-default btn-sm' %>
+      <%= link_to '+ add more items', '#', class: 'add-more-items btn btn-default btn-sm' %>
+    </div>
   </div>
 
 </div>
 
 
-<%= link_to '+ add more items', '#', class: 'add-more-items pull-right' %>
+
 <table class="table table-striped table-condensed table-bordered">
   <tr>
     <th>Group</th>
-    <th class="text-center">Quantity</th>
     <th>Item</th>
     <th width="50%">Description</th>
     <th class="text-right">Unit price</th>
+    <th class="text-right">Quantity</th>
     <th>&nbsp;</th>
   </tr>
   <%= f.simple_fields_for :items do |itemf| %>
@@ -56,10 +69,10 @@
     %>
       <tr>
         <td><%= itemf.input_field :group %></td>
-        <td><%= itemf.input_field :quantity, class: "text-center quantity" %></td>
         <td><%= itemf.input_field :item_number %></td>
         <td><%= itemf.input_field :item_description, style: 'width: 100%;' %></td>
         <td><%= itemf.input_field :unit_price, class: "text-right unit-price" %></td>
+        <td><%= itemf.input_field :quantity, class: "text-right quantity" %></td>
         <td><i class="fa fa-times light"></i><%= itemf.hidden_field :_destroy, class: 'destroy' %></td>
       </tr>
   <% end %>
@@ -86,7 +99,7 @@
     <script>
       $(document).ready(function() {
         
-        $(".update-invoice").click(function(e) {
+        $(".update-amount").click(function(e) {
           
           e.preventDefault();
           var total = 0.0;
