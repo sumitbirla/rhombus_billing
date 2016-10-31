@@ -9,7 +9,11 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   def new
     if params[:shipment_id]
       s = Shipment.find(params[:shipment_id])
-      @invoice = s.order.invoices.build(affiliate_id: s.order.affiliate_id, amount: s.invoice_amount, post_date: Date.today)
+      @invoice = s.order.invoices.build(affiliate_id: s.order.affiliate_id, 
+                                        amount: s.invoice_amount, 
+                                        post_date: Date.today, 
+                                        due_date: Date.today + 1.month, 
+                                        from_affiliate_id: 280)
       
       s.items.each do |item|
         next if item.product.nil?  # should never happen, only here for bad historical data (i.e. product was deleted from DB)

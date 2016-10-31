@@ -10,6 +10,7 @@
 <h2>
   <span class='light pull-right'><%= @invoice.from_affiliate %> &nbsp; </span>
   Invoice #<%= @invoice.id %></h2>
+  
 
 <div class="row">
 
@@ -46,9 +47,16 @@
 </div>
 
 
+<div>
+  <% if @invoice.invoiceable_type == 'Order' %>
+    <% order = Order.find(@invoice.invoiceable_id) %>
+  Order #<%= link_to order.id.to_s, admin_store_order_path(order )%> &nbsp; &nbsp; <b>PO:</b> <%= order.external_order_id %>
+  <% end %>
+</div>
+
 <table class="table table-striped table-condensed table-bordered">
   <tr>
-    <th>Group</th>
+    <th>Shipment</th>
     <th class="text-center">Quantity</th>
     <th>Item</th>
     <th>Description</th>

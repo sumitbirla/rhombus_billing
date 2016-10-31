@@ -99,7 +99,7 @@
       </div>
       <div class="boxright">
         <h2>Payment due date:</h2>
-        <p><%= @invoice.due_date.strftime("%d-%^b-%Y") %></p>
+        <p><%= @invoice.due_date.strftime("%d-%^b-%Y") unless @invoice.due_date.nil? %></p>
       </div>
       <div style="clear:both;"></div>
     </header>
