@@ -80,11 +80,45 @@
 </table>
 
 <div class="row">
+  
+  <div class="col-md-8 col-sm-12">
+    <div class="panel panel-warning">
+      <div class="panel-heading"><i class="fa fa-clock-o"></i> History:</div>
+      <div class="panel-body">
+       
+        <table class="table table-condensed table-striped">
+          <tr>
+            <th>Timestamp</th>
+            <th>User</th>
+            <th>Event</th>
+            <th>Data 1</th>
+          </tr>
+          <% @invoice.logs.each do |log| %>
+          <tr>
+            <td><%= systime log.timestamp %></td>
+            <td>
+              <% if @invoice.user %>
+                <%= link_to @invoice.user.name, admin_system_user_path(@invoice.user) %>
+              <% else %>
+                <span class="light">- system -</span>
+              <% end %>
+            </td>
+            <td><%= log.event.titlecase %></td>
+            <td><%= log.data1 %></td>
+          </tr>
+          <% end%>
+        </table>
+        
+      </div>
+    </div>
+  </div>
+    
   <div class="col-md-4 col-sm-12">
     <div class="panel panel-warning">
       <div class="panel-heading">Email invoice:</div>
       <div class="panel-body">
-        <form action='/admin/billing/invoices/<%= @invoice.id %>/email'>
+        <form action='/admin/billing/invoices/<%= @invoice.id %>/email' method="POST">
+          <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
           <input class="form-control" type="email" name="email" value="<%= @invoice.affiliate.invoice_email if @invoice.affiliate %>" placeholder="email address"/><br>
           <button class="btn btn-sm btn-success">Send Invoice</button>
         </form>

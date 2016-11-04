@@ -40,7 +40,7 @@ Rails.application.routes.draw do
       resources :invoices do 
         member do 
           get 'print'
-          get 'email'
+          post 'email'
         end
       end
       resources :credit_memos do 

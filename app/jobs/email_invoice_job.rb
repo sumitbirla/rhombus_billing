@@ -1,7 +1,7 @@
 class EmailInvoiceJob < ActiveJob::Base
   queue_as :default
 
-  def perform(invoice_id, email, user_id)
+  def perform(invoice_id, email)
 
     Mail.defaults do
       delivery_method :smtp, { :enable_starttls_auto => false, address: '10.0.7.1'  }
@@ -27,7 +27,5 @@ class EmailInvoiceJob < ActiveJob::Base
     end
     
     File.delete(output_file)
-    Invoice.logs.create(user_id: user_id, event: :emailed, data1: email)
-    
   end
 end
