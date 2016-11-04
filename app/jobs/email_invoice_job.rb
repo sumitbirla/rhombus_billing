@@ -15,7 +15,7 @@ class EmailInvoiceJob < ActiveJob::Base
     digest = Digest::MD5.hexdigest(invoice_id.to_s + token) 
     url = website_url + "/admin/billing/invoices/#{invoice.id}/print?digest=#{digest}" 
       
-    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf")
+    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     system "wkhtmltopdf #{url} #{output_file}"
     
     Mail.deliver do
