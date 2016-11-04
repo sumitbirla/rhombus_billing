@@ -63,7 +63,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
   
   def email
-    EmailInvoiceJob.perform_later(params[:id], params[:email], session[:user_id])
+    EmailInvoiceJob.perform_now(params[:id], params[:email], session[:user_id])
     flash[:info] = "Invoice ##{params[:id]} has been emailed to #{params[:email]}"
     redirect_to :back
   end

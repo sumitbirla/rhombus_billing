@@ -4,13 +4,14 @@ class EmailInvoiceJob < ActiveJob::Base
   def perform(invoice_id, email, user_id)
 
     Mail.defaults do
-      delivery_method :smtp, { :enable_starttls_auto => false  }
+      delivery_method :smtp, { :enable_starttls_auto => false, address: '10.0.7.1'  }
     end
     
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
     
     invoice = Invoice.find(invoice_id)
+    order = Order.find(invoice.invoiceable_id)
     digest = Digest::MD5.hexdigest(invoice_id.to_s + token) 
     url = website_url + "/admin/billing/invoices/#{invoice.id}/print?digest=#{digest}" 
       
@@ -19,8 +20,8 @@ class EmailInvoiceJob < ActiveJob::Base
     
     Mail.deliver do
       from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
-      to        shipment.order.notify_email
-      subject   "Invoice for #{o.external_order_id.blank? ? "order ##{o.id}" : o.external_order_id}"
+      to        email
+      subject   "Invoice for #{order.external_order_id.blank? ? "order ##{order.id}" : order.external_order_id}"
       body      "Invoice attached:\n\n"
       add_file  output_file
     end
