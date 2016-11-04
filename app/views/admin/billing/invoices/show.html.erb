@@ -79,6 +79,19 @@
   </tr>
 </table>
 
+<div class="row">
+  <div class="col-md-4 col-sm-12">
+    <div class="panel panel-warning">
+      <div class="panel-heading">Email invoice:</div>
+      <div class="panel-body">
+        <form action='/admin/billing/invoices/<%= @invoice.id %>/email'>
+          <input class="form-control" type="email" name="email" value="<%= @invoice.affiliate.invoice_email if @invoice.affiliate %>" placeholder="email address"/><br>
+          <button class="btn btn-sm btn-success">Send Invoice</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

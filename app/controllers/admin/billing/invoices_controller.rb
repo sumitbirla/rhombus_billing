@@ -2,7 +2,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   
   def index
     @invoices = Invoice.where(paid: params[:paid])
-                       .order(post_date: :desc)
+                       .order(created_at: :desc)
                        .paginate(page: params[:page], per_page: @per_page)
   end
   
@@ -61,6 +61,12 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     @invoice = Invoice.find(params[:id])
     render 'print', layout: nil
   end
+  
+  def email
+    EmailInvoiceJob.perform_later(params[:id], params[:email], session[:user_id])
+    flash[:info] = "Invoice ##{params[:id]} has been emailed to #{params[:email]}"
+    redirect_to :back
+  end
 
   def edit
     @invoice = Invoice.find(params[:id])
@@ -89,7 +95,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   def destroy
     @invoice = Invoice.find(params[:id])
     @invoice.destroy
-    redirect_to action: 'index', notice: 'Invoice has been deleted.'
+    redirect_to action: 'index', paid: 0, notice: 'Invoice has been deleted.'
   end
   
   

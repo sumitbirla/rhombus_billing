@@ -22,6 +22,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :invoiceable, polymorphic: true
   
   has_many :items, class_name: 'InvoiceItem'
+  has_many :logs, as: :loggable
   has_and_belongs_to_many :payments
   
   validates_presence_of :amount, :from_affiliate_id

@@ -1,6 +1,6 @@
 <tr>
   <td><%= link_to invoice.id.to_s, admin_billing_invoice_path(invoice) %></td>
-  <td><%= sysdate invoice.post_date %></td>
+  <td><%= invoice.post_date ? sysdate(invoice.post_date) : '<span class="light">- not posted -</span>'.html_safe %></td>
   <td><%= link_to_user_or_affiliate invoice, :invoices %></td>
   <td>
     <% if invoice.invoiceable_type == "Order" %>
