@@ -89,6 +89,7 @@
         <table class="table table-condensed table-striped">
           <tr>
             <th>Timestamp</th>
+            <th>IP Address</th>
             <th>User</th>
             <th>Event</th>
             <th>Data 1</th>
@@ -96,6 +97,7 @@
           <% @invoice.logs.each do |log| %>
           <tr>
             <td><%= systime log.timestamp %></td>
+            <td><%= log.ip_address %></td>
             <td>
               <% if log.user %>
                 <%= link_to log.user.name, admin_system_user_path(log.user) %>
