@@ -18,8 +18,11 @@ class EmailInvoiceJob < ActiveJob::Base
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     system "wkhtmltopdf #{url} #{output_file}"
     
+    from_email = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
+    from_name = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Name')
+    
     Mail.deliver do
-      from      Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
+      from      "#{from_name} <#{from_email}>"
       to        email
       subject   "Invoice for #{order.external_order_id.blank? ? "order ##{order.id}" : order.external_order_id}"
       body      "Invoice attached:\n\n"
