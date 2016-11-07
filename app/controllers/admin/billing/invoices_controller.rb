@@ -63,13 +63,11 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
   
   def email
-    @invoice = Invoice.find(params[:id])
-    
+    @invoice = Invoice.find(params[:invoice_id])
     EmailInvoiceJob.perform_later(@invoice.id, params[:email])
-    #@invoice.logs.create(user_id: session[:user_id], ip_address: request.remote_ip, event: 'emailed', data1: email)
-
+    
     flash[:info] = "Invoice ##{@invoice.id} has been emailed to #{params[:email]}"
-    redirect_to action: 'show', id: @invoice.id
+    redirect_to :back
   end
 
   def edit
