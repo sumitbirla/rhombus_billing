@@ -46,7 +46,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     end
   
     if @invoice.save
-      redirect_to action: 'index', paid: false, notice: 'Invoice was successfully created.'
+      redirect_to action: 'show', id: @invoice.id, notice: 'Invoice was successfully created.'
     else
       5.times { @invoice.items.build }
       render 'edit'
