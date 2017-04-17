@@ -9,11 +9,10 @@
     <th>ID</th>
     <th>User</th>
     <th>Package</th>
-    <th>Amount</th>
-    <th>Rate</th>
-    <th>Recurr Date</th>
-    <th>Bill Attempts</th>
-    <th>Status</th>
+    <th class="text-right">Rate</th>
+    <th class="text-center">Recurr Date</th>
+    <th class="text-center">Bill Attempts</th>
+    <th class="text-center">Status</th>
     <th></th>
   </tr>
   <% @user_packages.each do |up| %>
@@ -21,12 +20,11 @@
     <td><%= link_to up.id.to_s, admin_billing_user_package_path(up) %></td>
     <td><%= link_to up.user.name, admin_system_user_path(up.user) %></td>
     <td><%= link_to up.package.name, admin_billing_package_path(up.package) %></td>
-    <td><%= number_to_currency(up.amount) %></td>
-    <td><%= number_to_currency(up.rate) %></td>
-    <td><%= sysdate up.recurr_date %></td>
-    <td><%= up.bill_attempts %></td>
-    <td><%= up.recurr_status %></td>
-    <td>
+    <td class="text-right"><%= number_to_currency(up.total_price) %></td>
+    <td class="text-center"><%= sysdate up.recurr_date %></td>
+    <td class="text-center"><%= up.bill_attempts %></td>
+    <td class="text-center"><%= up.recurr_status %></td>
+    <td class="text-right">
       <%= link_to "edit", edit_admin_billing_user_package_path(up) %> &nbsp;
       <%= link_to "delete",
                   { action: "destroy", id: up.id },
