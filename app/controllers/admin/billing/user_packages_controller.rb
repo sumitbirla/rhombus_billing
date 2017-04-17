@@ -57,6 +57,11 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
     @user_package.destroy
     redirect_to action: 'index'
   end
+  
+  def add_service
+    UserService.create(user_package_id: params[:id], service_type_id: params[:service_type_id], quantity: 0, used: 0, rate: 0)
+    redirect_to :back
+  end
 
 
   def services

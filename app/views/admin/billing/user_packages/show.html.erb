@@ -9,8 +9,7 @@
   <div class="col-md-6">
     <table class="table table-condensed table-bordered summary">
       <%= obj_property(@user_package, :user) { |x| link_to x.name, admin_system_user_path(x) }%>
-      <%= obj_property @user_package, :package %>
-      <%= obj_property @user_package, :rate %>
+      <%= obj_property @user_package, :package %> 
       <%= obj_property @user_package, :recurr_status %>
       <%= obj_property @user_package, :recurr_date %>
     </table>
@@ -18,17 +17,17 @@
   
   <div class="col-md-6">
     <table class="table table-condensed table-bordered summary">
-      <%= obj_property(@user_package, :package, label: "Base rate") { |x| x.price } %>
+      <%= obj_property @user_package, :rate, label: "Base rate" %>
       <%= obj_property(@user_package, :total_price, label: "With extras") %>
-      <%= obj_property(@user_package, :payments, label: "Balance") { |x| x.sum(:amount) } %>
+      <%= obj_property(@user_package, :payments, label: "Balance due") { |x| x.sum(:amount) } %>
     </table>
   </div>
 </div>
 
 
 <div class="row">
-  <div class="col-md-12">
-    <h4>Services</h4>
+  <div class="col-md-8">
+    <h4>Included Services</h4>
     <table class="table table-striped table-condensed">
       <tr>
         <th>Code</th>
@@ -36,13 +35,17 @@
         <th class="text-center">Used</th>
         <th class="text-center">Rate</th>
         <th>Service Type</th>
+        <th></th>
       </tr>
-      <% @user_package.services.each do |svc| %>
+      <%  included_svcs = []
+          @user_package.services.each do |svc| 
+            included_svcs << svc.service_type.id
+          %>
           <tr>
             <td><%= svc.service_type.code %></td>
             
-            <td class="text-center"><%= svc.quantity %></td>
-            <td class="text-center"><%= svc.used %></td>
+            <td class="text-center"><%= number_with_delimiter svc.quantity.round %></td>
+            <td class="text-center"><%= number_with_delimiter svc.used.round %></td>
             <td class="text-center">
               <% if svc.rate %>
                   <%= number_to_currency(svc.rate) %> / <%= svc.service_type.bill_frequency.downcase%>
@@ -55,10 +58,14 @@
               <% if svc.items.length > 0 %>
               <small>
                 &raquo; 
-                <%= svc.items.collect { |x| x.item_id }.join(", ") %>
+                <% svc.items.collect { |x| x.item_id }.join(", ") %>
               </small>
               <% end %>
             </td>
+            <td><%= link_to "- remove",
+                      { action: "destroy", controller: 'user_services', id: svc.id },
+                      method: :delete,
+                      data: { confirm: "Is it OK to remove #{svc.service_type.code} service?" } %></td>
           </tr>
       <% end %>
     </table>
@@ -82,6 +89,24 @@
       <% end %>
     </table>
 
+  </div>
+  
+  <div class="col-md-4">
+    <h4>Available</h4>
+    <% svc_list = ServiceType.where.not(id: included_svcs) %>
+    <table class="table table-striped table-condensed">
+      <tr>
+        <th>Code</th>
+        <th>Description</th>
+        <th>&nbsp;</th>
+      </tr>
+      <% svc_list.each do |svc| %>
+      <tr>
+        <td><%= svc.code %></td>
+        <td><%= svc.name %></td>
+        <td><%= link_to "+ add", add_service_admin_billing_user_package_path(@user_package, service_type_id: svc.id) %></td>
+      </tr>
+      <% end %>
   </div>
 </div>  <!-- row -->
 

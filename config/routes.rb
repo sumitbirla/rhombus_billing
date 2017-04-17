@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       resources :user_packages do
         member do
           get 'services'
+          get 'add_service'
         end
       end
       resources :user_services
