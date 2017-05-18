@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     
     namespace :billing do
       post 'email_invoice' => 'invoices#email'
+      post 'invoices_print_batch' => 'invoices#print_batch'
       
       resources :cc_transactions
       resources :service_types

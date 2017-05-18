@@ -1,4 +1,5 @@
 <tr>
+  <td><input type="checkbox" name="invoice_id[]" class="multiselect hidden-xs" value="<%= invoice.id %>"/></td>
   <td><%= link_to invoice.id.to_s, admin_billing_invoice_path(invoice) %></td>
   <td><%= invoice.post_date ? sysdate(invoice.post_date) : '<span class="light">- not posted -</span>'.html_safe %></td>
   <td><%= link_to_user_or_affiliate invoice, :invoices %></td>

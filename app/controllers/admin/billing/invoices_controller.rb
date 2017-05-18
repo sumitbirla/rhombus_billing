@@ -62,6 +62,41 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     render 'print', layout: nil
   end
   
+  def print_batch
+    urls = ''
+    token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
+    website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
+    
+    Invoice.where(id: params[:invoice_id]).each do |inv|
+      digest = Digest::MD5.hexdigest(inv.id.to_s + token) 
+      urls += " " + website_url + print_admin_billing_invoice_path(inv, digest: digest) 
+      
+      # LOG HERE
+      inv.logs.create(timestamp: Time.now, 
+                      user_id: session[:user_id], 
+                      ip_address: request.remote_ip, 
+                      event: :printed, 
+                      data1: params[:printer_id].presence || 'PDF download')
+    end
+    
+    output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
+    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    
+    unless File.exists?(output_file)
+      flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
+      return redirect_to :back
+    end
+    
+    if params[:printer_id].blank?
+      send_file output_file
+    else
+      printer = Printer.find(params[:printer_id])
+      job = printer.print_file(output_file)
+      flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
+      redirect_to :back
+    end
+  end
+  
   def email
     @invoice = Invoice.find(params[:invoice_id])
     

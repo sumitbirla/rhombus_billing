@@ -2,7 +2,7 @@
   <%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm' do %>
     <i class="fa fa-edit"></i> Edit
   <% end %>
-  <%= link_to print_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm', target: '_new' do %>
+  <%= link_to admin_billing_invoices_print_batch_path, class: 'print-link btn btn-default btn-sm', target: '_new' do %>
     <i class="fa fa-print"></i> Print
   <% end %>
 </div>
@@ -130,6 +130,12 @@
   </div>
 </div>
 
+
+<form id="frmBatch" action="" method="post">
+	<%= token_tag %>
+  <input type="hidden" name="printer_id" value=""/>
+  <input type="hidden" name="invoice_id[]" value="<%= @invoice.id %>"/>
+</form>
 
 
 <% content_for :title do %>

@@ -28,6 +28,7 @@
       </div>
       <div class="panel-body">
         <%= f.input :from_affiliate_id, collection: Cache.affiliate_list('purchasers'), label: 'Issued by' %>
+        <%= f.input :affiliate_id, collection: Cache.affiliate_list('retailers'), label: 'Issued to' %>
         <%= f.input :amount %>
         <%= f.input :post_date, as: :datepicker%>
         <%= f.input :due_date, as: :datepicker %>  
