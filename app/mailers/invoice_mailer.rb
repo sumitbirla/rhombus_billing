@@ -21,17 +21,11 @@ class InvoiceMailer < ActionMailer::Base
     from_name = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Name')
     from_email = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
 
-    options = {
-        address: Cache.setting(Rails.configuration.domain_id, :system, 'SMTP Server'),
-        openssl_verify_mode: 'none'
-    }
-    
-    attachments['Invoices.pdf'] = File.read(output_file)
+    attachments.inline['Invoices.pdf'] = File.read(output_file)
     
     mail(from: "#{from_name} <#{from_email}>",
          to: email_address,
-         subject: "Invoice attached (#{@invoices.length})",
-         delivery_method_options: options)
+         subject: "Invoice attached (#{@invoices.length})")
          
     File.delete(output_file)
     
