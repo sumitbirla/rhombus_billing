@@ -22,7 +22,7 @@ class InvoiceMailer < ActionMailer::Base
     from_email = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
 
     options = {
-        address: '10.0.7.1', #Cache.setting(Rails.configuration.domain_id, :system, 'SMTP Server'),
+        address: Cache.setting(Rails.configuration.domain_id, :system, 'SMTP Server'),
         openssl_verify_mode: 'none'
     }
     
