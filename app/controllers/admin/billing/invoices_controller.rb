@@ -106,6 +106,28 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     flash[:info] = "Invoice ##{@invoice.id} has been emailed to #{params[:email]}"
     redirect_to :back
   end
+  
+  def email_batch
+    
+    if params[:email_address].blank?
+      flash[:error] = "Please specify an email address"
+      return redirect_to :back
+    end
+    
+    if params[:invoice_id].length == 0
+      flash[:error] = "Please invoices to email"
+      return redirect_to :back
+    end
+    
+    begin
+      InvoiceMailer.batch(params[:invoice_id], session[:user_id], params[:email_address], request.remote_ip).deliver_now
+      flash[:success] = "#{params[:invoice_id].length} invoice(s) were mailed to '#{params[:email_address]}'"
+    rescue => e
+      flash[:error] = e.message
+    end
+    
+    redirect_to :back
+  end
 
   def edit
     @invoice = Invoice.find(params[:id])
