@@ -1,25 +1,5 @@
 <div class="pull-right">
-  <form action="" method="get" style="display: none;">
-      <input type="hidden" name="uid" value="<%= params[:uid] %>">
-      <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to 
-      <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
-      <input type="submit" class="btn btn-sm btn-default">
-  </form>
-  
-  <div class="pull-right hidden-xs">
-    <select id="selAction" class="form-control" style="display: inline; width: 75%">
-      <option> - - Select Action - - </option>
-  	  <option method="get" value="<%= new_admin_billing_invoice_path %>">New invoice</option>
-      <option method="post" print-dialog="true" value="<%= admin_billing_invoices_print_batch_path %>">Print (PDF)</option>
-      <option method="post" email-dialog="true" value="<%= admin_billing_invoices_email_batch_path %>">Email invoices</option>
-      <optgroup label="Mark as ">
-          <option method="post" value="/admin/store/shipments_update_status?status=shipped">Paid</option>
-          <option method="post" value="/admin/store/shipments_update_status?status=pending">Unpaid</option>
-      </optgroup>
-    </select>
-    <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
-  </div>
-  
+  <%= render 'admin/billing/invoices/group_actions' %>
 </div>
 
 <h2>
