@@ -9,7 +9,7 @@
     <select id="selAction" class="form-control" style="display: inline; width: 75%">
       <option> - - Select Action - - </option>
   	  <option method="get" value="<%= new_admin_billing_invoice_path %>">New invoice</option>
-      <option method="post" print-dialog="true" value="<%= admin_billing_invoices_print_batch_path %>">Print (PDF)</option>
+      <option method="post" print-dialog="true" print-format="pdf" value="<%= admin_billing_invoices_print_batch_path %>">Print (PDF)</option>
       <option method="post" email-dialog="true" value="<%= admin_billing_invoices_email_batch_path %>">Email invoices</option>
       <optgroup label="Mark as ">
           <option method="post" value="/admin/store/shipments_update_status?status=shipped">Paid</option>
