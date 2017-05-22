@@ -5,20 +5,20 @@
   <td><%= link_to_user_or_affiliate invoice, :invoices %></td>
   <td>
     <% if invoice.invoiceable_type == "Order" %>
-      <% o = Order.find(invoice.invoiceable_id)%>
-        <%= link_to "Order ##{invoice.invoiceable_id}", admin_store_order_path(invoice.invoiceable_id) %>
+      <% o = Order.find_by(id: invoice.invoiceable_id)%>
+        <%= link_to "Order ##{invoice.invoiceable_id}", admin_store_order_path(invoice.invoiceable_id) unless o.nil? %>
     <% elsif invoice.invoiceable_type == "UserPackage" %>
         <%= link_to UserPackage.find(invoice.invoiceable_id).package.name + " package [#{invoice.invoiceable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
     <% elsif invoice.invoiceable_type == "Shipment" %>
         <% shipment = Shipment.find_by(id: invoice.invoiceable_id)%>
-        <%= link_to "Shipment #{shipment}", admin_store_shipment_path(invoice.invoiceable_id) %>
+        <%= link_to "Shipment #{shipment}", admin_store_shipment_path(invoice.invoiceable_id) unless shipment.nil? %>
     <% end %>
   </td>
   <td>
     <% if invoice.invoiceable_type == "Order"
-          o = Order.find(invoice.invoiceable_id)
+          o = Order.find_by(id: invoice.invoiceable_id)
       elsif invoice.invoiceable_type == "Shipment"
-          o = Shipment.find(invoice.invoiceable_id).order
+          o = Shipment.find_by(id: invoice.invoiceable_id).order
       end
     %>
     <span class="light"><%= o.external_order_id unless o.nil? %></span>
@@ -28,7 +28,7 @@
   <td class="text-center">
     <% if invoice.paid %>
       <span class="label label-success">paid</span>
-    <% elsif invoice.due_date < Date.today %>
+    <% elsif invoice.due_date && (invoice.due_date < Date.today) %>
       <span class="label label-danger">overdue</span>
     <% else %>
       <span class="label label-warning">unpaid</span>
@@ -37,7 +37,7 @@
   <td class="text-right">
 		<%= link_to "edit", edit_admin_billing_invoice_path(invoice) %> &nbsp;
 		<%= link_to "delete", 
-					  { action: "destroy", id: invoice.id }, 
+					  { controller: 'admin/billing/invoices', action: "destroy", id: invoice.id }, 
 					  method: :delete, 
 					  data: { confirm: "Are you sure?" } %>
   </td>

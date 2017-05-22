@@ -168,7 +168,9 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   def destroy
     @invoice = Invoice.find(params[:id])
     @invoice.destroy
-    redirect_to action: 'index', paid: 0, notice: 'Invoice has been deleted.'
+    
+    flash.now[:success] = "Invoice ##{@invoice.id} has been deleted"
+    redirect_to :back
   end
   
   
