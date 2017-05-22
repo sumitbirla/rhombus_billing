@@ -25,7 +25,15 @@
   </td>
   <td class="text-right"><%= number_to_currency invoice.amount %></td>
   <td class="text-center"><%= invoice.due_date %></td>
-  <td class="text-center"><%= tick invoice.paid %></td>
+  <td class="text-center">
+    <% if invoice.paid %>
+      <span class="label label-success">paid</span>
+    <% elsif invoice.due_date < Date.today %>
+      <span class="label label-danger">overdue</span>
+    <% else %>
+      <span class="label label-warning">unpaid</span>
+    <% end %>
+  </td>
   <td class="text-right">
 		<%= link_to "edit", edit_admin_billing_invoice_path(invoice) %> &nbsp;
 		<%= link_to "delete", 

@@ -152,6 +152,18 @@ class Admin::Billing::InvoicesController < Admin::BaseController
       render 'edit'
     end
   end
+  
+  def update_status_batch
+    list = Invoice.where(id: params[:invoice_id])
+    
+    list.each do |invoice|
+      invoice.update(paid: params[:paid] == "true")
+      #log
+    end
+    
+    flash[:info] = "#{list.length} invoices updated"
+    redirect_to :back
+  end
 
   def destroy
     @invoice = Invoice.find(params[:id])

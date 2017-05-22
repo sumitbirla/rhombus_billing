@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       post 'email_invoice' => 'invoices#email'
       post 'invoices_print_batch' => 'invoices#print_batch'
       post 'invoices_email_batch' => 'invoices#email_batch'
+      post 'invoices_update_status_batch' => 'invoices#update_status_batch'
       
       resources :cc_transactions
       resources :service_types

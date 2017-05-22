@@ -12,8 +12,8 @@
       <option method="post" print-dialog="true" print-format="pdf" value="<%= admin_billing_invoices_print_batch_path %>">Print (PDF)</option>
       <option method="post" email-dialog="true" value="<%= admin_billing_invoices_email_batch_path %>">Email invoices</option>
       <optgroup label="Mark as ">
-          <option method="post" value="/admin/store/shipments_update_status?status=shipped">Paid</option>
-          <option method="post" value="/admin/store/shipments_update_status?status=pending">Unpaid</option>
+          <option method="post" value="<%= admin_billing_invoices_update_status_batch_path(paid: "true") %>">Paid</option>
+          <option method="post" value="<%= admin_billing_invoices_update_status_batch_path(paid: "false") %>">Unpaid</option>
       </optgroup>
     </select>
     <input type="button" class="btn btn-default btn-small" id="btnAction" value="Go" />	  
