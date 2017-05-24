@@ -33,8 +33,12 @@
             <% end %>
           </table>
           
-          <br><br><b>Attachments:</b><br>
-          <%= image_tag attachments['Invoices.pdf'].url %> 
+          <br><br><b>Attachments:</b>
+          <ul>
+            <% attachments.each do |attch| %>
+              <li><%= attch.filename %></li>
+            <% end %>
+          </ul>
     		</td>
     	</tr>
     </table>

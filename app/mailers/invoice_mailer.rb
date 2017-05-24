@@ -21,7 +21,7 @@ class InvoiceMailer < ActionMailer::Base
     from_name = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Name')
     from_email = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')
 
-    attachments.inline['Invoices.pdf'] = File.read(output_file)
+    attachments['Invoices.pdf'] = File.read(output_file)
     
     mail(from: "#{from_name} <#{from_email}>",
          to: email_address,
