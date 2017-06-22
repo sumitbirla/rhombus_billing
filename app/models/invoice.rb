@@ -26,6 +26,13 @@ class Invoice < ActiveRecord::Base
   has_and_belongs_to_many :payments
   
   validates_presence_of :amount, :from_affiliate_id
+  validate :issued_to
   accepts_nested_attributes_for :items, reject_if: lambda { |x| x['quantity'].blank? }, allow_destroy: true
+  
+  def issued_to
+    if (user_id.blank? && affiliate_id.blank?)
+      errors.add(:base, "Specified issued_to user or affiliate")
+    end
+  end
   
 end

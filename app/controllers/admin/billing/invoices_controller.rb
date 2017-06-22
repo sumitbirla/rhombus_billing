@@ -27,7 +27,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
       @invoice.items.build(group: s.to_s, item_number: 'Tax', item_description: '-', unit_price: s.order.tax_amount * -1, quantity: 1) if s.order.tax_amount > 0
       @invoice.items.build(group: s.to_s, item_number: 'Discount', item_description: '-', unit_price: s.order.discount_amount * -1, quantity: 1) if s.order.discount_amount > 0
       @invoice.items.build(group: s.to_s, item_number: 'Credit', item_description: '-', unit_price: s.order.credit_applied * -1, quantity: 1) if s.order.credit_applied > 0
-      @invoice.items.build(group: s.to_s, item_number: 'Shipping', item_description: "#{carrier} #{ship_method}", unit_price: s.ship_cost, quantity: 1) if (s.ship_cost && s.ship_cost > 0)
+      @invoice.items.build(group: s.to_s, item_number: 'Shipping', item_description: "#{s.carrier} #{s.ship_method}", unit_price: s.ship_cost, quantity: 1) if (s.ship_cost && s.ship_cost > 0)
     else
       @invoice = Invoice.new
     end
