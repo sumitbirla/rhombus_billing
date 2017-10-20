@@ -107,11 +107,12 @@
         <td><%= link_to "+ add", add_service_admin_billing_user_package_path(@user_package, service_type_id: svc.id) %></td>
       </tr>
       <% end %>
+    </table>
   </div>
 </div>  <!-- row -->
 
 
-<%= content_for :title do %>
+<% content_for :title do %>
     <%= "Subscription ##{@user_package.id}" %>
 <% end %>
 
