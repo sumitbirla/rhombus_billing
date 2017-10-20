@@ -1,6 +1,7 @@
 class Admin::Billing::PackagesController < Admin::BaseController
   
   def index
+    authorize Package
     @packages = Package.where(domain_id: cookies[:domain_id])
     
     respond_to do |format|
@@ -10,12 +11,12 @@ class Admin::Billing::PackagesController < Admin::BaseController
   end
 
   def new
-    @package = Package.new name: 'New Package', sort: 9, trial_days: 0
+    @package = authorize Package.new(name: 'New Package', sort: 9, trial_days: 0)
     render 'edit'
   end
 
   def create
-    @package = Package.new(package_params)
+    @package = authorize Package.new(package_params)
     @package.domain_id = cookies[:domain_id]
     
     if @package.save
@@ -26,15 +27,15 @@ class Admin::Billing::PackagesController < Admin::BaseController
   end
 
   def show
-    @package = Package.includes(:details, [details: :service_type]).find(params[:id])
+    @package = authorize Package.includes(:details, [details: :service_type]).find(params[:id])
   end
 
   def edit
-    @package = Package.find(params[:id])
+    @package = authorize Package.find(params[:id])
   end
 
   def update
-    @package = Package.find(params[:id])
+    @package = authorize Package.find(params[:id])
     
     if @package.update(package_params)
       redirect_to action: 'index', notice: 'Package was successfully updated.'
@@ -44,7 +45,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
   end
 
   def destroy
-    @package = Package.find(params[:id])
+    @package = authorize Package.find(params[:id])
     @package.destroy
     redirect_to action: 'index', notice: 'Package has been deleted.'
   end
@@ -52,6 +53,7 @@ class Admin::Billing::PackagesController < Admin::BaseController
 
   def details
     @package = Package.find(params[:id])
+    authorize @package, :show?
   end
 
   

@@ -8,4 +8,8 @@ class CreditMemo < ActiveRecord::Base
   validates_presence_of :user_id, unless: ->(cm){cm.affiliate_id.present?}
   validates_presence_of :affiliate_id, unless: ->(cm){cm.user_id.present?}
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

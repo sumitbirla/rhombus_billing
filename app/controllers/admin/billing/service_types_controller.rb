@@ -1,6 +1,7 @@
 class Admin::Billing::ServiceTypesController < Admin::BaseController
   
   def index
+    authorize ServiceType
     @service_types = ServiceType.where(domain_id: cookies[:domain_id]).order(:sort)
     
     respond_to do |format|
@@ -10,12 +11,12 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
   end
 
   def new
-    @service_type = ServiceType.new name: 'New service type'
+    @service_type = authorize ServiceType.new(name: 'New service type')
     render 'edit'
   end
 
   def create
-    @service_type = ServiceType.new(service_type_params)
+    @service_type = authorize ServiceType.new(service_type_params)
     @service_type.domain_id = cookies[:domain_id]
     
     if @service_type.save
@@ -26,15 +27,15 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
   end
 
   def show
-    @service_type = ServiceType.find(params[:id])
+    @service_type = authorize ServiceType.find(params[:id])
   end
 
   def edit
-    @service_type = ServiceType.find(params[:id])
+    @service_type = authorize ServiceType.find(params[:id])
   end
 
   def update
-    @service_type = ServiceType.find(params[:id])
+    @service_type = authorize ServiceType.find(params[:id])
     
     if @service_type.update(service_type_params)
       redirect_to action: 'index', notice: 'Service Type was successfully updated.'
@@ -44,7 +45,7 @@ class Admin::Billing::ServiceTypesController < Admin::BaseController
   end
 
   def destroy
-    @service_type = ServiceType.find(params[:id])
+    @service_type = authorize ServiceType.find(params[:id])
     @service_type.destroy
     redirect_to action: 'index', notice: 'Service Type has been deleted.'
   end

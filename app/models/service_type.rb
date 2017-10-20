@@ -20,4 +20,9 @@ class ServiceType < ActiveRecord::Base
   
   belongs_to :domain
   validates_presence_of :name, :quantity_type, :sort
+  
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

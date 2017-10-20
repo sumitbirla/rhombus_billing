@@ -1,6 +1,7 @@
 class Admin::Billing::InvoicesController < Admin::BaseController
   
   def index
+    authorize Invoice
     @invoices = Invoice.where(paid: params[:paid])
                        .order(post_date: :desc)
                        .paginate(page: params[:page], per_page: @per_page)
@@ -32,12 +33,14 @@ class Admin::Billing::InvoicesController < Admin::BaseController
       @invoice = Invoice.new
     end
     
+    authorize @invoice
+    
     5.times { @invoice.items.build }
     render 'edit'
   end
 
   def create
-    @invoice = Invoice.new(invoice_params)
+    @invoice = authorize Invoice.new(invoice_params)
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @invoice.items.length + 5 
@@ -54,15 +57,18 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
 
   def show
-    @invoice = Invoice.find(params[:id])
+    @invoice = authorize Invoice.find(params[:id])
   end
   
   def print
     @invoice = Invoice.find(params[:id])
+    authorize @invoice, :show?
     render 'print', layout: nil
   end
   
   def print_batch
+    authorize Invoice, :show?
+    
     urls = ''
     token = Cache.setting(Rails.configuration.domain_id, :system, 'Security Token')
     website_url = Cache.setting(Rails.configuration.domain_id, :system, 'Website URL')
@@ -130,12 +136,12 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
 
   def edit
-    @invoice = Invoice.find(params[:id])
+    @invoice = authorize Invoice.find(params[:id])
     2.times { @invoice.items.build }
   end
 
   def update
-    @invoice = Invoice.find(params[:id])
+    @invoice = authorize Invoice.find(params[:id])
     item_count = @invoice.items.length
 
     @invoice.assign_attributes(invoice_params)
@@ -154,6 +160,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
   
   def update_status_batch
+    authorize Invoice, :update?
     list = Invoice.where(id: params[:invoice_id])
     
     list.each do |invoice|
@@ -166,7 +173,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
 
   def destroy
-    @invoice = Invoice.find(params[:id])
+    @invoice = authorize Invoice.find(params[:id])
     @invoice.destroy
     
     flash.now[:success] = "Invoice ##{@invoice.id} has been deleted"

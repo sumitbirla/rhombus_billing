@@ -1,6 +1,8 @@
 class Admin::Billing::PaymentsController < Admin::BaseController
   
   def index
+    authorize Payment
+    
     @payments = Payment.order(created_at: :desc)
     @payments = @payments.where(user_id: params[:uid]) unless params[:uid].nil?
     @payments = @payments.where("created_at > '#{params[:start_date]}'") unless params[:start_date].blank?
@@ -17,11 +19,11 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   end
   
   def show
-    @payment = Payment.find(params[:id])
+    @payment = authorize Payment.find(params[:id])
   end
 
   def new
-    @payment = Payment.new(user_id: params[:user_id], memo: 'New Payment')
+    @payment = authorize Payment.new(user_id: params[:user_id], memo: 'New Payment')
     
     unless params[:order_id].nil?
       order = Order.find(params[:order_id])
@@ -39,7 +41,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   end
 
   def create
-    @payment = Payment.new(payment_params)
+    @payment = authorize Payment.new(payment_params)
 
     if @payment.save
       flash[:notice] =  'Payment was successfully created.'
@@ -50,11 +52,11 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   end
 
   def edit
-    @payment = Payment.find(params[:id])
+    @payment = authorize Payment.find(params[:id])
   end
 
   def update
-    @payment = Payment.find(params[:id])
+    @payment = authorize Payment.find(params[:id])
 
     if @payment.update(payment_params)
       flash[:notice] =  'Payment was successfully updated.'
@@ -65,7 +67,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   end
 
   def destroy
-    @payment = Payment.find(params[:id])
+    @payment = authorize Payment.find(params[:id])
     @payment.destroy
 
     flash[:notice] = 'Payment has been deleted.'
@@ -75,6 +77,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   
   def refund
     @payment = Payment.find(params[:id])
+    authorize @payment, :update?
     response = @payment.refund(params[:amount].to_f, params[:memo])
     flash[:notice] = response.message
     redirect_to :back

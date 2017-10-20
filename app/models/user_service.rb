@@ -21,4 +21,9 @@ class UserService < ActiveRecord::Base
   def overage
     (used > quantity) ?  used-quantity : 0
   end
+  
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
 end

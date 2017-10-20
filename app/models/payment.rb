@@ -123,4 +123,9 @@ class Payment < ActiveRecord::Base
     response  
   end
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
 end

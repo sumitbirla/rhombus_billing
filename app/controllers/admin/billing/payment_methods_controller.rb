@@ -1,6 +1,7 @@
 class Admin::Billing::PaymentMethodsController < Admin::BaseController
 
   def index
+    authorize PaymentMethod
     @payment_methods = PaymentMethod.includes(:user)
     
     respond_to do |format|
@@ -10,15 +11,15 @@ class Admin::Billing::PaymentMethodsController < Admin::BaseController
   end
 
   def show
-    @payment_method = PaymentMethod.find(params[:id])
+    @payment_method = authorize PaymentMethod.find(params[:id])
   end
 
   def new
-    @payment_method = PaymentMethod.new(user_id: params[:user_id])
+    @payment_method = authorize PaymentMethod.new(user_id: params[:user_id])
   end
 
   def create
-    @payment_method = PaymentMethod.new(payment_method_params)
+    @payment_method = authorize PaymentMethod.new(payment_method_params)
     @payment_method.status = 'A'
 
     if @payment_method.save
@@ -30,7 +31,7 @@ class Admin::Billing::PaymentMethodsController < Admin::BaseController
   end
   
   def destroy
-    pm = PaymentMethod.find(params[:id])
+    pm = authorize PaymentMethod.find(params[:id])
     pm.destroy
     
     # if there is only one remaining payment_method, make it the default

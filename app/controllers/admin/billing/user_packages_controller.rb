@@ -1,6 +1,7 @@
 class Admin::Billing::UserPackagesController < Admin::BaseController
 
   def index
+    authorize UserPackage
     @user_packages = UserPackage.joins(:package)
                                 .where("bill_packages.domain_id = #{cookies[:domain_id]}")
                                 .where(recurr_status: 'A')
@@ -14,12 +15,12 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
   end
 
   def new
-    @user_package = UserPackage.new
+    @user_package = authorize UserPackage.new
     render 'edit'
   end
 
   def create
-    @user_package = UserPackage.new(user_package_params)
+    @user_package = authorize UserPackage.new(user_package_params)
 
     if @user_package.save
 
@@ -35,15 +36,15 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
   end
 
   def show
-    @user_package = UserPackage.includes(:services, [services: :service_type], [services: :items]).find(params[:id])
+    @user_package = authorize UserPackage.includes(:services, [services: :service_type], [services: :items]).find(params[:id])
   end
 
   def edit
-    @user_package = UserPackage.find(params[:id])
+    @user_package = authorize UserPackage.find(params[:id])
   end
 
   def update
-    @user_package = UserPackage.find(params[:id])
+    @user_package = authorize UserPackage.find(params[:id])
 
     if @user_package.update(user_package_params)
       redirect_to action: 'show', id: params[:id]
@@ -53,12 +54,13 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
   end
 
   def destroy
-    @user_package = UserPackage.find(params[:id])
+    @user_package = authorize UserPackage.find(params[:id])
     @user_package.destroy
     redirect_to action: 'index'
   end
   
   def add_service
+    authorize UserPackage, :update?
     UserService.create(user_package_id: params[:id], service_type_id: params[:service_type_id], quantity: 0, used: 0, rate: 0)
     redirect_to :back
   end
@@ -66,6 +68,7 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
 
   def services
     @user_package = UserPackage.includes(:services, [services: :service_type], [services: :items]).find(params[:id])
+    authorize @user_package, :show?
   end
 
 
