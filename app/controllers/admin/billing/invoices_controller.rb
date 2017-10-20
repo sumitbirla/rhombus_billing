@@ -1,7 +1,7 @@
 class Admin::Billing::InvoicesController < Admin::BaseController
   
   def index
-    authorize Invoice
+    authorize Invoice.new
     @invoices = Invoice.where(paid: params[:paid])
                        .order(post_date: :desc)
                        .paginate(page: params[:page], per_page: @per_page)

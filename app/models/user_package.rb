@@ -44,4 +44,9 @@ class UserPackage < ActiveRecord::Base
     total
   end
   
+  # PUNDIT
+  def self.policy_class
+    ApplicationPolicy
+  end
+  
 end

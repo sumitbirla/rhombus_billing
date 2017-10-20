@@ -1,6 +1,6 @@
 class Admin::Billing::CreditMemosController < Admin::BaseController
   def index
-    authorize CreditMemo
+    authorize CreditMemo.new
     @credit_memos = CreditMemo.order(created_at: :desc)
                               .paginate(page: params[:page], per_page: @per_page)
   end

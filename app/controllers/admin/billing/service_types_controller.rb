@@ -1,7 +1,7 @@
 class Admin::Billing::ServiceTypesController < Admin::BaseController
   
   def index
-    authorize ServiceType
+    authorize ServiceType.new
     @service_types = ServiceType.where(domain_id: cookies[:domain_id]).order(:sort)
     
     respond_to do |format|

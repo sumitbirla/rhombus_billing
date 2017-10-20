@@ -1,7 +1,7 @@
 class Admin::Billing::PackagesController < Admin::BaseController
   
   def index
-    authorize Package
+    authorize Package.new
     @packages = Package.where(domain_id: cookies[:domain_id])
     
     respond_to do |format|

@@ -1,7 +1,7 @@
 class Admin::Billing::PaymentMethodsController < Admin::BaseController
 
   def index
-    authorize PaymentMethod
+    authorize PaymentMethod.new
     @payment_methods = PaymentMethod.includes(:user)
     
     respond_to do |format|

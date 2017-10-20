@@ -1,7 +1,7 @@
 class Admin::Billing::UserPackagesController < Admin::BaseController
 
   def index
-    authorize UserPackage
+    authorize UserPackage.new
     @user_packages = UserPackage.joins(:package)
                                 .where("bill_packages.domain_id = #{cookies[:domain_id]}")
                                 .where(recurr_status: 'A')

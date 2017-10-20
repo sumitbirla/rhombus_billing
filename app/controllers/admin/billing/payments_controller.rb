@@ -1,7 +1,7 @@
 class Admin::Billing::PaymentsController < Admin::BaseController
   
   def index
-    authorize Payment
+    authorize Payment.new
     
     @payments = Payment.order(created_at: :desc)
     @payments = @payments.where(user_id: params[:uid]) unless params[:uid].nil?
