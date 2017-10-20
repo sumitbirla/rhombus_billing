@@ -1,6 +1,7 @@
 class Admin::Billing::CcTransactionsController < Admin::BaseController
 
   def index
+    authorize CcTransaction.new
     @cc_transactions = CcTransaction.joins(:payment_method)
                                     .includes(:payment_method)
                                     .order(sort_column + " " + sort_direction)
@@ -16,7 +17,7 @@ class Admin::Billing::CcTransactionsController < Admin::BaseController
   end
   
   def show
-    @cc_transaction = CcTransaction.find(params[:id])
+    @cc_transaction = authorize CcTransaction.find(params[:id])
   end
   
   
