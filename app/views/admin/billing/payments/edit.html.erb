@@ -4,6 +4,7 @@
 <%= simple_form_for [:admin, :billing, @payment] do |f| %>
 
     <%= render 'admin/shared/error_messages', object: f.object %>
+    <%= hidden_field_tag :redirect, params[:redirect] %>
 
     <%= f.association :user %>
     <%= f.input :amount %>

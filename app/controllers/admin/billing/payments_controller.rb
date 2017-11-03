@@ -45,7 +45,11 @@ class Admin::Billing::PaymentsController < Admin::BaseController
 
     if @payment.save
       flash[:notice] =  'Payment was successfully created.'
-      redirect_to action: 'index'
+      if params[:redirect]
+        redirect_to params[:redirect]
+      else
+        redirect_to action: 'index'
+      end
     else
       render 'edit'
     end
