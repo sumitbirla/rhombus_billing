@@ -62,7 +62,6 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   
   def print
     @invoice = Invoice.find(params[:id])
-    authorize @invoice, :show?
     render 'print', layout: nil
   end
   
@@ -87,6 +86,8 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    
+    puts ">>>>>>>> " + urls
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
