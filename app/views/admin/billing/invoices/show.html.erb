@@ -2,7 +2,7 @@
   <%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm' do %>
     <i class="fa fa-edit"></i> Edit
   <% end %>
-  <%= link_to admin_billing_invoices_print_batch_path, class: 'print-link btn btn-default btn-sm', target: '_new' do %>
+  <%= link_to admin_billing_invoices_print_batch_path, class: 'print-link btn btn-default btn-sm', "print-format" => "pdf" do %>
     <i class="fa fa-print"></i> Print
   <% end %>
 </div>
