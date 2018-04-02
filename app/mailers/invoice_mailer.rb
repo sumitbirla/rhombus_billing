@@ -14,7 +14,7 @@ class InvoiceMailer < ActionMailer::Base
     end
     
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
-    ret = system("wkhtmltopdf -q #{urls} #{output_file}")
+    ret = system("wkhtmltopdf -q -s Letter #{urls} #{output_file}")
     
     raise "Could not generate PDF" unless File.exists?(output_file)
   
