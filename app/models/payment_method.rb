@@ -49,7 +49,7 @@ class PaymentMethod < ActiveRecord::Base
   validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
 
   def to_s
-    (cardholder_name + " &middot; " + card_brand.upcase + " " + card_display).html_safe
+    (cardholder_name + " · " + card_brand.upcase + " " + card_display).html_safe
   end
 
   def self.CARD_BRANDS

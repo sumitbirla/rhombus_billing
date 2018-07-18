@@ -19,18 +19,15 @@ class Invoice < ActiveRecord::Base
   belongs_to :user
   belongs_to :affiliate
   belongs_to :from_affiliate, class_name: 'Affiliate'
-  belongs_to :invoiceable, polymorphic: true
   
-  has_many :items, class_name: 'InvoiceItem'
   has_many :logs, as: :loggable
-  has_and_belongs_to_many :payments
+  has_many :payments
   
   validates_presence_of :amount, :from_affiliate_id
   validate :issued_to
-  accepts_nested_attributes_for :items, reject_if: lambda { |x| x['quantity'].blank? }, allow_destroy: true
   
   def issued_to
-    if (user_id.blank? && affiliate_id.blank?)
+    if (user_id.nil? && affiliate_id.nil?)
       errors.add(:base, "Specified issued_to user or affiliate")
     end
   end
