@@ -5,16 +5,16 @@
     <td><%= link_to_user_or_affiliate pmt, :payments %></td>
     <td class="text-center"><%= tick pmt.customer %></td>
     <td>
-      <% if pmt.payable_type == "order" %>
+      <% if pmt.payable_type == "Order" %>
           <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
       <% elsif pmt.payable_type == "UserPackage" %>
           <%= link_to UserPackage.find(pmt.payable_id).package.name + " package [#{pmt.payable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "shipment" %>
+      <% elsif pmt.payable_type == "Shipment" %>
           <% shipment = Shipment.find_by(id: pmt.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
       <% end %>
     </td>
     <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
     <td><%= pmt.memo %></td>
-    <td><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+    <td class="text-right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
   </tr>
