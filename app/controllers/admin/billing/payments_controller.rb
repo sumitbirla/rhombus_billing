@@ -3,7 +3,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
   def index
     authorize Payment.new
     
-    @payments = Payment.order(created_at: :desc)
+    @payments = Payment.includes(:user, :affiliate).order(created_at: :desc)
     @payments = @payments.where(user_id: params[:uid]) unless params[:uid].nil?
     @payments = @payments.where("created_at > '#{params[:start_date]}'") unless params[:start_date].blank?
     @payments = @payments.where("created_at < '#{params[:end_date]}'") unless params[:end_date].blank?
