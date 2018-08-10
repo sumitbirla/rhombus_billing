@@ -12,6 +12,8 @@
       <% elsif pmt.payable_type == "Shipment" %>
           <% shipment = Shipment.find_by(id: pmt.payable_id)%>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
+      <% elsif pmt.payable_type == "Invoice" %>
+          <%= link_to "Invoice ##{pmt.payable_id}", admin_billing_invoice_path(pmt.payable_id) %>
       <% end %>
     </td>
     <td><%= pmt.transaction_id %></td>

@@ -7,6 +7,7 @@
     <%= hidden_field_tag :redirect, params[:redirect] %>
 
     <%= f.association :user %>
+    <%= f.association :affiliate %>
     <%= f.input :amount %>
 	  <%= f.input :payable_id %>
     <%= f.input :payable_type %>
