@@ -8,6 +8,12 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     @payments = @payments.where("created_at > '#{params[:start_date]}'") unless params[:start_date].blank?
     @payments = @payments.where("created_at < '#{params[:end_date]}'") unless params[:end_date].blank?
     
+    if params[:type] == "debit"
+      @payments = @payments.where("amount < 0.0")
+    elsif params[:type] == "credit"
+      @payments = @payments.where("amount > 0.0")
+    end
+    
     respond_to do |format|
       format.html do
         @balance = @payments.sum(:amount) 

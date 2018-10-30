@@ -14,7 +14,7 @@
         <li><%= link_to "Packages", admin_billing_packages_path %></li>
       <% end %>
       <% if current_user.has_permission?('Payment', 'index')%>
-        <li><%= link_to "Payments", admin_billing_payments_path %></li>
+        <li><%= link_to "Payments", admin_billing_payments_path(type: :credit) %></li>
       <% end %>
       <% if current_user.has_permission?('PaymentMethod', 'index')%>
         <li><%= link_to "Payment methods", admin_billing_payment_methods_path %></li>
