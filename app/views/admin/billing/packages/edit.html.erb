@@ -27,7 +27,14 @@
         <%= f.input_field :image_path %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
       </div>
     </div>
-    <%= f.input :description, as: :text, input_html: { style: 'width: 500px; height: 200px;' } %>
+    <%= f.input :description, as: :text %>
+    <script>
+            ClassicEditor
+                .create( document.querySelector( '#package_description' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+      </script>
 
     <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
@@ -54,7 +61,6 @@
 
 
 <% content_for :head do %>
-    <script type="text/javascript" src="/ckfinder/ckfinder.js"></script>
     <script>
         function BrowseServer()
         {
