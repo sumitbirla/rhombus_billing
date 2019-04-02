@@ -18,11 +18,18 @@ class Account::PaymentMethodsController < Account::BaseController
       @payment_method.default = true
     end
     
-    if @payment_method.save
-      flash[:notice] = 'Payment Method was successfully created.'
-      redirect_to action: 'index'
-    else
-      render 'new'
+    @payment_method.save
+    
+    respond_to do |format|
+      format.html do
+        if @payment_method.errors.any?
+          render 'new'
+        else
+          flash[:notice] =  'Payment method was successfully saved.'
+          redirect_to action: 'index'
+        end
+      end
+      format.js { render :layout => false }
     end
   end
 
@@ -35,7 +42,13 @@ class Account::PaymentMethodsController < Account::BaseController
       PaymentMethod.where(user_id: session[:user_id]).update_all(default: true)
     end
     
-    redirect_to action: 'index'
+    respond_to do |format|
+      format.html do
+        flash[:notice] =  'Payment method has been removed.'
+        redirect_to action: 'index'
+      end
+      format.js { render :layout => false }
+    end
   end
 
   def primary
@@ -49,7 +62,7 @@ class Account::PaymentMethodsController < Account::BaseController
   private
 
   def payment_method_params
-    params.require(:payment_method).permit(:cardholder_name, :number, :expiration_month, :expiration_year,
+    params.require(:payment_method).permit(:cardholder_name, :number, :expiration_month, :expiration_year, :expiration,
                                            :billing_street1, :billing_street2, :billing_city, :billing_state,
                                            :billing_zip, :billing_country)
   end

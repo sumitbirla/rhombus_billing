@@ -60,6 +60,19 @@ class PaymentMethod < ActiveRecord::Base
     self.card_brand = CreditCardValidations::Detector.new(number).brand
   end
   
+  def expiration
+    "#{expiration_month}/#{expiration_year}"
+  end
+  
+  def expiration=(str)
+    mo, yr = str.split("/").map { |x| x.strip }
+    return if mo.blank? || yr.blank?
+    
+    yr = "20" + yr if yr.length == 2
+    self.expiration_month = mo.to_i
+    self.expiration_year = yr.to_i
+  end
+  
   def encrypt_number  
     cipher = OpenSSL::Cipher::AES.new(256, :CBC)
     cipher.encrypt
