@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   end
   
   namespace :account do
+    resources :user_packages
     resources :payments
     resources :payment_methods do
       member do 
