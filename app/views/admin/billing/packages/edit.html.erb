@@ -21,16 +21,11 @@
     <%= f.input :active %>
     <%= f.input :hidden %>
     <%= f.input :sort %>
-    <div class="form-group string optional brand_website">
-      <label class="string optional control-label col-sm-3" for="brand_website">Image</label>
-      <div class="col-sm-9">
-        <%= f.input_field :image_path %> <input type="button" value="Browse Server" class="btn btn-default btn-sm" onclick="javascript:BrowseServer();">
-      </div>
-    </div>
+    <%= ckfinder_input(@package, "image_path") %>
     <%= f.input :description, as: :text %>
     <script>
             ClassicEditor
-                .create( document.querySelector( '#package_description' ) )
+                .create( document.querySelector( '#ZZpackage_description' ) )
                 .catch( error => {
                     console.error( error );
                 } );
@@ -57,24 +52,4 @@
 	<% else %>
 		<li class="active">edit</li>
 	<% end %>
-<% end %>
-
-
-<% content_for :head do %>
-    <script>
-        function BrowseServer()
-        {
-            // You can use the "CKFinder" class to render CKFinder in a page:
-            var finder = new CKFinder( { connectorPath : '<%= Cache.setting(Rails.configuration.domain_id, :system, 'Static Files Url') %>/ckfinder/core/connector/php/connector.php' });
-            //finder.basePath = '../';	// The path for the installation of CKFinder (default = "/ckfinder/").
-            finder.selectActionFunction = SetFileField;
-            finder.popup();
-        }
-
-        // This is a sample function which is called when a file is selected in CKFinder.
-        function SetFileField( fileUrl )
-        {
-            document.getElementById( 'package_image_path' ).value = fileUrl.substring(<%= Cache.setting(Rails.configuration.domain_id, :system, 'Static Files Url').length %>);
-        }
-    </script>
 <% end %>
