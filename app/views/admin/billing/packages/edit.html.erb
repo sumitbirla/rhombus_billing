@@ -22,14 +22,7 @@
     <%= f.input :hidden %>
     <%= f.input :sort %>
     <%= ckfinder_input(@package, "image_path") %>
-    <%= f.input :description, as: :text %>
-    <script>
-            ClassicEditor
-                .create( document.querySelector( '#ZZpackage_description' ) )
-                .catch( error => {
-                    console.error( error );
-                } );
-      </script>
+    <%= ckeditor_input(@package, "description") %>
 
     <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
@@ -37,10 +30,7 @@
 
 
 
-<% content_for :title do %>
-    <%= @package.name %>
-<% end %>
-
+<% content_for :title, @package.name %>
 
 
 <% content_for :breadcrumbs do %>
