@@ -91,7 +91,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     
     unless File.exists?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_billing_invoices_path)
     end
     
     if params[:printer_id].blank?
@@ -100,7 +100,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
       printer = Printer.find(params[:printer_id])
       job = printer.print_file(output_file)
       flash[:info] = "Print job submitted to '#{printer.name} [#{printer.location}]'. CUPS JobID: #{job.id}"
-      redirect_to :back
+      redirect_back(fallback_location: admin_billing_invoices_path)
     end
   end
   
@@ -111,19 +111,19 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     @invoice.logs.create(user_id: session[:user_id], ip_address: request.remote_ip, event: 'emailed', data1: params[:email])
     
     flash[:info] = "Invoice ##{@invoice.id} has been emailed to #{params[:email]}"
-    redirect_to :back
+    redirect_back(fallback_location: admin_billing_invoices_path)
   end
   
   def email_batch
     
     if params[:email_address].blank?
       flash[:error] = "Please specify an email address"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_billing_invoices_path)
     end
     
     if params[:invoice_id].length == 0
       flash[:error] = "Please invoices to email"
-      return redirect_to :back
+      return redirect_back(fallback_location: admin_billing_invoices_path)
     end
     
     begin
@@ -133,7 +133,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
       flash[:error] = e.message
     end
     
-    redirect_to :back
+    redirect_back(fallback_location: admin_billing_invoices_path)
   end
 
   def edit
@@ -170,7 +170,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     end
     
     flash[:info] = "#{list.length} invoices updated"
-    redirect_to :back
+    redirect_back(fallback_location: admin_billing_invoices_path)
   end
 
   def destroy
@@ -178,7 +178,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     @invoice.destroy
     
     flash.now[:success] = "Invoice ##{@invoice.id} has been deleted"
-    redirect_to :back
+    redirect_back(fallback_location: admin_billing_invoices_path)
   end
   
   

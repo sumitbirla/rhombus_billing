@@ -55,7 +55,7 @@ class Account::PaymentMethodsController < Account::BaseController
     PaymentMethod.where(user_id: session[:user_id]).update_all(default: false)
     PaymentMethod.where(user_id: session[:user_id], id: params[:id]).update_all(default: true)
 
-    redirect_to :back
+    redirect_back(fallback_location: account_payment_methods)
   end
 
 

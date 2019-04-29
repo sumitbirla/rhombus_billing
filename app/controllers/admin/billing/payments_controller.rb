@@ -90,7 +90,7 @@ class Admin::Billing::PaymentsController < Admin::BaseController
     authorize @payment, :update?
     response = @payment.refund(params[:amount].to_f, params[:memo])
     flash[:notice] = response.message
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
 
 

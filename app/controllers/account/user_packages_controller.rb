@@ -11,7 +11,7 @@ class Account::UserPackagesController < Account::BaseController
     @user_package.update_column(:recurr_status, "D")
     
     flash[:success] = "Your subsciption has been marked for cancellation. It will remain active until #{@user_package.recurr_date} "
-    redirect_to :back
+    redirect_back(fallback_location: account_user_packages_path)
   end
   
 end

@@ -62,7 +62,7 @@ class Admin::Billing::UserPackagesController < Admin::BaseController
   def add_service
     authorize UserPackage, :update?
     UserService.create(user_package_id: params[:id], service_type_id: params[:service_type_id], quantity: 0, used: 0, rate: 0)
-    redirect_to :back
+    redirect_back(fallback_location: admin_root_path)
   end
 
 
