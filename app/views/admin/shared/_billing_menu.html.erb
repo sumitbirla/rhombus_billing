@@ -1,5 +1,5 @@
   <li class="<%= 'active' if request.original_url.include? 'admin/billing' %>">
-    <a href="#"><i class="fa fa-money fa-fw"></i> Billing <span class="fa arrow"></span></a>
+    <a href="#"><i class="far fa-credit-card fa-fw"></i> Billing <span class="fa arrow"></span></a>
     <ul class="nav nav-second-level">
       <% if current_user.has_permission?('CcTransaction', 'index')%>
         <li><%= link_to "CC Transactions", admin_billing_cc_transactions_path %></li>
