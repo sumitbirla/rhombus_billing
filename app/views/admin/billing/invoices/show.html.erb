@@ -11,6 +11,7 @@
   <span class='light pull-right'><%= @invoice.from_affiliate %> &nbsp; </span>
   Invoice #<%= @invoice.id %></h2>
   
+<hr>
 
 <div class="row">
 
@@ -28,13 +29,39 @@
     <div class="panel panel-success">
       <div class="panel-heading">Payment:</div>
       <div class="panel-body">
-        Posted: <%= @invoice.post_date %><br>
-        Due: <%= @invoice.due_date || "<span class='light'>- not set -</span>".html_safe %><br>
-        Status: <%= @invoice.paid ? "paid" : "unpaid" %>
+        <table class="summary">
+          <tr>
+            <td>Amount</td>
+            <td><%= number_to_currency(@invoice.amount) %></td>
+          </tr>
+          <tr>
+            <td>Posted</td>
+            <td><%= @invoice.post_date %></td>
+          </tr>
+          <% unless @invoice.paid %>
+          <tr>
+            <td>Due</td>
+            <td><%= @invoice.due_date || "<span class='light'>- not set -</span>".html_safe %></td>
+          </tr>
+          <% end %>
+          <tr>
+            <td>Status</td>
+            <td>
+              <% if @invoice.paid %>
+                <span class="label label-success">paid</span>
+              <% elsif @invoice.due_date && (@invoice.due_date < Date.today) %>
+                <span class="label label-danger">overdue</span>
+              <% else %>
+                <span class="label label-warning">unpaid</span>
+              <% end %>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
 
+  <% unless @invoice.note.blank? %>
   <div class="col-md-4">
     <div class="panel panel-success">
       <div class="panel-heading">Notes:</div>
@@ -43,28 +70,59 @@
       </div>
     </div>
   </div>
+  <% end %>
 
 </div>
 
 
 
-<table class="table table-striped table-condensed">
-  <tr>
-    <th>ID</th>
+<table class="table table-striped table-condensed table-bordered">
+  <tr style="background-color: #eee;">
     <th>Date</th>
-    <th>User</th>
-    <th class="text-center">Cust.</th>
-    <th>Item</th>
+    <th>REF</th>
     <th>Transaction ID</th>
-    <th>Method</th>
+    <th>Item Number</th>
+    <th>Description</th>
+    <th style="text-align: center">Qty</th>
     <th>Memo</th>
-    <th class="text-right">Amount</th>
+    <th style="text-align: right">Amount</th>
   </tr>
-  <%= render @invoice.payments %>
+  <% @invoice.payments.each do |pmt| 
+    next if pmt.amount > 0.0 %>
+  <tr>
+    <%
+    if pmt.payable_type == "ShipmentItem"
+      si = ShipmentItem.find(pmt.payable_id)
+    %>
+      <td><%= si.shipment.ship_date %></td>
+      <td><%= link_to si.shipment.to_s, admin_store_shipment_path(si.shipment) %></td>
+      <td><%= pmt.transaction_id %></td>
+      <td><%= si.order_item.item_number %></td>
+      <td><%= si.order_item.item_description %></td>
+      <td style="text-align: right"><%= si.quantity %></td>
+    <% elsif pmt.payable_type == "Shipment" 
+        shp = Shipment.find(pmt.payable_id) %>
+      <td><%= shp.ship_date%></td>
+      <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
+      <td><%= pmt.transaction_id %></td>
+      <td>-</td>
+      <td><%= shp.carrier%> <%= shp.ship_method %></td>
+      <td style="text-align: right">1</td>
+    <% end %>
+    <td><%= pmt.memo.presence %></td>
+    <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+  </td>
+  <% end %>
+  <tfoot>
+  <tr>
+    <td style="text-align: right" colspan="7"><b>Total:</b></td>
+    <td style="text-align: right"><b><%= number_to_currency(@invoice.amount, negative_format: "(%u%n)") %></b></td>
+  </tr>
+  </tfoot>
 </table>
 
 
-<div class="row">
+<div class="row hidden-print">
   
   <div class="col-md-8 col-sm-12">
     <div class="panel panel-warning">
