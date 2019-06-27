@@ -3,7 +3,6 @@
     <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
     <td><%= systime pmt.created_at %></td>
     <td><%= link_to_user_or_affiliate pmt, :payments %></td>
-    <td class="text-center"><%= tick pmt.customer %></td>
     <td>
       <% if pmt.payable_type == "Order" %>
           <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
