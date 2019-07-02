@@ -1,0 +1,28 @@
+<%= link_to new_admin_billing_billing_arrangement_path, class: 'btn btn-sm btn-default pull-right' do %>
+  <i class="fa fa-plus"></i> New arrangement
+<% end %>
+<h2><i class="fa fa-project-diagram"></i> Billing Arrangements</h2>
+<hr>
+
+<table class="table table-striped table-condensed">
+	<tr>
+		<th>Dropshipper</th>
+		<th>Seller</th>
+		<th class="text-center">Dropshipper Transaction Fee</th>
+		<th class="text-center">Seller Transaction Fee</th>
+    <th>Created</th>
+		<th>&nbsp;</th>
+	</tr>
+	<%= render @billing_arrangements %>
+</table>
+
+<%= render 'admin/shared/table_summary', data: @billing_arrangements %>
+
+
+<% content_for :title, "Billing Arrangements" %>
+
+
+<% content_for :breadcrumbs do %>
+	<li><a href="#">Billing</a></li>
+	<li class="active">Billing Arrangements</li>
+<% end %>

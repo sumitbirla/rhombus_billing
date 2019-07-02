@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
 
   namespace :admin do
+    namespace :billing do
+      get 'billing_arrangements/index'
+      get 'billing_arrangements/edit'
+    end
+  end
+  namespace :admin do
   namespace :billing do
     get 'credit_memos/index'
     end
@@ -26,6 +32,7 @@ Rails.application.routes.draw do
       post 'invoices_email_batch' => 'invoices#email_batch'
       post 'invoices_update_status_batch' => 'invoices#update_status_batch'
       
+			resources :billing_arrangements
       resources :cc_transactions
       resources :service_types
       resources :packages do

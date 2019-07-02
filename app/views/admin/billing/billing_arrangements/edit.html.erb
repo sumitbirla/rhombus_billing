@@ -1,0 +1,27 @@
+<h2><%= @billing_arrangement %></h2>
+<hr>
+
+<%= simple_form_for [:admin, :billing, @billing_arrangement] do |f| %>
+
+    <%= render 'admin/shared/error_messages', object: f.object %>
+
+    <%= f.association :affiliate, collection: Cache.affiliate_list('dropshippers') %>
+	  <%= f.association :seller, collection: Affiliate.order(:name) %>
+    <%= f.input :dropshipper_transaction_fee %>
+    <%= f.input :seller_transaction_fee %>
+
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+<% end %>
+
+
+
+<% content_for :title, "Billing Arrangement" %>
+
+
+<% content_for :breadcrumbs do %>
+    <li><a href="#">Billing</a></li>
+    <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
+		<li class="active"><%= @billing_arrangement.persisted? ? "edit" : "new" %></li>
+<% end %>
+

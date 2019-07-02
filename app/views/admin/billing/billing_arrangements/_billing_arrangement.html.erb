@@ -1,0 +1,19 @@
+	<tr>
+    <td><%= link_to billing_arrangement.affiliate.name, admin_system_affiliate_path(billing_arrangement.affiliate, q: :billing_arrangements) %></td>
+		<td><%= link_to billing_arrangement.seller.name, admin_system_affiliate_path(billing_arrangement.seller, q: :billing_arrangements) %></td>
+		<td class="text-center">
+      <%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %>
+      <% unless billing_arrangement.affiliate.transaction_fee.nil? %>
+        &nbsp; <span class="text-muted">(default: <%= number_to_currency(billing_arrangement.affiliate.transaction_fee)%>)</span>
+      <% end %>
+    </td>
+    <td class="text-center"><%= number_to_currency(billing_arrangement.seller_transaction_fee) %></td>
+		<td><%= sysdate billing_arrangement.created_at %></td>
+		<td class="text-right">
+			<%= link_to "edit", edit_admin_billing_billing_arrangement_path(billing_arrangement) %> &nbsp;
+			<%= link_to "delete", 
+						  { action: "destroy", id: billing_arrangement.id }, 
+						  method: :delete, 
+						  data: { confirm: "Are you sure?" } %>
+		</td>
+	</tr>
