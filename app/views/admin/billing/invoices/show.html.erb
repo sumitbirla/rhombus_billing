@@ -165,7 +165,7 @@
         <form action='<%= admin_billing_invoices_email_batch_path %>' method="POST">
           <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
           <input type="hidden" name="invoice_id[]" value="<%= @invoice.id %>"/>
-          <input class="form-control" type="email" name="email_address" value="<%= @invoice.affiliate.invoice_email if @invoice.affiliate %>" placeholder="email address"/><br>
+          <input class="form-control" type="email" name="email_address" placeholder="email address"/><br>
           <button class="btn btn-sm btn-success">Send Invoice</button>
         </form>
       </div>
