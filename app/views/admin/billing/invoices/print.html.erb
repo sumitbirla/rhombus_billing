@@ -108,8 +108,8 @@
     <table border="1">
       <tr style="background-color: #eee;">
         <th>Date</th>
-        <th>REF</th>
         <th>Transaction ID</th>
+        <th>REF</th>
         <th>Item Number</th>
         <th>Description</th>
         <th style="text-align: center">Qty</th>
@@ -134,7 +134,7 @@
         <% elsif pmt.payable_type == "Shipment" 
             shp = Shipment.find(pmt.payable_id) %>
           <td><%= shp.ship_date%></td>
-          <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
+          <td><%= shp.to_s %></td>
           <td><%= pmt.transaction_id %></td>
           <td><%= pluralize(shp.items.sum(&:quantity), "item")%></td>
           <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
@@ -142,7 +142,7 @@
       
         <% elsif pmt.payable_type == "Order" %>
           <td><%= sysdate pmt.payable.submitted %></td>
-          <td><%= link_to pmt.payable.to_s, admin_store_order_path(pmt.payable) %></td>
+          <td><%= pmt.payable %></td>
           <td><%= pmt.transaction_id %></td>
           <td><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
           <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
@@ -157,16 +157,53 @@
           <td> - </td>
         <% end %>
         <td><%= pmt.memo.presence %></td>
-        <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+        <td style="text-align: right"><%= number_to_currency(pmt.amount * -1.0) %></td>
       </td>
       <% end %>
       <tfoot>
       <tr>
         <td style="text-align: right" colspan="7"><b>Total:</b></td>
-        <td style="text-align: right"><b><%= number_to_currency(@invoice.amount, negative_format: "(%u%n)") %></b></td>
+        <td style="text-align: right"><b><%= number_to_currency(@invoice.amount) %></b></td>
       </tr>
       </tfoot>
     </table>
+    
+    
+    <% if invoiced_items.any? { |x| x.payable_type == "Shipment"} %>
+    <% 
+      shipment_ids = invoiced_items.where(payable_type: "Shipment").pluck(:payable_id) 
+      grouped_items = ShipmentItem.joins(:order_item)
+                                  .where(shipment_id: shipment_ids)
+                                  .group("store_order_items.product_id")
+                                  .pluck("product_id, store_order_items.item_number, store_order_items.item_description, store_order_items.unit_price, sum(store_shipment_items.quantity) as quantity")
+      total = 0.0
+    %>
+    <h2 style="page-break-before: always;">Item Sale Summary</h2>
+    <table border="1">
+      <tr style="background-color: #eee;">
+        <th>Item</th>
+        <th>Description</th>
+        <th style="text-align: right">Unit Price</th>
+        <th style="text-align: center">Qty</th>
+        <th style="text-align: right">Extended Price</th>
+      </tr>
+      <% grouped_items.each do |product_id, item_number, desc, unit_price, quantity| 
+          total += unit_price*quantity
+      %>
+      <tr>
+        <td><%= item_number %></td>
+        <td><%= desc %></td>
+        <td style="text-align: right"><%= number_to_currency(unit_price) %></td>
+        <td style="text-align: center"><%= quantity %></td>
+        <td style="text-align: right"><%= number_to_currency(unit_price*quantity) %></td>
+      </tr>
+      <% end %>
+      <tr>
+        <td colspan="4" style="text-align: right"><b>Total:</b></td>
+        <td style="text-align: right"><b><%= number_to_currency(total)%></b></td>
+      </tr>
+    </table>
+    <% end %>
     
   </article>
 
@@ -177,6 +214,8 @@
   <% else %>
     Thank you for your business!
   <% end %>
+  
+  <br><br>
 
 </section>
 </body>
