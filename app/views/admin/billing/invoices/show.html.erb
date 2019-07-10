@@ -195,7 +195,7 @@
       total += unit_price*quantity
   %>
   <tr>
-    <td><%= item_number %></td>
+    <td><%= link_to item_number, admin_store_product_path(product_id) %></td>
     <td><%= desc %></td>
     <td style="text-align: right"><%= number_to_currency(unit_price) %></td>
     <td style="text-align: center"><%= quantity %></td>
