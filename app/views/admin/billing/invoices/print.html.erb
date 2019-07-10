@@ -116,8 +116,9 @@
         <th>Memo</th>
         <th style="text-align: right">Amount</th>
       </tr>
-      <% @invoice.payments.each do |pmt| 
-        next if pmt.amount > 0.0 %>
+      <% 
+        invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
+        invoiced_items.each do |pmt| %>
       <tr>
         <%
         if pmt.payable_type == "ShipmentItem"
@@ -129,14 +130,31 @@
           <td><%= si.order_item.item_number %></td>
           <td><%= si.order_item.item_description %></td>
           <td style="text-align: right"><%= si.quantity %></td>
+        
         <% elsif pmt.payable_type == "Shipment" 
             shp = Shipment.find(pmt.payable_id) %>
           <td><%= shp.ship_date%></td>
-          <td><%= shp %></td>
+          <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
           <td><%= pmt.transaction_id %></td>
-          <td>-</td>
-          <td><%= shp.carrier%> <%= shp.ship_method %></td>
-          <td style="text-align: right">1</td>
+          <td><%= pluralize(shp.items.sum(&:quantity), "item")%></td>
+          <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
+          <td class="text-center">1</td>
+      
+        <% elsif pmt.payable_type == "Order" %>
+          <td><%= sysdate pmt.payable.submitted %></td>
+          <td><%= link_to pmt.payable.to_s, admin_store_order_path(pmt.payable) %></td>
+          <td><%= pmt.transaction_id %></td>
+          <td><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
+          <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
+          <td class="text-center">1</td>
+        
+        <% else %>
+          <td><%= sysdate pmt.created_at %></td>
+          <td><%= pmt.transaction_id %></td>
+          <td> - </td>
+          <td> - </td>
+          <td> - </td>
+          <td> - </td>
         <% end %>
         <td><%= pmt.memo.presence %></td>
         <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>

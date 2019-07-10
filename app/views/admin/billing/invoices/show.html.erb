@@ -16,7 +16,17 @@
 <div class="row">
 
   <div class="col-md-4">
-    <div class="panel panel-success">
+    <div class="panel panel-default">
+      <div class="panel-heading">From:</div>
+      <div class="panel-body">
+        <%= link_to @invoice.from_affiliate, admin_system_affiliate_path(@invoice.from_affiliate) %><br/>
+        <%= @invoice.from_affiliate.address_as_text(delimiter: "<br>") unless @invoice.from_affiliate.nil? %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="panel panel-default">
       <div class="panel-heading">Invoicee:</div>
       <div class="panel-body">
         <%= link_to_user_or_affiliate @invoice %><br/>
@@ -74,21 +84,45 @@
 
 </div>
 
+<h3>Payments</h3>
+<% if @invoice.payments.length == 0 %>
+  <div class="alert alert-danger">No payments received.</div>
+<% else %>
+  <table class="table table-striped table-condensed table-bordered">
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>User / Affiliate</th>
+      <th>Item</th>
+      <th>Transaction ID</td>
+      <th>Method</th>
+      <th>Memo</th>
+      <th class="text-right">Amount</th>
+    </tr>
+    <%= render partial: "admin/billing/payments/payment", collection: @invoice.payments %>
+    <tr>
+      <td class="text-right" colspan="7"><b>Total:</b></td>
+      <td class="text-right"><b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
+    </tr>
+  </table>
+<% end %>
 
 
+<h3>Invoice Items</h3>
 <table class="table table-striped table-condensed table-bordered">
   <tr style="background-color: #eee;">
     <th>Date</th>
-    <th>REF</th>
     <th>Transaction ID</th>
-    <th>Item Number</th>
+    <th>REF</th>
+    <th>Item</th>
     <th>Description</th>
     <th style="text-align: center">Qty</th>
     <th>Memo</th>
     <th style="text-align: right">Amount</th>
   </tr>
-  <% @invoice.payments.each do |pmt| 
-    next if pmt.amount > 0.0 %>
+  <% 
+    invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
+    invoiced_items.each do |pmt| %>
   <tr>
     <%
     if pmt.payable_type == "ShipmentItem"
@@ -100,23 +134,40 @@
       <td><%= si.order_item.item_number %></td>
       <td><%= si.order_item.item_description %></td>
       <td style="text-align: right"><%= si.quantity %></td>
+      
     <% elsif pmt.payable_type == "Shipment" 
         shp = Shipment.find(pmt.payable_id) %>
       <td><%= shp.ship_date%></td>
       <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
       <td><%= pmt.transaction_id %></td>
-      <td>-</td>
-      <td><%= shp.carrier%> <%= shp.ship_method %></td>
-      <td style="text-align: right">1</td>
+      <td><%= pluralize(shp.items.sum(&:quantity), "item")%></td>
+      <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
+      <td class="text-center">1</td>
+      
+    <% elsif pmt.payable_type == "Order" %>
+      <td><%= sysdate pmt.payable.submitted %></td>
+      <td><%= link_to pmt.payable.to_s, admin_store_order_path(pmt.payable) %></td>
+      <td><%= pmt.transaction_id %></td>
+      <td><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
+      <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
+      <td class="text-center">1</td>
+      
+    <% else %>
+      <td><%= sysdate pmt.created_at %></td>
+      <td><%= pmt.transaction_id %></td>
+      <td> - </td>
+      <td> - </td>
+      <td> - </td>
+      <td> - </td>
     <% end %>
     <td><%= pmt.memo.presence %></td>
-    <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+    <td class="text-right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
   </td>
   <% end %>
   <tfoot>
   <tr>
-    <td style="text-align: right" colspan="7"><b>Total:</b></td>
-    <td style="text-align: right"><b><%= number_to_currency(@invoice.amount, negative_format: "(%u%n)") %></b></td>
+    <td class="text-right" colspan="7"><b>Total:</b></td>
+    <td class="text-right"><b><%= number_to_currency(invoiced_items.sum(&:amount), negative_format: "(%u%n)") %></b></td>
   </tr>
   </tfoot>
 </table>

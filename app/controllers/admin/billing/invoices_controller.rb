@@ -8,34 +8,15 @@ class Admin::Billing::InvoicesController < Admin::BaseController
   end
   
   def new
-    if params[:shipment_id]
-      s = Shipment.find(params[:shipment_id])
-      @invoice = s.order.invoices.build(affiliate_id: s.order.affiliate_id, 
-                                        amount: s.invoice_amount, 
-                                        post_date: Date.today, 
-                                        due_date: Date.today + 1.month, 
-                                        from_affiliate_id: 280)
-      
-      s.items.each do |item|
-        next if item.product.nil?  # should never happen, only here for bad historical data (i.e. product was deleted from DB)
-        @invoice.items.build(group: s.to_s, 
-                            item_number: item.order_item.item_number,
-                            item_description: item.order_item.item_description,
-                            unit_price: item.order_item.unit_price,
-                            quantity: item.quantity)
-      end
-      
-      @invoice.items.build(group: s.to_s, item_number: 'Tax', item_description: '-', unit_price: s.order.tax_amount * -1, quantity: 1) if s.order.tax_amount > 0
-      @invoice.items.build(group: s.to_s, item_number: 'Discount', item_description: '-', unit_price: s.order.discount_amount * -1, quantity: 1) if s.order.discount_amount > 0
-      @invoice.items.build(group: s.to_s, item_number: 'Credit', item_description: '-', unit_price: s.order.credit_applied * -1, quantity: 1) if s.order.credit_applied > 0
-      @invoice.items.build(group: s.to_s, item_number: 'Shipping', item_description: "#{s.carrier} #{s.ship_method}", unit_price: s.ship_cost, quantity: 1) if (s.ship_cost && s.ship_cost > 0)
-    else
-      @invoice = Invoice.new
+    if params[:affiliate_id]
+      @pending_payments = Payment.where(affiliate_id: params[:affiliate_id], invoice_id: nil)
+                                 .where.not(payable_type: :invoice)
     end
     
-    authorize @invoice
+    @invoice = Invoice.new
+    5.times { @invoice.payments.build }
     
-    5.times { @invoice.items.build }
+    authorize @invoice
     render 'edit'
   end
 
@@ -44,14 +25,41 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     
     unless params[:add_more_items].blank?
       count = params[:add_more_items].to_i - @invoice.items.length + 5 
-      count.times { @invoice.items.build }
+      count.times { @invoice.payments.build }
       return render 'edit'
     end
   
     if @invoice.save
       redirect_to action: 'show', id: @invoice.id, notice: 'Invoice was successfully created.'
     else
-      5.times { @invoice.items.build }
+      5.times { @invoice.payments.build }
+      render 'edit'
+    end
+  end
+  
+  def edit
+    @invoice = authorize Invoice.find(params[:id])
+    @pending_payments = Payment.where(invoice_id: @invoice.id)
+                               .where.not(payable_type: :invoice)
+                               
+    2.times { @invoice.payments.build }
+  end
+
+  def update
+    @invoice = authorize Invoice.find(params[:id])
+    item_count = @invoice.payments.length
+
+    @invoice.assign_attributes(invoice_params)
+    
+    unless params[:add_more_items].blank?
+      count = params[:add_more_items].to_i - item_count + 5 
+      count.times { @invoice.payments.build }
+      return render 'edit'
+    end
+
+    if @invoice.save(validate: false)
+      redirect_to action: 'show', id: @invoice.id, notice: 'Invoice was successfully updated.'
+    else
       render 'edit'
     end
   end
@@ -136,29 +144,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
     redirect_back(fallback_location: admin_billing_invoices_path)
   end
 
-  def edit
-    @invoice = authorize Invoice.find(params[:id])
-    2.times { @invoice.items.build }
-  end
-
-  def update
-    @invoice = authorize Invoice.find(params[:id])
-    item_count = @invoice.items.length
-
-    @invoice.assign_attributes(invoice_params)
-    
-    unless params[:add_more_items].blank?
-      count = params[:add_more_items].to_i - item_count + 5 
-      count.times { @invoice.items.build }
-      return render 'edit'
-    end
-
-    if @invoice.save(validate: false)
-      redirect_to action: 'show', id: @invoice.id, notice: 'Invoice was successfully updated.'
-    else
-      render 'edit'
-    end
-  end
+  
   
   def update_status_batch
     authorize Invoice, :update?

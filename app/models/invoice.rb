@@ -21,7 +21,9 @@ class Invoice < ActiveRecord::Base
   belongs_to :from_affiliate, class_name: 'Affiliate'
   
   has_many :logs, as: :loggable
-  has_many :payments
+  has_many :payments, as: :payable
+  
+  accepts_nested_attributes_for :payments, reject_if: lambda { |x| x['amount'].blank? }, allow_destroy: true
   
   validates_presence_of :amount, :from_affiliate_id
   validate :issued_to
