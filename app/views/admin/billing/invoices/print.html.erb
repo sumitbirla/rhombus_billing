@@ -110,7 +110,7 @@
         <th>Date</th>
         <th>Transaction ID</th>
         <th>REF</th>
-        <th>Item Number</th>
+        <th>Item</th>
         <th>Description</th>
         <th style="text-align: center">Qty</th>
         <th>Memo</th>
@@ -191,7 +191,7 @@
           total += unit_price*quantity
       %>
       <tr>
-        <td><%= item_number %></td>
+        <td nowrap><%= item_number %></td>
         <td><%= desc %></td>
         <td style="text-align: right"><%= number_to_currency(unit_price) %></td>
         <td style="text-align: center"><%= quantity %></td>
