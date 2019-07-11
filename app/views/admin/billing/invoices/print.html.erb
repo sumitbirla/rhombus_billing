@@ -99,12 +99,19 @@
       </div>
       <div class="boxright">
         <h2>Payment due date:</h2>
-        <p><%= @invoice.due_date.strftime("%d-%^b-%Y") unless @invoice.due_date.nil? %></p>
+        <p>
+          <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
+            Upon Receipt
+          <% else %>
+            <%= sysdate @invoice.due_date %>
+          <% end %>
+        </p>
       </div>
       <div style="clear:both;"></div>
     </header>
     <br/>
     
+    <h2>Transactions</h2>
     <table border="1">
       <tr style="background-color: #eee;">
         <th>Date</th>

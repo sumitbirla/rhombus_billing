@@ -51,7 +51,13 @@
           <% unless @invoice.paid %>
           <tr>
             <td>Due</td>
-            <td><%= @invoice.due_date || "<span class='light'>- not set -</span>".html_safe %></td>
+            <td>
+              <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
+                Upon Receipt
+              <% else %>
+                <%= sysdate @invoice.due_date %>
+              <% end %>
+            </td>
           </tr>
           <% end %>
           <tr>
@@ -59,8 +65,6 @@
             <td>
               <% if @invoice.paid %>
                 <span class="label label-success">paid</span>
-              <% elsif @invoice.due_date && (@invoice.due_date < Date.today) %>
-                <span class="label label-danger">overdue</span>
               <% else %>
                 <span class="label label-warning">unpaid</span>
               <% end %>
