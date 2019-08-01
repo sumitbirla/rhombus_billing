@@ -8,6 +8,7 @@
       <% end %>
     </td>
     <td class="text-center"><%= number_to_currency(billing_arrangement.seller_transaction_fee) %></td>
+    <td class="text-center"><%= tick(billing_arrangement.uses_seller_shipping_account) %></td>
 		<td><%= sysdate billing_arrangement.created_at %></td>
 		<td class="text-right">
 			<%= link_to "edit", edit_admin_billing_billing_arrangement_path(billing_arrangement) %> &nbsp;

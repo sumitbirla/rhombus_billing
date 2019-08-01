@@ -9,6 +9,7 @@
 	  <%= f.association :seller, collection: Affiliate.order(:name) %>
     <%= f.input :dropshipper_transaction_fee %>
     <%= f.input :seller_transaction_fee %>
+    <%= f.input :uses_seller_shipping_account %>
 
     <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
 
