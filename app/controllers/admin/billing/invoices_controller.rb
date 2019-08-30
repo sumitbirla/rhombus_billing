@@ -161,6 +161,8 @@ class Admin::Billing::InvoicesController < Admin::BaseController
 
   def destroy
     @invoice = authorize Invoice.find(params[:id])
+    
+    Payment.where(invoice_id: @invoice.id).update_all(invoice_id: nil)
     @invoice.destroy
     
     flash.now[:success] = "Invoice ##{@invoice.id} has been deleted"
