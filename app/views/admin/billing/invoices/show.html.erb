@@ -1,3 +1,19 @@
+<%
+  start_date = Date.new(2500, 1, 1)
+  end_date = Date.new(1900, 1, 1)
+  
+  invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
+  invoiced_items.each do |pmt|
+    date = sysdate(pmt.created_at)
+    date = pmt.payable.shipment.ship_date if pmt.payable_type == "ShipmentItem"
+    date = pmt.payable.ship_date if pmt.payable_type == "Shipment"
+    date = pmt.payable.submitted if pmt.payable_type == "Order"
+    
+    start_date = date if date < start_date
+    end_date = date if date > end_date
+  end
+%>
+
 <div class="pull-right">
   <%= link_to edit_admin_billing_invoice_path(@invoice), class: 'btn btn-default btn-sm' do %>
     <i class="fa fa-edit"></i> Edit
@@ -40,13 +56,15 @@
       <div class="panel-heading">Payment:</div>
       <div class="panel-body">
         <table class="summary">
+          <% if invoiced_items.length > 1 %>
+          <tr>
+            <td>Date Range</td>
+            <td><%= start_date %> to <%= end_date %></td>
+          </tr>
+          <% end %>
           <tr>
             <td>Amount</td>
             <td><%= number_to_currency(@invoice.amount) %></td>
-          </tr>
-          <tr>
-            <td>Posted</td>
-            <td><%= @invoice.post_date %></td>
           </tr>
           <% unless @invoice.paid %>
           <tr>
@@ -60,6 +78,10 @@
             </td>
           </tr>
           <% end %>
+          <tr>
+            <td>Posted</td>
+            <td><%= @invoice.post_date %></td>
+          </tr>
           <tr>
             <td>Status</td>
             <td>
@@ -124,13 +146,11 @@
     <th>Memo</th>
     <th style="text-align: right">Amount</th>
   </tr>
-  <% 
-    invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
-    invoiced_items.each do |pmt| %>
+  <% invoiced_items.each do |pmt| %>
   <tr>
     <%
     if pmt.payable_type == "ShipmentItem"
-      si = ShipmentItem.find(pmt.payable_id)
+      si = pmt.payable
     %>
       <td><%= si.shipment.ship_date %></td>
       <td><%= link_to si.shipment.to_s, admin_store_shipment_path(si.shipment) %></td>
@@ -140,7 +160,7 @@
       <td style="text-align: right"><%= si.quantity %></td>
       
     <% elsif pmt.payable_type == "Shipment" 
-        shp = Shipment.find(pmt.payable_id) %>
+        shp = pmt.payable %>
       <td><%= shp.ship_date%></td>
       <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
       <td><%= pmt.transaction_id %></td>
