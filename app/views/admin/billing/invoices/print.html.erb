@@ -1,3 +1,19 @@
+<%
+  start_date = Date.new(2500, 1, 1)
+  end_date = Date.new(1900, 1, 1)
+  
+  invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
+  invoiced_items.each do |pmt|
+    date = sysdate(pmt.created_at)
+    date = pmt.payable.shipment.ship_date if pmt.payable_type == "ShipmentItem"
+    date = pmt.payable.ship_date if pmt.payable_type == "Shipment"
+    date = pmt.payable.submitted if pmt.payable_type == "Order"
+    
+    start_date = date if date < start_date
+    end_date = date if date > end_date
+  end
+%>
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -97,8 +113,12 @@
         <p><%= @invoice.affiliate.name %><br/>
           <%= @invoice.affiliate.address_as_text(skip_country: true, delimiter: "<br>").html_safe %></p>
       </div>
+      <div class="boxleft">
+        <h2>Date range:</h2>
+        <p><%= sysdate(start_date) %> to <%= sysdate(end_date )%></p>
+      </div>
       <div class="boxright">
-        <h2>Payment due date:</h2>
+        <h2>Due:</h2>
         <p>
           <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
             Upon Receipt
