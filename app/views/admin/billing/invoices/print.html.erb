@@ -163,17 +163,17 @@
           <td><%= shp.ship_date%></td>
           <td><%= shp.to_s %></td>
           <td><%= pmt.transaction_id %></td>
-          <td><%= pluralize(shp.items.sum(&:quantity), "item")%></td>
+          <td>n/a</td>
           <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
-          <td class="text-center">1</td>
+          <td style="text-align: center"><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
       
         <% elsif pmt.payable_type == "Order" %>
           <td><%= sysdate pmt.payable.submitted %></td>
           <td><%= pmt.payable %></td>
           <td><%= pmt.transaction_id %></td>
-          <td><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
+          <td>n/a</td>  
           <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
-          <td class="text-center">1</td>
+          <td><%= pmt.payable.items.sum(&:quantity) %></td>
         
         <% else %>
           <td><%= sysdate pmt.created_at %></td>
