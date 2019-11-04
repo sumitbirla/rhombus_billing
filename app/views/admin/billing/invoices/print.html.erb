@@ -131,6 +131,7 @@
     </header>
     <br/>
     
+    <% h = {} %>
     <h2>Transactions</h2>
     <table border="1">
       <tr style="background-color: #eee;">
@@ -159,7 +160,18 @@
           <td style="text-align: right"><%= si.quantity %></td>
         
         <% elsif pmt.payable_type == "Shipment" 
-            shp = Shipment.find(pmt.payable_id) %>
+            shp = Shipment.find(pmt.payable_id)
+            
+            if pmt.memo == "COGS"
+              shp.items.each do |si|
+                if h[si.order_item.product_id].nil?
+                  h[si.order_item.product_id] = si.quantity
+                else
+                  h[si.order_item.product_id] += si.quantity
+                end
+              end
+            end 
+             %>
           <td><%= shp.ship_date%></td>
           <td><%= shp.to_s %></td>
           <td><%= pmt.transaction_id %></td>
@@ -196,6 +208,7 @@
     </table>
     
     
+    
     <% if invoiced_items.any? { |x| x.payable_type == "Shipment"} %>
     <% 
       shipment_ids = invoiced_items.where(payable_type: "Shipment").pluck(:payable_id) 
@@ -214,15 +227,16 @@
         <th style="text-align: center">Qty</th>
         <th style="text-align: right">Extended Price</th>
       </tr>
-      <% grouped_items.each do |product_id, item_number, desc, unit_price, quantity| 
-          total += unit_price*quantity
+      <% 
+      Product.where(id: h.keys).each do |p|
+        total += p.reseller_price * h[p.id]
       %>
       <tr>
-        <td nowrap><%= item_number %></td>
-        <td><%= desc %></td>
-        <td style="text-align: right"><%= number_to_currency(unit_price) %></td>
-        <td style="text-align: center"><%= quantity %></td>
-        <td style="text-align: right"><%= number_to_currency(unit_price*quantity) %></td>
+        <td nowrap><%= p.item_number %></td>
+        <td><%= p.title %></td>
+        <td style="text-align: right"><%= number_to_currency(p.reseller_price) %></td>
+        <td style="text-align: center"><%= h[p.id] %></td>
+        <td style="text-align: right"><%= number_to_currency(p.reseller_price * h[p.id]) %></td>
       </tr>
       <% end %>
       <tr>
