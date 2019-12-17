@@ -9,6 +9,8 @@
     date = pmt.payable.ship_date if pmt.payable_type == "Shipment"
     date = pmt.payable.submitted if pmt.payable_type == "Order"
     
+    date ||= Date.today
+    
     start_date = date if date < start_date
     end_date = date if date > end_date
   end

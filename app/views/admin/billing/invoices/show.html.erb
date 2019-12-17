@@ -174,7 +174,7 @@
           end
         end 
       %>
-      <td><%= shp.ship_date%></td>
+      <td><%= shp.ship_date || pmt.created_at.to_date %></td>
       <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
       <td><%= pmt.transaction_id %></td>
       <td>n/a</td>
