@@ -2,7 +2,7 @@ class Admin::Billing::BillingArrangementsController < Admin::BaseController
   
 	def index
     authorize BillingArrangement.new
-    @billing_arrangements = BillingArrangement.includes(:affiliate, :seller)
+    @billing_arrangements = BillingArrangement.includes(:affiliate, :seller).order(created_at: :desc)
     
     respond_to do |format|
       format.html { @billing_arrangements = @billing_arrangements.paginate(page: params[:page], per_page: @per_page) }

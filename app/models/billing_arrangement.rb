@@ -5,6 +5,7 @@ class BillingArrangement < ApplicationRecord
 	belongs_to :seller, class_name: "Affiliate", foreign_key: :seller_id
 
 	validates_presence_of :affiliate_id, :seller_id, :seller_transaction_fee, :dropshipper_transaction_fee
+	validates_uniqueness_of :affiliate_id, scope: :seller_id, message: "Billing arrangement between selected parties already exists."
 
 	def to_s
 		return "New Billing Arrangement" unless persisted?

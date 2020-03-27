@@ -1,14 +1,15 @@
 	<tr>
     <td><%= link_to billing_arrangement.affiliate.name, admin_system_affiliate_path(billing_arrangement.affiliate, q: :billing_arrangements) %></td>
 		<td><%= link_to billing_arrangement.seller.name, admin_system_affiliate_path(billing_arrangement.seller, q: :billing_arrangements) %></td>
-		<td class="text-center">
-      <%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %>
-      <% unless billing_arrangement.affiliate.transaction_fee.nil? %>
-        &nbsp; <span class="text-muted">(default: <%= number_to_currency(billing_arrangement.affiliate.transaction_fee)%>)</span>
+		<td><%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %></td>
+    <td>
+      <%= number_to_currency(billing_arrangement.seller_transaction_fee) %>
+      <% if billing_arrangement.seller_transaction_percent %>
+        + <%= billing_arrangement.seller_transaction_percent %>% COGS
       <% end %>
     </td>
-    <td class="text-center"><%= number_to_currency(billing_arrangement.seller_transaction_fee) %></td>
-    <td class="text-center"><%= tick(billing_arrangement.uses_seller_shipping_account) %></td>
+    <td><%= billing_arrangement.percent_of_msrp ?  "#{billing_arrangement.percent_of_msrp.to_i}%" : "n.a" %></td>
+    <td class="text-center"><%= tick billing_arrangement.invoice_seller %></td>
 		<td><%= sysdate billing_arrangement.created_at %></td>
 		<td class="text-right">
 			<%= link_to "edit", edit_admin_billing_billing_arrangement_path(billing_arrangement) %> &nbsp;
