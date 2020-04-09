@@ -7,10 +7,44 @@ class BillingArrangement < ApplicationRecord
 	validates_presence_of :affiliate_id, :seller_id, :seller_transaction_fee, :dropshipper_transaction_fee
 	validates_uniqueness_of :affiliate_id, scope: :seller_id, message: "Billing arrangement between selected parties already exists."
 
+	after_save :set_negotiated_prices
+	before_destroy :set_default_prices
+
 	def to_s
 		return "New Billing Arrangement" unless persisted?
 		"#{affiliate}  <->  #{seller}"
 	end
+	
+	
+	def set_negotiated_prices
+		if percent_of_msrp.nil?
+			set_default_prices
+		else
+	    sql = <<-EOF
+				UPDATE store_affiliate_products ap
+				JOIN store_products p ON ap.product_id = p.id
+				SET ap.price = p.msrp * #{percent_of_msrp} / 100
+				WHERE p.fulfiller_id = #{affiliate_id}
+				AND ap.affiliate_id = #{seller_id};
+	    EOF
+			
+			ActiveRecord::Base.connection.execute(sql)
+		end
+	end
+	
+	
+	def set_default_prices
+    sql = <<-EOF
+			UPDATE store_affiliate_products ap
+			JOIN store_products p ON ap.product_id = p.id
+			SET ap.price = p.reseller_price
+			WHERE p.fulfiller_id = #{affiliate_id}
+			AND ap.affiliate_id = #{seller_id};
+    EOF
+		
+		ActiveRecord::Base.connection.execute(sql)
+	end
+	
 	
   # PUNDIT
   def self.policy_class
