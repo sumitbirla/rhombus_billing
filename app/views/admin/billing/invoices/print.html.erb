@@ -119,8 +119,8 @@
         <h2>Date range:</h2>
         <p><%= sysdate(start_date) %> to <%= sysdate(end_date )%></p>
       </div>
-      <div class="boxright">
-        <h2>Due:</h2>
+      <div class="boxright" style="border: solid 1px black; padding: 10px;">
+        <h2>Amount Due: <%= number_to_currency(Payment.where(invoice_id: @invoice.id).sum(&:amount) * -1.0, negative_format: "(%u%n)") %></h2>
         <p>
           <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
             Upon Receipt
@@ -132,6 +132,33 @@
       <div style="clear:both;"></div>
     </header>
     <br/>
+    
+    
+    <% if @invoice.payments.length > 0 %>
+      <h2>Credits</h2>
+      <table border="1">
+        <tr style="background-color: #eee;">
+          <th>Date</th>
+          <th>Transaction ID</td>
+          <th>Method</th>
+          <th>Memo</th>
+          <th style="text-align: right">Amount</th>
+        </tr>
+        <% @invoice.payments.each do |pmt|%>
+        <tr>
+          <td><%= systime pmt.created_at %></td>
+          <td><%= pmt.transaction_id %></td>
+          <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
+          <td><%= pmt.memo %></td>
+          <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+        </tr>
+        <% end %>
+        <tr>
+          <td style="text-align: right" colspan="4"><b>Total:</b></td>
+          <td style="text-align: right"><b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
+        </tr>
+      </table>
+    <% end %>
     
     <% h = {} %>
     <h2>Transactions</h2>
@@ -204,7 +231,7 @@
       <tfoot>
       <tr>
         <td style="text-align: right" colspan="7"><b>Total:</b></td>
-        <td style="text-align: right"><b><%= number_to_currency(@invoice.amount) %></b></td>
+        <td style="text-align: right"><b><%= number_to_currency(invoiced_items.sum(&:amount) * -1.0) %></b></td>
       </tr>
       </tfoot>
     </table>
