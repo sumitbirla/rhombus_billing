@@ -32,7 +32,11 @@ Rails.application.routes.draw do
       post 'invoices_email_batch' => 'invoices#email_batch'
       post 'invoices_update_status_batch' => 'invoices#update_status_batch'
       
-			resources :billing_arrangements
+			resources :billing_arrangements do 
+				member do
+					get 'update_prices'
+				end
+			end
       resources :cc_transactions
       resources :service_types
       resources :packages do

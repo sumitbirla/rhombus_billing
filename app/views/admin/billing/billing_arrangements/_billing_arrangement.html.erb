@@ -1,4 +1,5 @@
 	<tr>
+    <td><%= link_to billing_arrangement.id.to_s, admin_billing_billing_arrangement_path(billing_arrangement) %></td>
     <td><%= link_to billing_arrangement.affiliate.name, admin_system_affiliate_path(billing_arrangement.affiliate, q: :billing_arrangements) %></td>
 		<td><%= link_to billing_arrangement.seller.name, admin_system_affiliate_path(billing_arrangement.seller, q: :billing_arrangements) %></td>
 		<td><%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %></td>
