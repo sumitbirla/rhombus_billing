@@ -1,5 +1,7 @@
 <style>
-    .form-inline .control-label { width: 140px; }
+    .form-inline .control-label {
+        width: 140px;
+    }
 </style>
 
 <h2>Subscription #<%= @user_service.user_package_id %></h2>
@@ -8,29 +10,29 @@
 
 <%= simple_form_for [:admin, :billing, @user_service] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
-    <%= f.input :user_package_id, as: :hidden %>
-    <%= f.association :service_type %>
-    <%= f.input :quantity %>
-    <%= f.input :used %>
-    <%= f.input :rate %>
+  <%= f.input :user_package_id, as: :hidden %>
+  <%= f.association :service_type %>
+  <%= f.input :quantity %>
+  <%= f.input :used %>
+  <%= f.input :rate %>
 
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 
 <%= content_for :title do %>
-    Subscription #<%= @user_service.user_package_id %>
+  Subscription #<%= @user_service.user_package_id %>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
-    <li><%= link_to "Subscription ##{@user_service.user_package.id}", admin_billing_user_package_path(@user_service.user_package_id) %></li>
-    <li class="active">edit</li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+  <li><%= link_to "Subscription ##{@user_service.user_package.id}", admin_billing_user_package_path(@user_service.user_package_id) %></li>
+  <li class="active">edit</li>
 <% end %>

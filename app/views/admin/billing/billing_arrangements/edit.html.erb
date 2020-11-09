@@ -3,18 +3,18 @@
 
 <%= simple_form_for [:admin, :billing, @billing_arrangement] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
-    <%= f.association :affiliate, collection: Cache.affiliate_list('dropshippers') %>
-	  <%= f.association :seller, collection: Affiliate.where(active: true).order(:name) %>
-    <%= f.input :percent_of_msrp %>
-    <%= f.input :dropshipper_transaction_fee %>
-    <%= f.input :seller_transaction_fee %>
-    <%= f.input :seller_transaction_percent %>
-    <%= f.input :uses_seller_shipping_account %>
-    <%= f.input :invoice_seller %>
+  <%= f.association :affiliate, collection: Cache.affiliate_list('dropshippers') %>
+  <%= f.association :seller, collection: Affiliate.where(active: true).order(:name) %>
+  <%= f.input :percent_of_msrp %>
+  <%= f.input :dropshipper_transaction_fee %>
+  <%= f.input :seller_transaction_fee %>
+  <%= f.input :seller_transaction_percent %>
+  <%= f.input :uses_seller_shipping_account %>
+  <%= f.input :invoice_seller %>
 
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -24,8 +24,8 @@
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
-		<li class="active"><%= @billing_arrangement.persisted? ? "edit" : "new" %></li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
+  <li class="active"><%= @billing_arrangement.persisted? ? "edit" : "new" %></li>
 <% end %>
 

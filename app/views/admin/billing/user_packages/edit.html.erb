@@ -19,7 +19,7 @@
       <%= f.input :bill_attempts %>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-md-12">
       <table class="table table-condensed table-striped">
@@ -30,20 +30,20 @@
           <th>Used</th>
           <th>Rate</th>
         </tr>
-        
+
         <%= f.fields_for :services do |sf| %>
           <% svc = @user_package.services[sf.index] %>
-        <tr>
-          <td><%= svc.service_type.code %></td>
-          <td><%= svc.service_type.name %></td>
-          <td><%= sf.input_field :quantity %></td>
-          <td><%= sf.input_field :used %></td>
-          <td><%= sf.input_field :rate %> / <%= svc.service_type.bill_frequency %></td>
-        </tr>
-      <% end %>
+          <tr>
+            <td><%= svc.service_type.code %></td>
+            <td><%= svc.service_type.name %></td>
+            <td><%= sf.input_field :quantity %></td>
+            <td><%= sf.input_field :used %></td>
+            <td><%= sf.input_field :rate %> / <%= svc.service_type.bill_frequency %></td>
+          </tr>
+        <% end %>
       </table>
-    
-      <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+      <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
     </div>
   </div>
 <% end %>
@@ -51,18 +51,18 @@
 
 
 <% content_for :title do %>
-    User Subscription #<%= @user_package.id %>
+  User Subscription #<%= @user_package.id %>
 <% end %>
 
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
-    <% if @user_package.persisted? %>
-      <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
-      <li class="active">edit</li>
-    <% else %>
-      <li>new</li>
-    <% end %>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+  <% if @user_package.persisted? %>
+    <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
+    <li class="active">edit</li>
+  <% else %>
+    <li>new</li>
+  <% end %>
 <% end %>

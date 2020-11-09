@@ -1,113 +1,114 @@
 <h2>
   <%= link_to "edit", edit_admin_billing_billing_arrangement_path(@billing_arrangement), class: "btn btn-sm btn-default pull-right" %>
   <h2><i class="fa fa-project-diagram"></i> Billing Arrangement: <%= @billing_arrangement.id %></h2>
-<hr/>
+  <hr/>
 
-<div class="col-md-6">
-  <table class="table table-condensed table-bordered summary">
-    <tr>
-      <th></th>
-      <th>Entity</th>
-      <th>Cost = % MSRP</th>
-      <th>Transaction Fee</th>
-    </tr>
-    <tr>
-      <td>Seller</td>
-      <td><%= link_to @billing_arrangement.seller.name, admin_system_affiliate_path(@billing_arrangement.seller, q: :billing_arrangements) %></td>
-      <td><%= @billing_arrangement.percent_of_msrp ?  "#{@billing_arrangement.percent_of_msrp.to_i}%" : "Reseller Price" %></td>
-      <td>
-        <%= number_to_currency(@billing_arrangement.seller_transaction_fee) %>
-        <% if @billing_arrangement.seller_transaction_percent %>
-          + <%= @billing_arrangement.seller_transaction_percent %>% COGS
-        <% end %>
-      </td>
-    </tr>
-    <tr>
-      <td>Dropshipper</td>
-      <td><%= link_to @billing_arrangement.affiliate.name, admin_system_affiliate_path(@billing_arrangement.affiliate, q: :billing_arrangements) %></td>
-      <td>n/a</td>
-      <td><%= number_to_currency(@billing_arrangement.dropshipper_transaction_fee) %></td>
-    </tr>
-  </table>
-</div>
+  <div class="col-md-6">
+    <table class="table table-condensed table-bordered summary">
+      <tr>
+        <th></th>
+        <th>Entity</th>
+        <th>Cost = % MSRP</th>
+        <th>Transaction Fee</th>
+      </tr>
+      <tr>
+        <td>Seller</td>
+        <td><%= link_to @billing_arrangement.seller.name, admin_system_affiliate_path(@billing_arrangement.seller, q: :billing_arrangements) %></td>
+        <td><%= @billing_arrangement.percent_of_msrp ? "#{@billing_arrangement.percent_of_msrp.to_i}%" : "Reseller Price" %></td>
+        <td>
+          <%= number_to_currency(@billing_arrangement.seller_transaction_fee) %>
+          <% if @billing_arrangement.seller_transaction_percent %>
+            + <%= @billing_arrangement.seller_transaction_percent %>% COGS
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>Dropshipper</td>
+        <td><%= link_to @billing_arrangement.affiliate.name, admin_system_affiliate_path(@billing_arrangement.affiliate, q: :billing_arrangements) %></td>
+        <td>n/a</td>
+        <td><%= number_to_currency(@billing_arrangement.dropshipper_transaction_fee) %></td>
+      </tr>
+    </table>
+  </div>
 
 
-<% 
-  ap_list = AffiliateProduct.includes(product: :pictures)
-                            .joins(:product)
-                            .where(affiliate_id: @billing_arrangement.seller_id)
-                            .where("store_products.fulfiller_id = ?", @billing_arrangement.affiliate_id)
-                            .sample(5)
-%>
-                       
-<div class="col-md-12">
-  <h3>Example seller fees</h3>
+  <%
+    ap_list = AffiliateProduct.includes(product: :pictures)
+        .joins(:product)
+        .where(affiliate_id: @billing_arrangement.seller_id)
+        .where("store_products.fulfiller_id = ?", @billing_arrangement.affiliate_id)
+        .sample(5)
+  %>
 
-  <% if ap_list.length > 0 %>
-  <table class="table table-bordered">
-    <tr>
-      <th></th>
-      <th>Item</th>
-      <th class="text-right">MSRP</th>
-      <th class="text-right">Calculated COGS</th>
-      <th class="text-right">COGS in DB</th>
-      <th class="text-right">Transaction Fees</th>
-    </tr>
-    <% ap_list.each do |ap| 
-      fees = @billing_arrangement.seller_transaction_fee
-      if @billing_arrangement.seller_transaction_percent
-        fees += ap.product.negotiated_price(@billing_arrangement.seller_id) * @billing_arrangement.seller_transaction_percent / 100.0
-      end
-    
-      if ap.product.pictures.any?
-        file_path = ap.product.pictures[0].file_path
-      else
-        file_path = "/images/no-image.png"
-      end
-    %>
-    <tr>
-      <td>
+  <div class="col-md-12">
+    <h3>Example seller fees</h3>
+
+    <% if ap_list.length > 0 %>
+      <table class="table table-bordered">
+        <tr>
+          <th></th>
+          <th>Item</th>
+          <th class="text-right">MSRP</th>
+          <th class="text-right">Calculated COGS</th>
+          <th class="text-right">COGS in DB</th>
+          <th class="text-right">Transaction Fees</th>
+        </tr>
+        <% ap_list.each do |ap|
+          fees = @billing_arrangement.seller_transaction_fee
+          if @billing_arrangement.seller_transaction_percent
+            fees += ap.product.negotiated_price(@billing_arrangement.seller_id) * @billing_arrangement.seller_transaction_percent / 100.0
+          end
+
+          if ap.product.pictures.any?
+            file_path = ap.product.pictures[0].file_path
+          else
+            file_path = "/images/no-image.png"
+          end
+        %>
+          <tr>
+            <td>
         <span class="order-item-thumbnail hidden-print">
           <a href="<%= cdn_image_url file_path, 800, 700, 0 %>" data-lightbox="image-1">
             <img src="<%= cdn_image_url file_path, 50, 50, 2 %>" title="product" height="50"/>
           </a>
         </span>
-      </td>
-      <td><%= link_to ap.product.name, admin_store_product_path(ap.product_id) %><br><%= ap.product.item_number%></td>
-      <td class="text-right"><%= number_to_currency(ap.product.msrp) %></td>
-      <td class="text-right"><%= number_to_currency(ap.product.negotiated_price(@billing_arrangement.seller_id)) %></td>
-      <td class="text-right"><%= number_to_currency(ap.price) %></td>
-      <td class="text-right"><%= number_to_currency(fees) %></td>
-    </tr>
+            </td>
+            <td><%= link_to ap.product.name, admin_store_product_path(ap.product_id) %><br><%= ap.product.item_number %>
+            </td>
+            <td class="text-right"><%= number_to_currency(ap.product.msrp) %></td>
+            <td class="text-right"><%= number_to_currency(ap.product.negotiated_price(@billing_arrangement.seller_id)) %></td>
+            <td class="text-right"><%= number_to_currency(ap.price) %></td>
+            <td class="text-right"><%= number_to_currency(fees) %></td>
+          </tr>
+        <% end %>
+      </table>
+
+      <%= link_to update_prices_admin_billing_billing_arrangement_path(@billing_arrangement), class: "btn btn-sm btn-default" do %>
+        <i class="fa fa-sync-alt"></i> Update Prices
+      <% end %>
+
+    <% else %>
+      <div class="alert alert-warning">There are no products loaded</div>
     <% end %>
-  </table>
-  
-  <%= link_to update_prices_admin_billing_billing_arrangement_path(@billing_arrangement), class: "btn btn-sm btn-default" do %>
-    <i class="fa fa-sync-alt"></i> Update Prices
-  <% end%>
-  
-  <% else %>
-    <div class="alert alert-warning">There are no products loaded</div>
-  <% end %>
-</div>
+  </div>
 
 
 
 
 
 
-<%= content_for :title do %>
+  <%= content_for :title do %>
     Billing Arrangement: <%= @billing_arrangement.id %>
-<% end %>
+  <% end %>
 
 
-<% content_for :menu do
-  render "admin/shared/billing_menu"
-end %>
+  <% content_for :menu do
+    render "admin/shared/billing_menu"
+  end %>
 
 
-<% content_for :breadcrumbs do %>
+  <% content_for :breadcrumbs do %>
     <li><a href="#">Billing</a></li>
     <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
     <li class="active"><%= @billing_arrangement.id %></li>
-<% end %>
+  <% end %>

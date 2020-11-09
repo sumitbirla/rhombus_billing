@@ -11,8 +11,8 @@
     <table class="table table-condensed table-bordered summary">
       <%= obj_property @package, :name %>
       <%= obj_property @package, :price %>
-      <%= obj_property(@package, :bill_frequency) { |x| "#{x} days"} %>
-      <%= obj_property(@package, :trial_days) { |x| "#{x} days"} %>
+      <%= obj_property(@package, :bill_frequency) { |x| "#{x} days" } %>
+      <%= obj_property(@package, :trial_days) { |x| "#{x} days" } %>
       <%= obj_property @package, :active %>
       <%= obj_property @package, :hidden %>
     </table>
@@ -26,24 +26,24 @@
         <th>Rate</th>
       </tr>
       <% @package.details.each do |pd| %>
-          <tr>
-            <td><%= pd.service_type.name %></td>
-            <td class="calign"><%= pd.quantity %></td>
-            <td class="calign">
-		      <% if pd.trial_days && pd.trial_days > 0 %>
-		          <%= pd.trial_days %> days
-		      <% else %>
-		          <span class="light">- none -</span>
-		      <% end %>
-            </td>
-            <td>
-				<% unless pd.rate.nil? || pd.rate == 0.0 %>
-					<%= number_to_currency(pd.rate) %> / <%= pd.service_type.bill_frequency.downcase %>
-				<% else %>
-					<span class="light">- included -</span>
-				<% end %>
-			</td>
-          </tr>
+        <tr>
+          <td><%= pd.service_type.name %></td>
+          <td class="calign"><%= pd.quantity %></td>
+          <td class="calign">
+            <% if pd.trial_days && pd.trial_days > 0 %>
+              <%= pd.trial_days %> days
+            <% else %>
+              <span class="light">- none -</span>
+            <% end %>
+          </td>
+          <td>
+            <% unless pd.rate.nil? || pd.rate == 0.0 %>
+              <%= number_to_currency(pd.rate) %> / <%= pd.service_type.bill_frequency.downcase %>
+            <% else %>
+              <span class="light">- included -</span>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     </table>
 
@@ -52,9 +52,9 @@
 
   <div class="col-md-3">
     <% unless @package.image_path.blank? %>
-        <a href="<%= cdn_image_url @package.image_path, 700, 600, 0 %>" data-lightbox="image-1">
-          <img src="<%= cdn_image_url @package.image_path, 400, 300, 2 %>" class="img-responsive" />
-        </a>
+      <a href="<%= cdn_image_url @package.image_path, 700, 600, 0 %>" data-lightbox="image-1">
+        <img src="<%= cdn_image_url @package.image_path, 400, 300, 2 %>" class="img-responsive"/>
+      </a>
     <% end %>
 
     <% count = UserPackage.where(recurr_status: 'A', package_id: @package.id).count %>
@@ -66,7 +66,7 @@
 
 
 <%= content_for :title do %>
-    <%= @package.name %>
+  <%= @package.name %>
 <% end %>
 
 
@@ -76,7 +76,7 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Packages", admin_billing_packages_path %></li>
-    <li class="active"><%= @package.name %></li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Packages", admin_billing_packages_path %></li>
+  <li class="active"><%= @package.name %></li>
 <% end %>

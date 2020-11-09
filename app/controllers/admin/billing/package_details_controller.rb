@@ -42,8 +42,8 @@ class Admin::Billing::PackageDetailsController < Admin::BaseController
 
   private
 
-    def package_detail_params
-      params.require(:package_detail).permit!
-    end
+  def package_detail_params
+    params.require(:package_detail).permit!
+  end
 
 end

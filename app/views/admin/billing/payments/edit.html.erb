@@ -3,21 +3,21 @@
 
 <%= simple_form_for [:admin, :billing, @payment] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
-    <%= hidden_field_tag :redirect, params[:redirect] %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= hidden_field_tag :redirect, params[:redirect] %>
 
-    <%= f.association :user %>
-    <%= f.association :affiliate %>
-    <%= f.input :amount %>
-	  <%= f.input :payable_id %>
-    <%= f.input :payable_type %>
-    <%= f.input :transaction_id %>
-    <%= f.input :memo %>
-    
-    <hr/>
-    <%= f.input :cc, label: "Charge Card" %>
-    <%= f.input :payment_method_id, collection: PaymentMethod.where(user_id: @payment.user_id), prompt: "- manual entry -" %>
-    <span class="manual-entry">
+  <%= f.association :user %>
+  <%= f.association :affiliate %>
+  <%= f.input :amount %>
+  <%= f.input :payable_id %>
+  <%= f.input :payable_type %>
+  <%= f.input :transaction_id %>
+  <%= f.input :memo %>
+
+  <hr/>
+  <%= f.input :cc, label: "Charge Card" %>
+  <%= f.input :payment_method_id, collection: PaymentMethod.where(user_id: @payment.user_id), prompt: "- manual entry -" %>
+  <span class="manual-entry">
     <%= f.input :cc_cardholder_name, label: "Card holder" %>
     <%= f.input :cc_number, label: "Number" %>
     <div class="form-group">
@@ -25,44 +25,44 @@
       <%= f.number_field :cc_expiration_month, in: 1..12, placeholder: 'MM' %>
       <%= f.number_field :cc_expiration_year, in: 2015..2015, placeholder: 'YYYY' %>
     </div>
-    <%= f.input :cc_code, label: "CVC", input_html: { max_length: 4, style: "width: 100px;", placeholder: 'XXX' } %>
+    <%= f.input :cc_code, label: "CVC", input_html: {max_length: 4, style: "width: 100px;", placeholder: 'XXX'} %>
     </span>
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 
 <% content_for :title do %>
-    New Payment
+  New Payment
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Payments", admin_billing_payments_path %></li>
-	<% unless @payment.id.nil? %>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Payments", admin_billing_payments_path %></li>
+  <% unless @payment.id.nil? %>
     <li class="active">edit</li>
-	<% else %>
-		<li class="active">new</li>
-	<% end %>
+  <% else %>
+    <li class="active">new</li>
+  <% end %>
 <% end %>
 
 
 <% content_for :head do %>
   <script>
-    $(document).ready(function() {
-      
-      $("#payment_payment_method_id").change(function() {
-        if ($(this).val() == "")
-          $(".manual-entry").show();
-        else
-          $(".manual-entry").hide();
+      $(document).ready(function () {
+
+          $("#payment_payment_method_id").change(function () {
+              if ($(this).val() == "")
+                  $(".manual-entry").show();
+              else
+                  $(".manual-entry").hide();
+          });
+
+          $("#payment_payment_method_id").trigger('change');
+
       });
-      
-      $("#payment_payment_method_id").trigger('change');
-      
-    });
   </script>
 <% end %>
 

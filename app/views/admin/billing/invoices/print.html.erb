@@ -1,16 +1,16 @@
 <%
   start_date = Date.new(2500, 1, 1)
   end_date = Date.new(1900, 1, 1)
-  
+
   invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
   invoiced_items.each do |pmt|
     date = sysdate(pmt.created_at)
     date = pmt.payable.shipment.ship_date if pmt.payable_type == "ShipmentItem"
     date = pmt.payable.ship_date if pmt.payable_type == "Shipment"
     date = pmt.payable.submitted if pmt.payable_type == "Order"
-    
+
     date ||= Date.today
-    
+
     start_date = date if date < start_date
     end_date = date if date > end_date
   end
@@ -19,61 +19,72 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>Invoice #<%= @invoice.id %></title>
   <style>
       body {
-          background:white !important;
-          color:black!important;
-          width: 95%!important;
-          margin: 0 auto!important;
-          font-family:Arial, Helvetica, sans-serif!important;
-          font-size:10px!important;
+          background: white !important;
+          color: black !important;
+          width: 95% !important;
+          margin: 0 auto !important;
+          font-family: Arial, Helvetica, sans-serif !important;
+          font-size: 10px !important;
       }
+
       table {
-          width: 100%!important;
-          border-collapse:collapse;
+          width: 100% !important;
+          border-collapse: collapse;
       }
-      table td{
+
+      table td {
           aborder: 1px solid #ccc;
-          padding: 5px!important;
+          padding: 5px !important;
       }
+
       table.bordered {
-        border: solid 1px black;
+          border: solid 1px black;
       }
+
       table.bordered th {
-        padding: 4px;
-        border-bottom: solid 1px black;    
+          padding: 4px;
+          border-bottom: solid 1px black;
       }
+
       article {
-          padding: 0px 0!important;
+          padding: 0px 0 !important;
       }
+
       p {
-          font-weight:normal !important;
-          line-height:16px !important;
+          font-weight: normal !important;
+          line-height: 16px !important;
           margin-top: 0;
       }
+
       h2 {
-          font-size:20px !important;
+          font-size: 20px !important;
           margin-bottom: 2px;
       }
+
       .boxleft {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxcenter {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxright {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
-      .textright{
-          text-align:right !important;
+
+      .textright {
+          text-align: right !important;
       }
   </style>
 </head>
@@ -96,13 +107,13 @@
               <strong>Email:</strong> <%= from.email %>
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> <h2>INVOICE</h2>
+          <th scope="col" style="text-align:right;"><h2>INVOICE</h2>
             <p>
-              
+
               <strong>Invoice Date: </strong>
               <%= @invoice.post_date.strftime("%d-%^b-%Y") %><br/>
               <strong>Invoice ID: </strong> <%= @invoice.id %><br/>
-              <img src="/barcode?code=<%= @invoice.id %>" />
+              <img src="/barcode?code=<%= @invoice.id %>"/>
             </p>
           </th>
         </tr>
@@ -117,10 +128,11 @@
       </div>
       <div class="boxleft">
         <h2>Date range:</h2>
-        <p><%= sysdate(start_date) %> to <%= sysdate(end_date )%></p>
+        <p><%= sysdate(start_date) %> to <%= sysdate(end_date) %></p>
       </div>
       <div class="boxright" style="border: solid 1px black; padding: 10px;">
-        <h2>Amount Due: <%= number_to_currency(Payment.where(invoice_id: @invoice.id).sum(&:amount) * -1.0, negative_format: "(%u%n)") %></h2>
+        <h2>Amount
+          Due: <%= number_to_currency(Payment.where(invoice_id: @invoice.id).sum(&:amount) * -1.0, negative_format: "(%u%n)") %></h2>
         <p>
           <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
             Upon Receipt
@@ -132,34 +144,36 @@
       <div style="clear:both;"></div>
     </header>
     <br/>
-    
-    
+
+
     <% if @invoice.payments.length > 0 %>
       <h2>Credits</h2>
       <table border="1">
         <tr style="background-color: #eee;">
           <th>Date</th>
-          <th>Transaction ID</td>
+          <th>Transaction ID
+          </td>
           <th>Method</th>
           <th>Memo</th>
           <th style="text-align: right">Amount</th>
         </tr>
-        <% @invoice.payments.each do |pmt|%>
-        <tr>
-          <td><%= systime pmt.created_at %></td>
-          <td><%= pmt.transaction_id %></td>
-          <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
-          <td><%= pmt.memo %></td>
-          <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
-        </tr>
+        <% @invoice.payments.each do |pmt| %>
+          <tr>
+            <td><%= systime pmt.created_at %></td>
+            <td><%= pmt.transaction_id %></td>
+            <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
+            <td><%= pmt.memo %></td>
+            <td style="text-align: right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+          </tr>
         <% end %>
         <tr>
           <td style="text-align: right" colspan="4"><b>Total:</b></td>
-          <td style="text-align: right"><b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
+          <td style="text-align: right">
+            <b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
         </tr>
       </table>
     <% end %>
-    
+
     <% h = {} %>
     <h2>Transactions</h2>
     <table border="1">
@@ -173,60 +187,62 @@
         <th>Memo</th>
         <th style="text-align: right">Amount</th>
       </tr>
-      <% 
+      <%
         invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
         invoiced_items.each do |pmt| %>
-      <tr>
-        <%
-        if pmt.payable_type == "ShipmentItem"
-          si = ShipmentItem.find(pmt.payable_id)
-        %>
-          <td><%= si.shipment.ship_date %></td>
-          <td><%= si.shipment %></td>
-          <td><%= pmt.transaction_id %></td>
-          <td><%= si.order_item.item_number %></td>
-          <td><%= si.order_item.item_description %></td>
-          <td style="text-align: right"><%= si.quantity %></td>
-        
-        <% elsif pmt.payable_type == "Shipment" 
-            shp = Shipment.find(pmt.payable_id)
-            
-            if pmt.memo == "COGS"
-              shp.items.each do |si|
-                if h[si.order_item.product_id].nil?
-                  h[si.order_item.product_id] = si.quantity
-                else
-                  h[si.order_item.product_id] += si.quantity
-                end
-              end
-            end 
-             %>
-          <td><%= shp.ship_date%></td>
-          <td><%= shp.to_s %></td>
-          <td><%= pmt.transaction_id %></td>
-          <td>n/a</td>
-          <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
-          <td style="text-align: center"><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
-      
-        <% elsif pmt.payable_type == "Order" %>
-          <td><%= sysdate pmt.payable.submitted %></td>
-          <td><%= pmt.payable %></td>
-          <td><%= pmt.transaction_id %></td>
-          <td>n/a</td>  
-          <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
-          <td><%= pmt.payable.items.sum(&:quantity) %></td>
-        
-        <% else %>
-          <td><%= sysdate pmt.created_at %></td>
-          <td><%= pmt.transaction_id %></td>
-          <td> - </td>
-          <td> - </td>
-          <td> - </td>
-          <td> - </td>
-        <% end %>
-        <td><%= pmt.memo.presence %></td>
-        <td style="text-align: right"><%= number_to_currency(pmt.amount * -1.0) %></td>
-      </td>
+        <tr>
+          <%
+            if pmt.payable_type == "ShipmentItem"
+              si = ShipmentItem.find(pmt.payable_id)
+          %>
+            <td><%= si.shipment.ship_date %></td>
+            <td><%= si.shipment %></td>
+            <td><%= pmt.transaction_id %></td>
+            <td><%= si.order_item.item_number %></td>
+            <td><%= si.order_item.item_description %></td>
+            <td style="text-align: right"><%= si.quantity %></td>
+
+          <% elsif pmt.payable_type == "Shipment"
+               shp = Shipment.find(pmt.payable_id)
+
+               if pmt.memo == "COGS"
+                 shp.items.each do |si|
+                   if h[si.order_item.product_id].nil?
+                     h[si.order_item.product_id] = si.quantity
+                   else
+                     h[si.order_item.product_id] += si.quantity
+                   end
+                 end
+               end
+          %>
+            <td><%= shp.ship_date %></td>
+            <td><%= shp.to_s %></td>
+            <td><%= pmt.transaction_id %></td>
+            <td>n/a</td>
+            <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
+            <td style="text-align: center"><%= pluralize(pmt.payable.items.sum(&:quantity), "item") %></td>
+
+          <% elsif pmt.payable_type == "Order" %>
+            <td><%= sysdate pmt.payable.submitted %></td>
+            <td><%= pmt.payable %></td>
+            <td><%= pmt.transaction_id %></td>
+            <td>n/a</td>
+            <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>
+              , <%= pmt.payable.shipping_state %>)
+            </td>
+            <td><%= pmt.payable.items.sum(&:quantity) %></td>
+
+          <% else %>
+            <td><%= sysdate pmt.created_at %></td>
+            <td><%= pmt.transaction_id %></td>
+            <td> -</td>
+            <td> -</td>
+            <td> -</td>
+            <td> -</td>
+          <% end %>
+          <td><%= pmt.memo.presence %></td>
+          <td style="text-align: right"><%= number_to_currency(pmt.amount * -1.0) %></td>
+          </td>
       <% end %>
       <tfoot>
       <tr>
@@ -235,46 +251,46 @@
       </tr>
       </tfoot>
     </table>
-    
-    
-    
-    <% if invoiced_items.any? { |x| x.payable_type == "Shipment"} %>
-    <% 
-      shipment_ids = invoiced_items.where(payable_type: "Shipment").pluck(:payable_id) 
-      grouped_items = ShipmentItem.joins(:order_item)
-                                  .where(shipment_id: shipment_ids)
-                                  .group("store_order_items.product_id")
-                                  .pluck("product_id, store_order_items.item_number, store_order_items.item_description, store_order_items.unit_price, sum(store_shipment_items.quantity) as quantity")
-      total = 0.0
-    %>
-    <h2 style="page-break-before: always;">Item Sale Summary</h2>
-    <table border="1">
-      <tr style="background-color: #eee;">
-        <th>Item</th>
-        <th>Description</th>
-        <th style="text-align: right">Unit Price</th>
-        <th style="text-align: center">Qty</th>
-        <th style="text-align: right">Extended Price</th>
-      </tr>
-      <% 
-      Product.where(id: h.keys).each do |p|
-        total += p.reseller_price * h[p.id]
+
+
+
+    <% if invoiced_items.any? { |x| x.payable_type == "Shipment" } %>
+      <%
+        shipment_ids = invoiced_items.where(payable_type: "Shipment").pluck(:payable_id)
+        grouped_items = ShipmentItem.joins(:order_item)
+            .where(shipment_id: shipment_ids)
+            .group("store_order_items.product_id")
+            .pluck("product_id, store_order_items.item_number, store_order_items.item_description, store_order_items.unit_price, sum(store_shipment_items.quantity) as quantity")
+        total = 0.0
       %>
-      <tr>
-        <td nowrap><%= p.item_number %></td>
-        <td><%= p.title %></td>
-        <td style="text-align: right"><%= number_to_currency(p.reseller_price) %></td>
-        <td style="text-align: center"><%= h[p.id] %></td>
-        <td style="text-align: right"><%= number_to_currency(p.reseller_price * h[p.id]) %></td>
-      </tr>
-      <% end %>
-      <tr>
-        <td colspan="4" style="text-align: right"><b>Total:</b></td>
-        <td style="text-align: right"><b><%= number_to_currency(total)%></b></td>
-      </tr>
-    </table>
+      <h2 style="page-break-before: always;">Item Sale Summary</h2>
+      <table border="1">
+        <tr style="background-color: #eee;">
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align: right">Unit Price</th>
+          <th style="text-align: center">Qty</th>
+          <th style="text-align: right">Extended Price</th>
+        </tr>
+        <%
+          Product.where(id: h.keys).each do |p|
+            total += p.reseller_price * h[p.id]
+        %>
+          <tr>
+            <td nowrap><%= p.item_number %></td>
+            <td><%= p.title %></td>
+            <td style="text-align: right"><%= number_to_currency(p.reseller_price) %></td>
+            <td style="text-align: center"><%= h[p.id] %></td>
+            <td style="text-align: right"><%= number_to_currency(p.reseller_price * h[p.id]) %></td>
+          </tr>
+        <% end %>
+        <tr>
+          <td colspan="4" style="text-align: right"><b>Total:</b></td>
+          <td style="text-align: right"><b><%= number_to_currency(total) %></b></td>
+        </tr>
+      </table>
     <% end %>
-    
+
   </article>
 
 
@@ -284,7 +300,7 @@
   <% else %>
     Thank you for your business!
   <% end %>
-  
+
   <br><br>
 
 </section>

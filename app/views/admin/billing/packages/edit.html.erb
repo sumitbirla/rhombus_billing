@@ -2,29 +2,29 @@
 
 
 <% unless @package.id.nil? %>
-    <ul class="nav nav-tabs" style="margin-bottom: 20px;">
-      <li class="active"><a href="#">Summary</a></li>
-      <li><%= link_to "Details", details_admin_billing_package_path(@package) %></li>
-    </ul>
+  <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+    <li class="active"><a href="#">Summary</a></li>
+    <li><%= link_to "Details", details_admin_billing_package_path(@package) %></li>
+  </ul>
 <% end %>
 
 <%= simple_form_for [:admin, :billing, @package] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
-    <%= f.association :domain %>
-    <%= f.input :name %>
-	  <%= f.input :group %>
-    <%= f.input :price %>
-    <%= f.input :bill_frequency, input_html: { placeholder: '30 days' } %>
-    <%= f.input :trial_days %>
-    <%= f.input :active %>
-    <%= f.input :hidden %>
-    <%= f.input :sort %>
-    <%= ckfinder_input(@package, "image_path") %>
-    <%= ckeditor_input(@package, "description") %>
+  <%= f.association :domain %>
+  <%= f.input :name %>
+  <%= f.input :group %>
+  <%= f.input :price %>
+  <%= f.input :bill_frequency, input_html: {placeholder: '30 days'} %>
+  <%= f.input :trial_days %>
+  <%= f.input :active %>
+  <%= f.input :hidden %>
+  <%= f.input :sort %>
+  <%= ckfinder_input(@package, "image_path") %>
+  <%= ckeditor_input(@package, "description") %>
 
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -34,12 +34,12 @@
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Packages", admin_billing_packages_path %></li>
-	<% unless @package.id.nil? %>
-    	<li><%= link_to @package.name, admin_billing_package_path(@package) %></li>
-    	<li class="active">edit</li>
-	<% else %>
-		<li class="active">edit</li>
-	<% end %>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Packages", admin_billing_packages_path %></li>
+  <% unless @package.id.nil? %>
+    <li><%= link_to @package.name, admin_billing_package_path(@package) %></li>
+    <li class="active">edit</li>
+  <% else %>
+    <li class="active">edit</li>
+  <% end %>
 <% end %>

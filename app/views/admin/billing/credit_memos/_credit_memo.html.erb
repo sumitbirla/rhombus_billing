@@ -14,10 +14,10 @@
   </td>
   <td class="text-right">
     <%= link_to "print", print_admin_billing_credit_memo_path(credit_memo), target: '_new' %> &nbsp;
-		<%= link_to "edit", edit_admin_billing_credit_memo_path(credit_memo) %> &nbsp;
-		<%= link_to "delete", 
-					  { action: "destroy", id: credit_memo.id }, 
-					  method: :delete, 
-					  data: { confirm: "Are you sure?" } %>
+    <%= link_to "edit", edit_admin_billing_credit_memo_path(credit_memo) %> &nbsp;
+    <%= link_to "delete",
+                {action: "destroy", id: credit_memo.id},
+                method: :delete,
+                data: {confirm: "Are you sure?"} %>
   </td>
 </tr>

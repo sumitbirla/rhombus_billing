@@ -18,35 +18,35 @@
 class UserPackage < ActiveRecord::Base
   include Exportable
   self.table_name = 'bill_user_packages'
-  
+
   belongs_to :user
   belongs_to :package
   has_many :services, class_name: 'UserService', dependent: :destroy
   has_many :payments, as: :payable
   has_many :invoices, as: :invoiceable
-  
+
   accepts_nested_attributes_for :services
-  
+
   def get_service(code)
     code = ServiceType.find_by(code: code).id if code.is_a?(String)
     services.find { |x| x.service_type_id == code }
   end
-  
+
   def total_price
     total = rate
-    
+
     services.each do |s|
       if s.used > s.quantity
-        total += (s.used - s.quantity) * s.rate 
+        total += (s.used - s.quantity) * s.rate
       end
     end
-    
+
     total
   end
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
   end
-  
+
 end

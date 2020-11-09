@@ -34,17 +34,17 @@ require 'base64'
 class PaymentMethod < ActiveRecord::Base
   include PaymentGateway
   include Exportable
-  
+
   self.table_name = 'bill_payment_methods'
   attr_accessor :number
-  
+
   before_validation :set_brand
   before_save :encrypt_number
-  
+
   belongs_to :user
   has_many :payments
   has_many :cc_transactions
-  
+
   validates :number, presence: true, credit_card_number: true
   validates_presence_of :user_id, :card_brand, :cardholder_name, :expiration_month, :expiration_year
 
@@ -53,38 +53,38 @@ class PaymentMethod < ActiveRecord::Base
   end
 
   def self.CARD_BRANDS
-    ['Visa', 'MasterCard', 'Discover', 'American Express' ]
+    ['Visa', 'MasterCard', 'Discover', 'American Express']
   end
-  
+
   def set_brand
     self.card_brand = CreditCardValidations::Detector.new(number).brand
   end
-  
+
   def expiration
     "#{expiration_month}/#{expiration_year}"
   end
-  
+
   def expiration=(str)
     mo, yr = str.split("/").map { |x| x.strip }
     return if mo.blank? || yr.blank?
-    
+
     yr = "20" + yr if yr.length == 2
     self.expiration_month = mo.to_i
     self.expiration_year = yr.to_i
   end
-  
-  def encrypt_number  
+
+  def encrypt_number
     cipher = OpenSSL::Cipher::AES.new(256, :CBC)
     cipher.encrypt
     cipher.key = IO.binread('/var/lib/rhombus.bin')
-    
+
     self.iv = Base64.encode64(cipher.random_iv)
     self.encrypted_cc = Base64.encode64(cipher.update(number) + cipher.final)
-    
+
     self.card_brand = CreditCardValidations::Detector.new(number).brand
     self.card_display = 'x-' + number[-4, 4]
   end
-  
+
   def decrypt_number
     decipher = OpenSSL::Cipher::AES.new(256, :CBC)
     decipher.decrypt
@@ -92,57 +92,57 @@ class PaymentMethod < ActiveRecord::Base
     decipher.iv = Base64.decode64(iv)
     self.number = decipher.update(Base64.decode64(encrypted_cc)) + decipher.final
   end
-  
+
   def charge(amount, cvv2 = nil)
-    
+
     credit_card = ActiveMerchant::Billing::CreditCard.new(
-      :number             => decrypt_number,
-      :month              => expiration_month,
-      :year               => expiration_year,
-      :first_name         => cardholder_name.split[0],
-      :last_name          => cardholder_name.split[1]
+        :number => decrypt_number,
+        :month => expiration_month,
+        :year => expiration_year,
+        :first_name => cardholder_name.split[0],
+        :last_name => cardholder_name.split[1]
     )
-    
+
     credit_card.verification_value = cvv2 unless cvv2.blank?
-      
+
     purchase_options = {
-      :billing_address => {
-        :name     => cardholder_name,
-        :address1 => billing_street1,
-        :address2 => billing_street2,
-        :city     => billing_city,
-        :state    => billing_state,
-        :zip      => billing_zip,
-        :country  => billing_country
-    }}
-    
+        :billing_address => {
+            :name => cardholder_name,
+            :address1 => billing_street1,
+            :address2 => billing_street2,
+            :city => billing_city,
+            :state => billing_state,
+            :zip => billing_zip,
+            :country => billing_country
+        }}
+
     # active_gateway is defined in concerns
     response = active_gateway.purchase((amount * 100).to_i, credit_card, purchase_options)
     CcTransaction.create(
-      payment_method_id: id,
-      gateway: "stripe",
-      action: "purchase",
-      amount: amount,
-      result: (response.success? ? "OK" : "FAIL"),
-      data: response.to_yaml
+        payment_method_id: id,
+        gateway: "stripe",
+        action: "purchase",
+        amount: amount,
+        result: (response.success? ? "OK" : "FAIL"),
+        data: response.to_yaml
     )
-    
+
     # record status
     if response.success?
-      update(bill_attempts: 0, 
-             last_transaction_date: DateTime.now, 
-             last_transaction_result: response.message, 
+      update(bill_attempts: 0,
+             last_transaction_date: DateTime.now,
+             last_transaction_result: response.message,
              status: "A")
     else
-      update(bill_attempts: bill_attempts + 1, 
-             last_transaction_date: DateTime.now, 
-             last_transaction_result: response.message, 
+      update(bill_attempts: bill_attempts + 1,
+             last_transaction_date: DateTime.now,
+             last_transaction_result: response.message,
              status: "D")
     end
-    
-    response  
+
+    response
   end
-    
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

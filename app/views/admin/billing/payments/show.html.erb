@@ -3,19 +3,19 @@
 <div class="row">
   <div class="col-md-6">
     <table class="table table-condensed table-bordered summary">
-      <%= obj_property(@payment, :user) { |x| link_to x.name, admin_system_user_path(x, q: :payments)}%>
+      <%= obj_property(@payment, :user) { |x| link_to x.name, admin_system_user_path(x, q: :payments) } %>
       <%= obj_property @payment, :created_at %>
       <%= obj_property @payment, :amount %>
       <tr>
         <td>REF:</td>
         <td>
           <% if @payment.payable_type == "order" %>
-              <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
+            <%= link_to "Order ##{@payment.payable_id}", admin_store_order_path(@payment.payable_id) %>
           <% elsif @payment.payable_type == "UserPackage" %>
-              <%= link_to UserPackage.find(@payment.payable_id).package.name + " package [#{@payment.payable_id}]", admin_billing_user_package_path(@payment.payable_id) %>
+            <%= link_to UserPackage.find(@payment.payable_id).package.name + " package [#{@payment.payable_id}]", admin_billing_user_package_path(@payment.payable_id) %>
           <% elsif @payment.payable_type == "shipment" %>
-              <% shipment = Shipment.find_by(id: @payment.payable_id)%>
-              <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
+            <% shipment = Shipment.find_by(id: @payment.payable_id) %>
+            <%= link_to "Shipment #{shipment}", admin_store_shipment_path(@payment.payable_id) %>
           <% end %>
         </td>
       </tr>
@@ -29,15 +29,15 @@
 
 <% if @payment.amount > 0.0 %>
   <form method="get" action="/admin/billing/payments/<%= @payment.id %>/refund">
-    <b>Amount:</b> <input type="number" name="amount" value="<%= @payment.amount %>"> &nbsp; &nbsp; 
-    <b>Memo:</b> <input type="text" name="memo"> &nbsp; &nbsp; 
+    <b>Amount:</b> <input type="number" name="amount" value="<%= @payment.amount %>"> &nbsp; &nbsp;
+    <b>Memo:</b> <input type="text" name="memo"> &nbsp; &nbsp;
     <button class="btn btn-sm btn-danger">Refund</button>
   </form>
 <% end %>
 
 
 <% content_for :title do %>
-    Payment ID: <%= @payment.id %>
+  Payment ID: <%= @payment.id %>
 <% end %>
 
 

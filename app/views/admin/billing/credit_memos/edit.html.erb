@@ -1,5 +1,5 @@
 <h2>
-	Credit Memo
+  Credit Memo
 </h2>
 <hr/>
 
@@ -12,8 +12,8 @@
   <%= f.input :description %>
   <%= f.input :amount %>
   <%= f.input :used %>
-  
-  <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
@@ -24,7 +24,7 @@
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">Billing</a></li>
-	<li><%= link_to "Credit Memos", admin_billing_credit_memos_path %></li>
-	<li class="active">Credit Memo</li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Credit Memos", admin_billing_credit_memos_path %></li>
+  <li class="active">Credit Memo</li>
 <% end %>

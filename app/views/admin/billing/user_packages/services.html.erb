@@ -17,32 +17,32 @@
     <th></th>
   </tr>
   <% @user_package.services.each do |svc| %>
-      <tr>
-        <td><%= svc.service_type.name %></td>
-        <td><%= svc.quantity %></td>
-        <td><%= svc.used %></td>
-        <td>
-          <% if svc.rate %>
-            <%= number_to_currency(svc.rate) %>
-          <% else %>
-            - included -
-          <% end %>
-        </td>
-        <td>
-          <%= link_to "edit", edit_admin_billing_user_service_path(svc) %> &nbsp;
-          <%= link_to "delete",
-                      { action: "destroy", controller: 'user_services', id: svc.id },
-                      method: :delete,
-                      data: { confirm: "Are you sure?" } %>
-        </td>
-      </tr>
+    <tr>
+      <td><%= svc.service_type.name %></td>
+      <td><%= svc.quantity %></td>
+      <td><%= svc.used %></td>
+      <td>
+        <% if svc.rate %>
+          <%= number_to_currency(svc.rate) %>
+        <% else %>
+          - included -
+        <% end %>
+      </td>
+      <td>
+        <%= link_to "edit", edit_admin_billing_user_service_path(svc) %> &nbsp;
+        <%= link_to "delete",
+                    {action: "destroy", controller: 'user_services', id: svc.id},
+                    method: :delete,
+                    data: {confirm: "Are you sure?"} %>
+      </td>
+    </tr>
   <% end %>
 </table>
 
 
 
 <%= content_for :title do %>
-    User Subscription #<%= @user_package.id %>
+  User Subscription #<%= @user_package.id %>
 <% end %>
 
 
@@ -52,8 +52,8 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
-    <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
-    <li class="active">edit</li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+  <li><%= link_to "User Subscription ##{@user_package.id}", admin_billing_user_package_path(@user_package) %></li>
+  <li class="active">edit</li>
 <% end %>

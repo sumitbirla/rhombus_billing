@@ -38,8 +38,8 @@ class Admin::Billing::UserServicesController < Admin::BaseController
 
   private
 
-    def user_service_params
-      params.require(:user_service).permit!
-    end
+  def user_service_params
+    params.require(:user_service).permit!
+  end
 
 end

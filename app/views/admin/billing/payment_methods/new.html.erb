@@ -3,42 +3,42 @@
 
 <%= simple_form_for [:admin, :billing, @payment_method] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
-    <div class="row">
-        <div class="col-md-6">
-            <%= f.association :user %>
-            <%= f.input :number, placeholder: '####-####-####-####', label: 'Number' %>
-            <%= f.input :cardholder_name, label: "Cardholder" %>
-            <div class="form-group string optional payment_method_billing_street1">
-              <label class="string optional control-label col-sm-3" for="payment_method_billing_street1">Expiration</label>
-              <div class="col-sm-9">
-                <%= f.select :expiration_month, (1..12) %>
-                <%= f.select :expiration_year, (2015..2025) %>
-              </div>
-            </div>
-            <%= f.input :default %>
+  <div class="row">
+    <div class="col-md-6">
+      <%= f.association :user %>
+      <%= f.input :number, placeholder: '####-####-####-####', label: 'Number' %>
+      <%= f.input :cardholder_name, label: "Cardholder" %>
+      <div class="form-group string optional payment_method_billing_street1">
+        <label class="string optional control-label col-sm-3" for="payment_method_billing_street1">Expiration</label>
+        <div class="col-sm-9">
+          <%= f.select :expiration_month, (1..12) %>
+          <%= f.select :expiration_year, (2015..2025) %>
         </div>
-
-        <div class="col-md-6">
-            <%= f.input :billing_street1 %>
-            <%= f.input :billing_street2 %>
-            <%= f.input :billing_city %>
-            <%= f.input :billing_state %>
-            <%= f.input :billing_zip %>
-            <%= f.input :billing_country %>
-        </div>
+      </div>
+      <%= f.input :default %>
     </div>
 
-    <div class="col-md-12">
-      <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+    <div class="col-md-6">
+      <%= f.input :billing_street1 %>
+      <%= f.input :billing_street2 %>
+      <%= f.input :billing_city %>
+      <%= f.input :billing_state %>
+      <%= f.input :billing_zip %>
+      <%= f.input :billing_country %>
     </div>
+  </div>
+
+  <div class="col-md-12">
+    <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
+  </div>
 <% end %>
 
 
 
 <% content_for :title do %>
-    <%= @payment_method.card_display %>
+  <%= @payment_method.card_display %>
 <% end %>
 
 
@@ -48,7 +48,7 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
-    <li class="active"><%= @payment_method.card_display %></li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
+  <li class="active"><%= @payment_method.card_display %></li>
 <% end %>

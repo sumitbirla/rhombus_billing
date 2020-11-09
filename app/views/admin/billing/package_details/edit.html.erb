@@ -4,23 +4,23 @@
 
 <%= simple_form_for [:admin, :billing, @package_detail] do |f| %>
 
-    <%= render 'admin/shared/error_messages', object: f.object %>
+  <%= render 'admin/shared/error_messages', object: f.object %>
 
-    <%= f.input :package_id, as: :hidden %>
-    <%= f.association :service_type, collection: ServiceType.where(domain_id: current_domain.id) %>
-    <%= f.input :quantity %>
-    <%= f.input :trial_days %>
-    <%= f.input :rate %>
-    <%= f.input :hidden %>
+  <%= f.input :package_id, as: :hidden %>
+  <%= f.association :service_type, collection: ServiceType.where(domain_id: current_domain.id) %>
+  <%= f.input :quantity %>
+  <%= f.input :trial_days %>
+  <%= f.input :rate %>
+  <%= f.input :hidden %>
 
-    <%= button_tag "Save changes", :class => "btn btn-primary", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..." } %>
+  <%= button_tag "Save changes", :class => "btn btn-primary", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i> Please wait ..."} %>
 
 <% end %>
 
 
 
 <% content_for :title do %>
-    <%= @package_detail.package.name %>
+  <%= @package_detail.package.name %>
 <% end %>
 
 
@@ -30,8 +30,8 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Packages", admin_billing_packages_path %></li>
-    <li><%= link_to @package_detail.package.name, admin_billing_package_path(@package_detail.package) %></li>
-    <li class="active">edit</li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Packages", admin_billing_packages_path %></li>
+  <li><%= link_to @package_detail.package.name, admin_billing_package_path(@package_detail.package) %></li>
+  <li class="active">edit</li>
 <% end %>

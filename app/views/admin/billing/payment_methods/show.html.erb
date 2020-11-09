@@ -4,49 +4,49 @@
 <hr/>
 
 
-    <div class="well row" style="margin-left: 0;">
+<div class="well row" style="margin-left: 0;">
 
-      <div class="col-md-5">
-          <div>
-            <label>Card Holder:</label>
-            <%= link_to @payment_method.cardholder_name, admin_system_user_path(@payment_method.user) %>
-          </div>
-          <div>
-            <label>Brand:</label>
-            <%= @payment_method.card_brand.titlecase %>
-          </div>
-          <div>
-            <label>Number:</label>
-            <%= @payment_method.card_display %>
-          </div>
-          <div>
-            <label>Expiration:</label>
-            <%= @payment_method.expiration_month %> / <%= @payment_method.expiration_year %>
-          </div>
-      </div>
-
-      <div class="col-md-6">
-        <div>
-          <label style="height: 50px;">Billing:</label>
-          <%= @payment_method.billing_street1 %><br/>
-          <% unless @payment_method.billing_street2.blank? %>
-              <%= @payment_method.billing_street2 %><br/>
-          <% end %>
-          <%= @payment_method.billing_city %>, <%= @payment_method.billing_state %> <%= @payment_method.billing_zip %><br/>
-          <%= @payment_method.billing_country %>
-        </div>
-        <div>
-          <label>Status:</label>
-          <%= @payment_method.status %>
-        </div>
-        <% unless @payment_method.last_transaction_date.nil? %>
-        <div>
-          <label>Last Transaction:</label>
-          <%= @payment_method.last_transaction_date %>
-        </div>
-        <% end %>
-      </div>
+  <div class="col-md-5">
+    <div>
+      <label>Card Holder:</label>
+      <%= link_to @payment_method.cardholder_name, admin_system_user_path(@payment_method.user) %>
     </div>
+    <div>
+      <label>Brand:</label>
+      <%= @payment_method.card_brand.titlecase %>
+    </div>
+    <div>
+      <label>Number:</label>
+      <%= @payment_method.card_display %>
+    </div>
+    <div>
+      <label>Expiration:</label>
+      <%= @payment_method.expiration_month %> / <%= @payment_method.expiration_year %>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div>
+      <label style="height: 50px;">Billing:</label>
+      <%= @payment_method.billing_street1 %><br/>
+      <% unless @payment_method.billing_street2.blank? %>
+        <%= @payment_method.billing_street2 %><br/>
+      <% end %>
+      <%= @payment_method.billing_city %>, <%= @payment_method.billing_state %> <%= @payment_method.billing_zip %><br/>
+      <%= @payment_method.billing_country %>
+    </div>
+    <div>
+      <label>Status:</label>
+      <%= @payment_method.status %>
+    </div>
+    <% unless @payment_method.last_transaction_date.nil? %>
+      <div>
+        <label>Last Transaction:</label>
+        <%= @payment_method.last_transaction_date %>
+      </div>
+    <% end %>
+  </div>
+</div>
 
 
 <h4>Payments</h4>
@@ -61,44 +61,53 @@
     <th>Credit</th>
   </tr>
   <% @payment_method.payments.order('created_at DESC').each do |payment| %>
-  <tr>
-    <td><%= payment.id %></td>
-    <td><%= systime payment.created_at %></td>
-    <td>
-      <% if payment.user_id %>
-        <%= link_to payment.user.name, admin_system_user_path(payment.user) %>
-      <% else %>
-        - guest -
-      <% end %>
-    </td>
-    <td>
-      <% if payment.payable_type == "order" %>
+    <tr>
+      <td><%= payment.id %></td>
+      <td><%= systime payment.created_at %></td>
+      <td>
+        <% if payment.user_id %>
+          <%= link_to payment.user.name, admin_system_user_path(payment.user) %>
+        <% else %>
+          - guest -
+        <% end %>
+      </td>
+      <td>
+        <% if payment.payable_type == "order" %>
           <%= link_to "Order ##{payment.payable_id}", admin_store_order_path(payment.payable_id) %>
-      <% elsif payment.payable_type == "UserPackage" %>
+        <% elsif payment.payable_type == "UserPackage" %>
           <%= link_to UserPackage.find(payment.payable_id).package.name + " package [#{payment.payable_id}]", admin_billing_user_package_path(payment.payable_id) %>
-      <% elsif payment.payable_type == "shipment" %>
-          <% shipment = Shipment.find_by(id: payment.payable_id)%>
+        <% elsif payment.payable_type == "shipment" %>
+          <% shipment = Shipment.find_by(id: payment.payable_id) %>
           <%= link_to "Shipment #{shipment}", admin_store_shipment_path(payment.payable_id) %>
-      <% end %>
-    </td>
-    <td><%= payment.memo %></td>
-    <td><%= number_to_currency(payment.amount) if payment.amount < 0.0 %></td>
-    <td><%= number_to_currency(payment.amount) if payment.amount >= 0.0 %></td>
-  </tr>
+        <% end %>
+      </td>
+      <td><%= payment.memo %></td>
+      <td><%= number_to_currency(payment.amount) if payment.amount < 0.0 %></td>
+      <td><%= number_to_currency(payment.amount) if payment.amount >= 0.0 %></td>
+    </tr>
   <% end %>
 </table>
 
 
 <%= content_for :head do %>
-    <style>
-        .well label { float: left; width: 120px; text-align: right; font-weight: bold; padding-right: 12px; }
-        .well div div { clear: left; }
-    </style>
+  <style>
+      .well label {
+          float: left;
+          width: 120px;
+          text-align: right;
+          font-weight: bold;
+          padding-right: 12px;
+      }
+
+      .well div div {
+          clear: left;
+      }
+  </style>
 <% end %>
 
 
 <%= content_for :title do %>
-    <%= @payment_method.card_display %>
+  <%= @payment_method.card_display %>
 <% end %>
 
 
@@ -108,7 +117,7 @@ end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
-    <li class="active"><%= @payment_method %></li>
+  <li><a href="#">Billing</a></li>
+  <li><%= link_to "Payment Methods", admin_billing_payment_methods_path %></li>
+  <li class="active"><%= @payment_method %></li>
 <% end %>

@@ -1,32 +1,32 @@
-  <li class="<%= 'active' if request.original_url.include? 'admin/billing' %>">
-    <a href="#"><i class="far fa-credit-card fa-fw"></i> Billing <span class="fa arrow"></span></a>
-    <ul class="nav nav-second-level">
-      <% if current_user.has_permission?('BillingArrangement', 'index')%>
-        <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('CcTransaction', 'index')%>
-        <li><%= link_to "CC Transactions", admin_billing_cc_transactions_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('CreditMemo', 'index')%>
-        <li><%= link_to "Credit Memos", admin_billing_credit_memos_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('Invoice', 'index')%>
-        <li><%= link_to "Invoices", admin_billing_invoices_path(paid: 0) %></li>
-      <% end %>
-      <% if current_user.has_permission?('Package', 'index')%>
-        <li><%= link_to "Packages", admin_billing_packages_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('Payment', 'index')%>
-        <li><%= link_to "Payments", admin_billing_payments_path(type: :credit) %></li>
-      <% end %>
-      <% if current_user.has_permission?('PaymentMethod', 'index')%>
-        <li><%= link_to "Payment methods", admin_billing_payment_methods_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('ServiceType', 'index')%>
-        <li><%= link_to "Service Types", admin_billing_service_types_path %></li>
-      <% end %>
-      <% if current_user.has_permission?('UserPackage', 'index')%>
-        <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
-      <% end %>
-    </ul>
-  </li>
+<li class="<%= 'active' if request.original_url.include? 'admin/billing' %>">
+  <a href="#"><i class="far fa-credit-card fa-fw"></i> Billing <span class="fa arrow"></span></a>
+  <ul class="nav nav-second-level">
+    <% if current_user.has_permission?('BillingArrangement', 'index') %>
+      <li><%= link_to "Billing Arrangements", admin_billing_billing_arrangements_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('CcTransaction', 'index') %>
+      <li><%= link_to "CC Transactions", admin_billing_cc_transactions_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('CreditMemo', 'index') %>
+      <li><%= link_to "Credit Memos", admin_billing_credit_memos_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('Invoice', 'index') %>
+      <li><%= link_to "Invoices", admin_billing_invoices_path(paid: 0) %></li>
+    <% end %>
+    <% if current_user.has_permission?('Package', 'index') %>
+      <li><%= link_to "Packages", admin_billing_packages_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('Payment', 'index') %>
+      <li><%= link_to "Payments", admin_billing_payments_path(type: :credit) %></li>
+    <% end %>
+    <% if current_user.has_permission?('PaymentMethod', 'index') %>
+      <li><%= link_to "Payment methods", admin_billing_payment_methods_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('ServiceType', 'index') %>
+      <li><%= link_to "Service Types", admin_billing_service_types_path %></li>
+    <% end %>
+    <% if current_user.has_permission?('UserPackage', 'index') %>
+      <li><%= link_to "User Subscriptions", admin_billing_user_packages_path %></li>
+    <% end %>
+  </ul>
+</li>

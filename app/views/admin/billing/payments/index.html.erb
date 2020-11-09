@@ -1,13 +1,13 @@
 <div class="pull-right">
   <form action="" method="get" style="display: inline;">
-      <input type="hidden" name="uid" value="<%= params[:uid] %>">
-      <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to 
-      <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
-      <input type="submit" class="btn btn-sm btn-default">
+    <input type="hidden" name="uid" value="<%= params[:uid] %>">
+    <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to
+    <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
+    <input type="submit" class="btn btn-sm btn-default">
   </form>
   <%= link_to new_admin_billing_payment_path, class: 'btn btn-default btn-sm' do %>
     <i class="fa fa-plus"></i> New payment
-    <% end %>
+  <% end %>
 </div>
 
 <h2>
@@ -24,13 +24,17 @@
   </div>
 <% else %>
 
-<span class="pull-right"><b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %></span>
+  <span class="pull-right"><b>Balance:</b> <%= number_to_currency(@balance, negative_format: "(%u%n)") %></span>
 
-<ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <li class="<%= "active" if params[:type] == "credit" %>"><a href="<%= admin_billing_payments_path(type: :credit)%>"><%= tab_count("Credit", Payment.where("amount > 0.0").count)%></a></li>
-  <li class="<%= "active" if params[:type] == "debit" %>"><a href="<%= admin_billing_payments_path(type: :debit)%>"><%= tab_count("Debit", Payment.where("amount < 0.0").count)%></a></li>
-  <li class="<%= "active" if params[:type].blank? %>"><a href="<%= admin_billing_payments_path %>">All</a></li>
-</ul>
+  <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+    <li class="<%= "active" if params[:type] == "credit" %>">
+      <a href="<%= admin_billing_payments_path(type: :credit) %>"><%= tab_count("Credit", Payment.where("amount > 0.0").count) %></a>
+    </li>
+    <li class="<%= "active" if params[:type] == "debit" %>">
+      <a href="<%= admin_billing_payments_path(type: :debit) %>"><%= tab_count("Debit", Payment.where("amount < 0.0").count) %></a>
+    </li>
+    <li class="<%= "active" if params[:type].blank? %>"><a href="<%= admin_billing_payments_path %>">All</a></li>
+  </ul>
 
 <% end %>
 
@@ -57,11 +61,11 @@
 
 
 <% content_for :title do %>
-    Payments
+  Payments
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li class="active">Payments</li>
+  <li><a href="#">Billing</a></li>
+  <li class="active">Payments</li>
 <% end %>

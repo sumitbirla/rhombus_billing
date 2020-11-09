@@ -1,74 +1,87 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>Credit Memo</title>
   <style>
       body {
-          background:white !important;
-          color:black!important;
-          width: 95%!important;
-          margin: 0 auto!important;
-          font-family:Arial, Helvetica, sans-serif!important;
-          font-size:12px!important;
+          background: white !important;
+          color: black !important;
+          width: 95% !important;
+          margin: 0 auto !important;
+          font-family: Arial, Helvetica, sans-serif !important;
+          font-size: 12px !important;
       }
+
       table {
-          width: 100%!important;
-          border-collapse:collapse;
+          width: 100% !important;
+          border-collapse: collapse;
       }
+
       table td {
           border-right: 1px solid #000;
-          padding: 5px!important;
+          padding: 5px !important;
       }
+
       table.bordered {
-        border: solid 1px black;
+          border: solid 1px black;
       }
+
       table.bordered th {
-        padding: 4px;
-        border-bottom: solid 1px black;    
+          padding: 4px;
+          border-bottom: solid 1px black;
       }
+
       article {
-          padding: 0px 0!important;
+          padding: 0px 0 !important;
       }
+
       p {
-          font-weight:normal !important;
-          line-height:16px !important;
+          font-weight: normal !important;
+          line-height: 16px !important;
           margin-top: 0;
       }
-      h1 { 
-        font-size: 38px;
-        color: #ccc;
+
+      h1 {
+          font-size: 38px;
+          color: #ccc;
       }
+
       h2 {
-          font-size:20px !important;
+          font-size: 20px !important;
           margin-bottom: 0px;
       }
+
       h3 {
-        margin-bottom:4px;
+          margin-bottom: 4px;
       }
+
       .boxleft {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxcenter {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
+
       .boxright {
-          float:left!important;
-          width: 32%!important;
-          margin-top:0px !important;
+          float: left !important;
+          width: 32% !important;
+          margin-top: 0px !important;
       }
-      .textright{
-          text-align:right !important;
+
+      .textright {
+          text-align: right !important;
       }
   </style>
 </head>
 <body onload="window.print()">
-  <h1>CREDIT MEMO</h1>
-  
+<h1>CREDIT MEMO</h1>
+
 <section>
   <article>
     <header>
@@ -80,10 +93,10 @@
             <p><%= raw @credit_memo.affiliate.address_as_text.gsub("\n", "<br>") %></p>
             <p>
               <% unless @credit_memo.affiliate.phone.blank? %>
-              <strong>Phone:</strong> <%= @credit_memo.affiliate.phone %><br/>
+                <strong>Phone:</strong> <%= @credit_memo.affiliate.phone %><br/>
               <% end %>
               <% unless @credit_memo.affiliate.fax.blank? %>
-              <strong>Fax:</strong> <%= @credit_memo.affiliate.fax %><br/>
+                <strong>Fax:</strong> <%= @credit_memo.affiliate.fax %><br/>
               <% end %>
             </p>
             <p>
@@ -92,11 +105,11 @@
               <strong>Vendor Code: </strong> <%= @credit_memo.affiliate.code %><br>
             </p>
           </th>
-          <th scope="col" style="text-align:right;"> 
+          <th scope="col" style="text-align:right;">
             <h2>Pet Healthbox LLC</h2>
-              201 Douglas Rd E., STE 1<br>
-              Oldsmar, FL 34677<br><br>
-              <strong>Email:</strong> help@healthybreeds.com<br><br>  
+            201 Douglas Rd E., STE 1<br>
+            Oldsmar, FL 34677<br><br>
+            <strong>Email:</strong> help@healthybreeds.com<br><br>
           </th>
         </tr>
         </thead>
@@ -120,8 +133,8 @@
 
       </tbody>
     </table>
-    
-    <br><br><br><img src="/barcode?code=CM<%= @credit_memo.id %>" />
+
+    <br><br><br><img src="/barcode?code=CM<%= @credit_memo.id %>"/>
   </article>
 
 

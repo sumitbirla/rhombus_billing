@@ -18,15 +18,19 @@
 
 
 <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-  <li class="<%= "active" if params[:paid] == "0" %>"><a href="<%= admin_billing_invoices_path(paid: 0)%>"><%= tab_count("Unpaid", Invoice.where(paid: false).count)%></a></li>
-  <li class="<%= "active" if params[:paid] == "1" %>"><a href="<%= admin_billing_invoices_path(paid: 1)%>"><%= tab_count("Paid", Invoice.where(paid: true).count)%></a></li>
+  <li class="<%= "active" if params[:paid] == "0" %>">
+    <a href="<%= admin_billing_invoices_path(paid: 0) %>"><%= tab_count("Unpaid", Invoice.where(paid: false).count) %></a>
+  </li>
+  <li class="<%= "active" if params[:paid] == "1" %>">
+    <a href="<%= admin_billing_invoices_path(paid: 1) %>"><%= tab_count("Paid", Invoice.where(paid: true).count) %></a>
+  </li>
 </ul>
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
+  <%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <input type="hidden" name="email_address" value=""/>
-  
+
   <%= will_paginate @invoices %>
   <table class="table table-striped table-condensed">
     <tr>
@@ -48,11 +52,11 @@
 
 
 <% content_for :title do %>
-    Invoices
+  Invoices
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li class="active">Invoices</li>
+  <li><a href="#">Billing</a></li>
+  <li class="active">Invoices</li>
 <% end %>

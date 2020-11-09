@@ -1,16 +1,16 @@
 <%
   start_date = Date.new(2500, 1, 1)
   end_date = Date.new(1900, 1, 1)
-  
+
   invoiced_items = Payment.where(invoice_id: @invoice.id).where.not(payable_type: :invoice)
   invoiced_items.each do |pmt|
     date = sysdate(pmt.created_at)
     date = pmt.payable.shipment.ship_date if pmt.payable_type == "ShipmentItem"
     date = pmt.payable.ship_date if pmt.payable_type == "Shipment"
     date = pmt.payable.submitted if pmt.payable_type == "Order"
-    
+
     date ||= Date.today
-    
+
     start_date = date if date < start_date
     end_date = date if date > end_date
   end
@@ -28,7 +28,7 @@
 <h2>
   <span class='light pull-right'><%= @invoice.from_affiliate %> &nbsp; </span>
   Invoice #<%= @invoice.id %></h2>
-  
+
 <hr>
 
 <div class="row">
@@ -42,7 +42,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">Invoicee:</div>
@@ -52,33 +52,33 @@
       </div>
     </div>
   </div>
-  
+
   <div class="col-md-4">
     <div class="panel panel-success">
       <div class="panel-heading">Payment:</div>
       <div class="panel-body">
         <table class="summary">
           <% if invoiced_items.length > 1 %>
-          <tr>
-            <td>Date Range</td>
-            <td><%= start_date %> to <%= end_date %></td>
-          </tr>
+            <tr>
+              <td>Date Range</td>
+              <td><%= start_date %> to <%= end_date %></td>
+            </tr>
           <% end %>
           <tr>
             <td>Amount</td>
             <td><%= number_to_currency(@invoice.amount) %></td>
           </tr>
           <% unless @invoice.paid %>
-          <tr>
-            <td>Due</td>
-            <td>
-              <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
-                Upon Receipt
-              <% else %>
-                <%= sysdate @invoice.due_date %>
-              <% end %>
-            </td>
-          </tr>
+            <tr>
+              <td>Due</td>
+              <td>
+                <% if @invoice.due_date.nil? || @invoice.due_date == @invoice.post_date %>
+                  Upon Receipt
+                <% else %>
+                  <%= sysdate @invoice.due_date %>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
           <tr>
             <td>Posted</td>
@@ -100,14 +100,14 @@
   </div>
 
   <% unless @invoice.note.blank? %>
-  <div class="col-md-4">
-    <div class="panel panel-success">
-      <div class="panel-heading">Notes:</div>
-      <div class="panel-body">
-        <%= @invoice.note %>
+    <div class="col-md-4">
+      <div class="panel panel-success">
+        <div class="panel-heading">Notes:</div>
+        <div class="panel-body">
+          <%= @invoice.note %>
+        </div>
       </div>
     </div>
-  </div>
   <% end %>
 
 </div>
@@ -122,7 +122,8 @@
       <th>Date</th>
       <th>User / Affiliate</th>
       <th>Item</th>
-      <th>Transaction ID</td>
+      <th>Transaction ID
+      </td>
       <th>Method</th>
       <th>Memo</th>
       <th class="text-right">Amount</th>
@@ -130,7 +131,8 @@
     <%= render partial: "admin/billing/payments/payment", collection: @invoice.payments %>
     <tr>
       <td class="text-right" colspan="7"><b>Total:</b></td>
-      <td class="text-right"><b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
+      <td class="text-right">
+        <b><%= number_to_currency(@invoice.payments.sum(&:amount), negative_format: "(%u%n)") %></b></td>
     </tr>
   </table>
 <% end %>
@@ -149,57 +151,59 @@
     <th style="text-align: right">Amount</th>
   </tr>
   <% invoiced_items.each do |pmt| %>
-  <tr>
-    <%
-    if pmt.payable_type == "ShipmentItem"
-      si = pmt.payable
-    %>
-      <td><%= si.shipment.ship_date %></td>
-      <td><%= link_to si.shipment.to_s, admin_store_shipment_path(si.shipment) %></td>
-      <td><%= pmt.transaction_id %></td>
-      <td><%= si.order_item.item_number %></td>
-      <td><%= si.order_item.item_description %></td>
-      <td style="text-align: right"><%= si.quantity %></td>
-      
-    <% elsif pmt.payable_type == "Shipment" 
-        shp = pmt.payable 
-        
-        if pmt.memo == "COGS"
-          shp.items.each do |si|
-            if h[si.order_item.product_id].nil?
-              h[si.order_item.product_id] = si.quantity
-            else
-              h[si.order_item.product_id] += si.quantity
-            end
-          end
-        end 
+    <tr>
+      <%
+        if pmt.payable_type == "ShipmentItem"
+          si = pmt.payable
       %>
-      <td><%= shp.ship_date || pmt.created_at.to_date %></td>
-      <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
-      <td><%= pmt.transaction_id %></td>
-      <td>n/a</td>
-      <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
-      <td class="text-center"><%= pluralize(shp.items.sum(&:quantity), "item")%></td>
-      
-    <% elsif pmt.payable_type == "Order" %>
-      <td><%= sysdate pmt.payable.submitted %></td>
-      <td><%= link_to pmt.payable.to_s, admin_store_order_path(pmt.payable) %></td>
-      <td><%= pmt.transaction_id %></td>
-      <td>n/a</td>
-      <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>, <%= pmt.payable.shipping_state %>)</td>
-      <td class="text-center"><%= pluralize(pmt.payable.items.sum(&:quantity), "item")%></td>
-      
-    <% else %>
-      <td><%= sysdate pmt.created_at %></td>
-      <td><%= pmt.transaction_id %></td>
-      <td> - </td>
-      <td> - </td>
-      <td> - </td>
-      <td> - </td>
-    <% end %>
-    <td><%= pmt.memo.presence %></td>
-    <td class="text-right"><%= number_to_currency(pmt.amount * -1.0) %></td>
-  </td>
+        <td><%= si.shipment.ship_date %></td>
+        <td><%= link_to si.shipment.to_s, admin_store_shipment_path(si.shipment) %></td>
+        <td><%= pmt.transaction_id %></td>
+        <td><%= si.order_item.item_number %></td>
+        <td><%= si.order_item.item_description %></td>
+        <td style="text-align: right"><%= si.quantity %></td>
+
+      <% elsif pmt.payable_type == "Shipment"
+           shp = pmt.payable
+
+           if pmt.memo == "COGS"
+             shp.items.each do |si|
+               if h[si.order_item.product_id].nil?
+                 h[si.order_item.product_id] = si.quantity
+               else
+                 h[si.order_item.product_id] += si.quantity
+               end
+             end
+           end
+      %>
+        <td><%= shp.ship_date || pmt.created_at.to_date %></td>
+        <td><%= link_to shp.to_s, admin_store_shipment_path(shp) %></td>
+        <td><%= pmt.transaction_id %></td>
+        <td>n/a</td>
+        <td>Ship to <%= shp.recipient_name %> (<%= shp.recipient_city %>, <%= shp.recipient_state %>)</td>
+        <td class="text-center"><%= pluralize(shp.items.sum(&:quantity), "item") %></td>
+
+      <% elsif pmt.payable_type == "Order" %>
+        <td><%= sysdate pmt.payable.submitted %></td>
+        <td><%= link_to pmt.payable.to_s, admin_store_order_path(pmt.payable) %></td>
+        <td><%= pmt.transaction_id %></td>
+        <td>n/a</td>
+        <td>Ship to <%= pmt.payable.shipping_name %> (<%= pmt.payable.shipping_city %>
+          , <%= pmt.payable.shipping_state %>)
+        </td>
+        <td class="text-center"><%= pluralize(pmt.payable.items.sum(&:quantity), "item") %></td>
+
+      <% else %>
+        <td><%= sysdate pmt.created_at %></td>
+        <td><%= pmt.transaction_id %></td>
+        <td> -</td>
+        <td> -</td>
+        <td> -</td>
+        <td> -</td>
+      <% end %>
+      <td><%= pmt.memo.presence %></td>
+      <td class="text-right"><%= number_to_currency(pmt.amount * -1.0) %></td>
+      </td>
   <% end %>
   <tfoot>
   <tr>
@@ -210,45 +214,45 @@
 </table>
 
 <pre><%= h %></pre>
-<% 
-if h.keys.length > 0
-  total = 0.0
+<%
+  if h.keys.length > 0
+    total = 0.0
 %>
-<h3>Item Sale Summary</h3>
-<table class="table table-striped table-condensed table-bordered">
-  <tr style="background-color: #eee;">
-    <th>Item</th>
-    <th>Description</th>
-    <th style="text-align: right">Unit Price</th>
-    <th style="text-align: center">Qty</th>
-    <th style="text-align: right">Extended Price</th>
-  </tr>
-  <% 
-  Product.where(id: h.keys).each do |p|
-    total += p.reseller_price * h[p.id]
-  %>
-  <tr>
-    <td><%= link_to p.item_number, admin_store_product_path(p) %></td>
-    <td><%= p.title %></td>
-    <td style="text-align: right"><%= number_to_currency(p.reseller_price) %></td>
-    <td style="text-align: center"><%= h[p.id] %></td>
-    <td style="text-align: right"><%= number_to_currency(p.reseller_price * h[p.id]) %></td>
-  </tr>
-  <% end %>
-  <tr>
-    <td colspan="4" style="text-align: right"><b>Total:</b></td>
-    <td style="text-align: right"><b><%= number_to_currency(total)%></b></td>
-  </tr>
-</table>
+  <h3>Item Sale Summary</h3>
+  <table class="table table-striped table-condensed table-bordered">
+    <tr style="background-color: #eee;">
+      <th>Item</th>
+      <th>Description</th>
+      <th style="text-align: right">Unit Price</th>
+      <th style="text-align: center">Qty</th>
+      <th style="text-align: right">Extended Price</th>
+    </tr>
+    <%
+      Product.where(id: h.keys).each do |p|
+        total += p.reseller_price * h[p.id]
+    %>
+      <tr>
+        <td><%= link_to p.item_number, admin_store_product_path(p) %></td>
+        <td><%= p.title %></td>
+        <td style="text-align: right"><%= number_to_currency(p.reseller_price) %></td>
+        <td style="text-align: center"><%= h[p.id] %></td>
+        <td style="text-align: right"><%= number_to_currency(p.reseller_price * h[p.id]) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td colspan="4" style="text-align: right"><b>Total:</b></td>
+      <td style="text-align: right"><b><%= number_to_currency(total) %></b></td>
+    </tr>
+  </table>
 <% end %>
 
 <div class="row hidden-print">
-  
+
   <div class="col-md-8 col-sm-12">
     <div class="panel panel-warning">
       <div class="panel-heading"><i class="fa fa-clock-o"></i> History:</div>
       <div class="panel-body">
-       
+
         <table class="table table-condensed table-striped">
           <tr>
             <th>Timestamp</th>
@@ -258,26 +262,26 @@ if h.keys.length > 0
             <th>Data 1</th>
           </tr>
           <% @invoice.logs.each do |log| %>
-          <tr>
-            <td><%= systime log.timestamp %></td>
-            <td><%= log.ip_address %></td>
-            <td>
-              <% if log.user %>
-                <%= link_to log.user.name, admin_system_user_path(log.user) %>
-              <% else %>
-                <span class="light">- system -</span>
-              <% end %>
-            </td>
-            <td><%= log.event.titlecase %></td>
-            <td><%= log.data1 %></td>
-          </tr>
-          <% end%>
+            <tr>
+              <td><%= systime log.timestamp %></td>
+              <td><%= log.ip_address %></td>
+              <td>
+                <% if log.user %>
+                  <%= link_to log.user.name, admin_system_user_path(log.user) %>
+                <% else %>
+                  <span class="light">- system -</span>
+                <% end %>
+              </td>
+              <td><%= log.event.titlecase %></td>
+              <td><%= log.data1 %></td>
+            </tr>
+          <% end %>
         </table>
-        
+
       </div>
     </div>
   </div>
-    
+
   <div class="col-md-4 col-sm-12">
     <div class="panel panel-warning">
       <div class="panel-heading">Email invoice:</div>
@@ -295,19 +299,19 @@ if h.keys.length > 0
 
 
 <form id="frmBatch" action="" method="post">
-	<%= token_tag %>
+  <%= token_tag %>
   <input type="hidden" name="printer_id" value=""/>
   <input type="hidden" name="invoice_id[]" value="<%= @invoice.id %>"/>
 </form>
 
 
 <% content_for :title do %>
-	Invoice #<%= @invoice.id%>
+  Invoice #<%= @invoice.id %>
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-	<li><a href="#">eCommerce</a></li>
-	<li><%= link_to "Invoices", admin_billing_invoices_path(paid: 0) %></li>
-	<li class="active">Invoice #<%= @invoice.id%></li>
+  <li><a href="#">eCommerce</a></li>
+  <li><%= link_to "Invoices", admin_billing_invoices_path(paid: 0) %></li>
+  <li class="active">Invoice #<%= @invoice.id %></li>
 <% end %>

@@ -21,7 +21,7 @@
 class Package < ActiveRecord::Base
   include Exportable
   self.table_name = 'bill_packages'
-  
+
   belongs_to :domain
   has_many :details, class_name: 'PackageDetail', dependent: :destroy
   validates_presence_of :name, :price, :bill_frequency
@@ -29,11 +29,11 @@ class Package < ActiveRecord::Base
   def to_s
     name
   end
-  
+
   def get_detail(service_code)
     details.find { |x| x.service_type.code == service_code }
   end
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy

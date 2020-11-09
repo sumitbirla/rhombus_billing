@@ -12,20 +12,20 @@ class Account::PaymentMethodsController < Account::BaseController
     @payment_method = PaymentMethod.new(payment_method_params)
     @payment_method.user_id = session[:user_id]
     @payment_method.status = 'A'
-    
+
     # if this is only one payment_method, make it the default
     if PaymentMethod.where(user_id: session[:user_id]).count == 0
       @payment_method.default = true
     end
-    
+
     @payment_method.save
-    
+
     respond_to do |format|
       format.html do
         if @payment_method.errors.any?
           render 'new'
         else
-          flash[:notice] =  'Payment method was successfully saved.'
+          flash[:notice] = 'Payment method was successfully saved.'
           redirect_to action: 'index'
         end
       end
@@ -36,15 +36,15 @@ class Account::PaymentMethodsController < Account::BaseController
   def destroy
     @payment_method = PaymentMethod.find_by(id: params[:id], user_id: session[:user_id])
     @payment_method.destroy
-    
+
     # if there is only one remaining payment_method, make it the default
     if PaymentMethod.where(user_id: session[:user_id]).count == 1
       PaymentMethod.where(user_id: session[:user_id]).update_all(default: true)
     end
-    
+
     respond_to do |format|
       format.html do
-        flash[:notice] =  'Payment method has been removed.'
+        flash[:notice] = 'Payment method has been removed.'
         redirect_to action: 'index'
       end
       format.js { render :layout => false }

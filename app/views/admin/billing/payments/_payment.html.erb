@@ -1,22 +1,22 @@
-  <% pmt = payment %>
-  <tr>
-    <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
-    <td><%= systime pmt.created_at %></td>
-    <td><%= link_to_user_or_affiliate pmt, :payments %></td>
-    <td>
-      <% if pmt.payable_type == "Order" %>
-          <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "UserPackage" %>
-          <%= link_to UserPackage.find(pmt.payable_id).package.name + " package [#{pmt.payable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "Shipment" %>
-          <% shipment = Shipment.find_by(id: pmt.payable_id)%>
-          <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
-      <% elsif pmt.payable_type == "Invoice" %>
-          <%= link_to "Invoice ##{pmt.payable_id}", admin_billing_invoice_path(pmt.payable_id) %>
-      <% end %>
-    </td>
-    <td><%= pmt.transaction_id %></td>
-    <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
-    <td><%= pmt.memo %></td>
-    <td class="text-right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
-  </tr>
+<% pmt = payment %>
+<tr>
+  <td><%= link_to pmt.id.to_s, admin_billing_payment_path(pmt) %></td>
+  <td><%= systime pmt.created_at %></td>
+  <td><%= link_to_user_or_affiliate pmt, :payments %></td>
+  <td>
+    <% if pmt.payable_type == "Order" %>
+      <%= link_to "Order ##{pmt.payable_id}", admin_store_order_path(pmt.payable_id) %>
+    <% elsif pmt.payable_type == "UserPackage" %>
+      <%= link_to UserPackage.find(pmt.payable_id).package.name + " package [#{pmt.payable_id}]", admin_billing_user_package_path(pmt.payable_id) %>
+    <% elsif pmt.payable_type == "Shipment" %>
+      <% shipment = Shipment.find_by(id: pmt.payable_id) %>
+      <%= link_to "Shipment #{shipment}", admin_store_shipment_path(pmt.payable_id) %>
+    <% elsif pmt.payable_type == "Invoice" %>
+      <%= link_to "Invoice ##{pmt.payable_id}", admin_billing_invoice_path(pmt.payable_id) %>
+    <% end %>
+  </td>
+  <td><%= pmt.transaction_id %></td>
+  <td><%= pmt.payment_method.card_brand + " " + pmt.payment_method.card_display unless pmt.payment_method.nil? %></td>
+  <td><%= pmt.memo %></td>
+  <td class="text-right"><%= number_to_currency(pmt.amount, negative_format: "(%u%n)") %></td>
+</tr>

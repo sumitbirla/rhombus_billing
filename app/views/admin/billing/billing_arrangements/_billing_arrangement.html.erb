@@ -1,22 +1,22 @@
-	<tr>
-    <td><%= link_to billing_arrangement.id.to_s, admin_billing_billing_arrangement_path(billing_arrangement) %></td>
-    <td><%= link_to billing_arrangement.affiliate.name, admin_system_affiliate_path(billing_arrangement.affiliate, q: :billing_arrangements) %></td>
-		<td><%= link_to billing_arrangement.seller.name, admin_system_affiliate_path(billing_arrangement.seller, q: :billing_arrangements) %></td>
-		<td><%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %></td>
-    <td>
-      <%= number_to_currency(billing_arrangement.seller_transaction_fee) %>
-      <% if billing_arrangement.seller_transaction_percent %>
-        + <%= billing_arrangement.seller_transaction_percent %>% COGS
-      <% end %>
-    </td>
-    <td><%= billing_arrangement.percent_of_msrp ?  "#{billing_arrangement.percent_of_msrp.to_i}%" : "n.a" %></td>
-    <td class="text-center"><%= tick billing_arrangement.invoice_seller %></td>
-		<td><%= sysdate billing_arrangement.created_at %></td>
-		<td class="text-right">
-			<%= link_to "edit", edit_admin_billing_billing_arrangement_path(billing_arrangement) %> &nbsp;
-			<%= link_to "delete", 
-						  { action: "destroy", id: billing_arrangement.id }, 
-						  method: :delete, 
-						  data: { confirm: "Are you sure?" } %>
-		</td>
-	</tr>
+<tr>
+  <td><%= link_to billing_arrangement.id.to_s, admin_billing_billing_arrangement_path(billing_arrangement) %></td>
+  <td><%= link_to billing_arrangement.affiliate.name, admin_system_affiliate_path(billing_arrangement.affiliate, q: :billing_arrangements) %></td>
+  <td><%= link_to billing_arrangement.seller.name, admin_system_affiliate_path(billing_arrangement.seller, q: :billing_arrangements) %></td>
+  <td><%= number_to_currency(billing_arrangement.dropshipper_transaction_fee) %></td>
+  <td>
+    <%= number_to_currency(billing_arrangement.seller_transaction_fee) %>
+    <% if billing_arrangement.seller_transaction_percent %>
+      + <%= billing_arrangement.seller_transaction_percent %>% COGS
+    <% end %>
+  </td>
+  <td><%= billing_arrangement.percent_of_msrp ? "#{billing_arrangement.percent_of_msrp.to_i}%" : "n.a" %></td>
+  <td class="text-center"><%= tick billing_arrangement.invoice_seller %></td>
+  <td><%= sysdate billing_arrangement.created_at %></td>
+  <td class="text-right">
+    <%= link_to "edit", edit_admin_billing_billing_arrangement_path(billing_arrangement) %> &nbsp;
+    <%= link_to "delete",
+                {action: "destroy", id: billing_arrangement.id},
+                method: :delete,
+                data: {confirm: "Are you sure?"} %>
+  </td>
+</tr>

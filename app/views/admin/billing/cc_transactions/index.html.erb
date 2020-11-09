@@ -1,9 +1,9 @@
 <div class="pull-right">
   <form action="" method="get" style="display: inline;">
-      <input type="hidden" name="uid" value="<%= params[:uid] %>">
-      <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to 
-      <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
-      <input type="submit" class="btn btn-sm btn-default">
+    <input type="hidden" name="uid" value="<%= params[:uid] %>">
+    <input type="text" name="start_date" class="date-field" value="<%= params[:start_date] %>"> to
+    <input type="textbox" name="end_date" class="date-field" value="<%= params[:end_date] %>">
+    <input type="submit" class="btn btn-sm btn-default">
   </form>
 </div>
 
@@ -34,22 +34,22 @@
     <th>&nbsp;</th>
   </tr>
   <% @cc_transactions.each do |tran| %>
-  <tr>
-    <td><%= link_to tran.id.to_s, admin_billing_cc_transaction_path(tran) %></td>
-    <td><%= systime tran.created_at %></td>
-    <td>
-    <% unless tran.payment_method.nil? %>
-      <%= link_to tran.payment_method.to_s, admin_billing_payment_method_path(tran.payment_method) %>
-    <% else %>
-      <span class="light">- not saved -</span>
-    <% end %>
-    </td>
-    <td class="text-center"><%= tran.gateway %></td>
-    <td class="text-center"><%= tran.action %></td>
-    <td class="text-center"><%= number_to_currency(tran.amount, negative_format: "(%u%n)") %></td>
-    <td class="text-center"><%= tran.result %></td>
-    <td><%= link_to "details", admin_billing_cc_transaction_path(tran) %></td>
-  </tr>
+    <tr>
+      <td><%= link_to tran.id.to_s, admin_billing_cc_transaction_path(tran) %></td>
+      <td><%= systime tran.created_at %></td>
+      <td>
+        <% unless tran.payment_method.nil? %>
+          <%= link_to tran.payment_method.to_s, admin_billing_payment_method_path(tran.payment_method) %>
+        <% else %>
+          <span class="light">- not saved -</span>
+        <% end %>
+      </td>
+      <td class="text-center"><%= tran.gateway %></td>
+      <td class="text-center"><%= tran.action %></td>
+      <td class="text-center"><%= number_to_currency(tran.amount, negative_format: "(%u%n)") %></td>
+      <td class="text-center"><%= tran.result %></td>
+      <td><%= link_to "details", admin_billing_cc_transaction_path(tran) %></td>
+    </tr>
   <% end %>
 </table>
 
@@ -57,11 +57,11 @@
 
 
 <% content_for :title do %>
-    CC Transactions
+  CC Transactions
 <% end %>
 
 
 <% content_for :breadcrumbs do %>
-    <li><a href="#">Billing</a></li>
-    <li class="active">CC Transactions</li>
+  <li><a href="#">Billing</a></li>
+  <li class="active">CC Transactions</li>
 <% end %>

@@ -17,10 +17,10 @@
 class ServiceType < ActiveRecord::Base
   include Exportable
   self.table_name = 'bill_service_types'
-  
+
   belongs_to :domain
   validates_presence_of :name, :quantity_type, :sort
-  
+
   # PUNDIT
   def self.policy_class
     ApplicationPolicy
