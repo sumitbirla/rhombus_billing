@@ -13,7 +13,7 @@ module PaymentGateway
       )
     elsif active_gw == 'Stripe'
       gateway = ActiveMerchant::Billing::StripeGateway.new(
-          :login => Cache.setting(domain_id, 'eCommerce', 'Stripe Secret Key')
+          :login => Rails.application.credentials.dig(Rails.env.to_sym, :stripe, :secret_key)
       )
     else
       raise "Payment gateway is not set up."
