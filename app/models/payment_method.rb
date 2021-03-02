@@ -3,27 +3,31 @@
 # Table name: bill_payment_methods
 #
 #  id                      :integer          not null, primary key
-#  user_id                 :integer          not null
-#  default                 :boolean          default(FALSE), not null
+#  bill_attempts           :integer          default(0), not null
+#  billing_city            :string(255)      default("")
+#  billing_country         :string(255)      default("")
+#  billing_state           :string(255)      default("")
+#  billing_street1         :string(255)      default("")
+#  billing_street2         :string(255)
+#  billing_zip             :string(255)      default("")
 #  card_brand              :string(255)      default(""), not null
 #  card_display            :string(255)      default(""), not null
 #  cardholder_name         :string(255)      not null
+#  default                 :boolean          default(FALSE), not null
+#  encrypted_cc            :text(65535)      not null
 #  expiration_month        :integer          not null
 #  expiration_year         :integer          not null
-#  billing_street1         :string(255)      not null
-#  billing_street2         :string(255)
-#  billing_city            :string(255)      not null
-#  billing_state           :string(255)      not null
-#  billing_zip             :string(255)      not null
-#  billing_country         :string(255)      default(""), not null
-#  encrypted_cc            :text(65535)      not null
 #  iv                      :text(65535)      not null
-#  status                  :string(255)      not null
-#  last_transaction_result :string(255)
 #  last_transaction_date   :datetime
-#  bill_attempts           :integer          default(0), not null
+#  last_transaction_result :string(255)
+#  status                  :string(255)      not null
 #  created_at              :datetime
 #  updated_at              :datetime
+#  user_id                 :integer          not null
+#
+# Indexes
+#
+#  index_payment_methods_on_user_id  (user_id)
 #
 
 require 'activemerchant'

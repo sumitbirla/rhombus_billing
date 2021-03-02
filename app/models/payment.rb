@@ -3,23 +3,29 @@
 # Table name: bill_payments
 #
 #  id                  :integer          not null, primary key
-#  payable_id          :string(255)
-#  payable_type        :string(255)      default("")
-#  user_id             :integer
-#  customer            :boolean          default(TRUE), not null
-#  payment_method_id   :integer
 #  amount              :decimal(10, 2)   not null
-#  transaction_id      :string(255)
 #  cc                  :boolean          default(FALSE), not null
-#  cc_type             :string(255)
 #  cc_cardholder_name  :string(255)
-#  cc_number           :string(255)
+#  cc_code             :string(255)
 #  cc_expiration_month :integer
 #  cc_expiration_year  :integer
-#  cc_code             :string(255)
+#  cc_number           :string(255)
+#  cc_type             :string(255)
+#  customer            :boolean          default(TRUE), not null
 #  memo                :string(255)
+#  payable_type        :string(255)      default("")
 #  created_at          :datetime
 #  updated_at          :datetime
+#  affiliate_id        :integer
+#  invoice_id          :integer
+#  payable_id          :string(255)
+#  payment_method_id   :integer
+#  transaction_id      :string(255)
+#  user_id             :integer
+#
+# Indexes
+#
+#  index_payments_on_payment_method_id  (payment_method_id)
 #
 
 require 'activemerchant'

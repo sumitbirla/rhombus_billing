@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: bill_billing_arrangements
+#
+#  id                           :bigint           not null, primary key
+#  dropshipper_transaction_fee  :decimal(5, 2)    default(0.0), not null
+#  invoice_seller               :boolean          default(FALSE), not null
+#  percent_of_msrp              :decimal(5, 2)
+#  seller_transaction_fee       :decimal(5, 2)    default(0.0), not null
+#  seller_transaction_percent   :decimal(5, 2)
+#  uses_seller_shipping_account :boolean          default(FALSE), not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  affiliate_id                 :integer          not null
+#  seller_id                    :integer          not null
+#
 class BillingArrangement < ApplicationRecord
   self.table_name = "bill_billing_arrangements"
 

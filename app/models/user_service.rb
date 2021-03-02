@@ -3,13 +3,18 @@
 # Table name: bill_user_services
 #
 #  id              :integer          not null, primary key
-#  user_package_id :integer          not null
-#  service_type_id :integer          not null
 #  quantity        :integer          not null
-#  used            :integer          not null
 #  rate            :decimal(10, 2)   not null
+#  used            :integer          not null
 #  created_at      :datetime
 #  updated_at      :datetime
+#  service_type_id :integer          not null
+#  user_package_id :integer          not null
+#
+# Indexes
+#
+#  index_user_services_on_service_type_id  (service_type_id)
+#  index_user_services_on_user_package_id  (user_package_id)
 #
 
 class UserService < ActiveRecord::Base

@@ -2,15 +2,17 @@
 #
 # Table name: bill_invoices
 #
-#  id               :integer          not null, primary key
-#  invoiceable_id   :integer          not null
-#  invoiceable_type :string(255)      not null
-#  amount           :decimal(10, 2)   not null
-#  due_date         :date
-#  paid             :boolean          default(FALSE), not null
-#  note             :text(65535)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id                :integer          not null, primary key
+#  amount            :decimal(10, 2)   not null
+#  due_date          :date
+#  note              :text(65535)
+#  paid              :boolean          default(FALSE), not null
+#  post_date         :date
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  affiliate_id      :integer
+#  from_affiliate_id :integer          not null
+#  user_id           :integer
 #
 
 class Invoice < ActiveRecord::Base

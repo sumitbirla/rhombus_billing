@@ -3,16 +3,21 @@
 # Table name: bill_user_packages
 #
 #  id                        :integer          not null, primary key
-#  user_id                   :integer          not null
-#  package_id                :integer          not null
 #  amount                    :decimal(10, 2)   not null
+#  bill_attempts             :integer          not null
 #  rate                      :decimal(10, 2)   not null
 #  recurr_date               :date             not null
 #  recurr_status             :string(255)      not null
 #  recurr_status_change_time :datetime
-#  bill_attempts             :integer          not null
 #  created_at                :datetime
 #  updated_at                :datetime
+#  package_id                :integer          not null
+#  user_id                   :integer          not null
+#
+# Indexes
+#
+#  index_user_packages_on_package_id  (package_id)
+#  index_user_packages_on_user_id     (user_id)
 #
 
 class UserPackage < ActiveRecord::Base
