@@ -21,7 +21,7 @@ class BillingArrangement < ApplicationRecord
   belongs_to :seller, class_name: "Affiliate", foreign_key: :seller_id
 
   has_many :extra_properties, -> { order "sort, name" }, as: :extra_property, dependent: :destroy
-  accepts_nested_attributes_for :extra_properties, reject_if: proc { |x| x['name'].blank? && x['value'].blank? }
+  accepts_nested_attributes_for :extra_properties, reject_if: proc { |x| x['name'].blank? && x['value'].blank? }, allow_destroy: true
 
   validates_presence_of :affiliate_id, :seller_id, :seller_transaction_fee, :dropshipper_transaction_fee
   validates_uniqueness_of :affiliate_id, scope: :seller_id, message: "Billing arrangement between selected parties already exists."
