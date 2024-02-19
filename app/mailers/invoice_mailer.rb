@@ -16,7 +16,7 @@ class InvoiceMailer < ActionMailer::Base
     output_file = "/tmp/#{SecureRandom.hex(6)}.pdf"
     ret = system("wkhtmltopdf -q -s Letter #{urls} #{output_file}")
 
-    raise "Could not generate PDF" unless File.exists?(output_file)
+    raise "Could not generate PDF" unless File.exist?(output_file)
 
     from_name = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Name')
     from_email = Cache.setting(Rails.configuration.domain_id, :system, 'From Email Address')

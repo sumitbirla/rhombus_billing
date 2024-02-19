@@ -97,7 +97,7 @@ class Admin::Billing::InvoicesController < Admin::BaseController
 
     #puts ">>>>>>>> " + urls
 
-    unless File.exists?(output_file)
+    unless File.exist?(output_file)
       flash[:error] = "Unable to generate PDF [Debug: #{$?}]"
       return redirect_back(fallback_location: admin_billing_invoices_path)
     end
